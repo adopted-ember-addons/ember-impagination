@@ -1,4 +1,5 @@
 # Ember-impagination
+[![Build Status](https://travis-ci.org/thefrontside/ember-impagination.svg)](https://travis-ci.org/thefrontside/ember-impagination)
 
 This README outlines the details of collaborating on this Ember addon.
 
