@@ -250,6 +250,35 @@ describe("Dataset", function() {
       });
     });
 
+    describe.only("loading records", function() {
+      describe("with a single page load horizon", function() {
+        beforeEach(function() {
+          this.options.loadHorizon = 1;
+          this.dataset = new Dataset(this.options);
+        });
+
+        it('loads a single page', function () {
+          expect(this.state.pages.length).to.equal(1);
+        });
+
+        it('loads a single page of records', function () {
+          expect(this.state.records.length).to.equal(this.recordsPerPage);
+        });
+
+        describe("loading the next page", function() {
+          beforeEach(function() {
+            // TODO: What is the offset for requesting the next page?
+            var nextPageOffset = this.recordsPerPage;
+            this.dataset.setReadOffset(nextPageOffset);
+          });
+          it("loads an additional page", function() {
+            expect(this.state.records.length).to.equal(2 * this.recordsPerPage);
+          });
+        });
+      });
+    });
+
+
     describe("start loading from the beginning", function() {
       describe("with a single page load horizon", function() {
         beforeEach(function() {
