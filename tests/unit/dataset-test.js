@@ -226,7 +226,9 @@ describe("Dataset", function() {
             resolve(records);
           });
         },
-        observe: (state) => { this.state = state; }
+        observe: (state) => {
+          this.state = state;
+        }
       };
     });
 
@@ -250,7 +252,7 @@ describe("Dataset", function() {
       });
     });
 
-    describe.only("loading records", function() {
+    describe("loading records", function() {
       describe("with a single page load horizon", function() {
         beforeEach(function() {
           this.options.loadHorizon = 1;
@@ -265,11 +267,26 @@ describe("Dataset", function() {
           expect(this.state.records.length).to.equal(this.recordsPerPage);
         });
 
+        describe("at an incremented readOffset within the same page", function() {
+          beforeEach(function() {
+            // TODO: What is the offset for requesting the next page?
+            this.prevState = this.state;
+            var samePageOffset = this.recordsPerPage - 1;
+            this.dataset.setReadOffset(samePageOffset);
+          });
+          it("does not change state", function() {
+            expect(this.state).to.equal(this.prevState);
+          });
+        });
+
         describe("loading the next page", function() {
           beforeEach(function() {
             // TODO: What is the offset for requesting the next page?
             var nextPageOffset = this.recordsPerPage;
             this.dataset.setReadOffset(nextPageOffset);
+          });
+          it("does not change state", function() {
+            expect(this.state).not.to.equal(this.prevState);
           });
           it("loads an additional page", function() {
             expect(this.state.records.length).to.equal(2 * this.recordsPerPage);
@@ -301,7 +318,8 @@ describe("Dataset", function() {
 
         describe("loading the next page", function() {
           beforeEach(function() {
-            this.dataset.setReadOffset(1);
+            var nextPageOffset = this.recordsPerPage;
+            this.dataset.setReadOffset(nextPageOffset);
           });
           it("loads an additional page", function() {
             expect(this.state.pages.length).to.equal(2);
@@ -313,8 +331,9 @@ describe("Dataset", function() {
     describe("start loading from the middle", function() {
       describe("with a single page load horizon", function() {
         beforeEach(function() {
+          var middlePageOffset = 2 * this.recordsPerPage;
           this.options.loadHorizon = 1;
-          this.options.initialReadOffset = 2;
+          this.options.initialReadOffset = middlePageOffset;
           this.dataset = new Dataset(this.options);
         });
 
@@ -359,9 +378,10 @@ describe("Dataset", function() {
 
       describe("with a single page unload horizon", function() {
         beforeEach(function() {
+          var middlePageOffset = 2 * this.recordsPerPage;
           this.options.loadHorizon = 1;
           this.options.unloadHorizon = 2;
-          this.options.initialReadOffset = 2;
+          this.options.initialReadOffset = middlePageOffset;
           this.dataset = new Dataset(this.options);
         });
 
@@ -394,7 +414,8 @@ describe("Dataset", function() {
 
         describe("incrementing the readOffset", function() {
           beforeEach(function() {
-            this.dataset.setReadOffset(4);
+            var nextPageOffset = (2 * this.recordsPerPage) + this.options.initialReadOffset;
+            this.dataset.setReadOffset(nextPageOffset);
           });
 
           it('initializes all pages up to the loadHorizon', function () {
@@ -481,7 +502,8 @@ describe("Dataset", function() {
 
         describe("setting the read head at the total page boundary", function() {
           beforeEach(function() {
-            this.options.initialReadOffset = this.totalPages;
+            var offset = this.totalPages * this.recordsPerPage;
+            this.options.initialReadOffset = offset;
           });
 
           describe("with a single page load horizon", function() {
@@ -495,7 +517,7 @@ describe("Dataset", function() {
             });
 
             it('loads unrequested pages before the load Horizon', function () {
-              var unrequestedPages = this.state.pages.slice(0, this.options.initialReadOffset - this.options.loadHorizon);
+              var unrequestedPages = this.state.pages.slice(0, this.totalPages - this.options.loadHorizon);
               unrequestedPages.forEach(function (unrequestedPage) {
                 expect(unrequestedPage.isRequested).to.be.false;
               });
@@ -512,7 +534,9 @@ describe("Dataset", function() {
 
         describe("setting the read head one past the total page boundary", function() {
           beforeEach(function() {
-            this.options.initialReadOffset = this.totalPages + 1;
+            this.initialPageOffset = this.totalPages + 1;
+            var offset = this.initialPageOffset * this.recordsPerPage;
+            this.options.initialReadOffset = offset;
           });
 
           describe("when reject() returns the total number of pages", function() {
@@ -580,11 +604,11 @@ describe("Dataset", function() {
               });
 
               it('initializes pages up to and including the requested offset', function () {
-                expect(this.state.pages.length).to.equal(this.options.initialReadOffset + this.options.loadHorizon);
+                expect(this.state.pages.length).to.equal(this.initialPageOffset + this.options.loadHorizon);
               });
 
               it('loads unrequested pages before the load Horizon', function () {
-                var unrequestedPages = this.state.pages.slice(0, this.options.initialReadOffset - this.options.loadHorizon);
+                var unrequestedPages = this.state.pages.slice(0, this.initialPageOffset - this.options.loadHorizon);
                 unrequestedPages.forEach(function (unrequestedPage) {
                   expect(unrequestedPage.isRequested).to.be.false;
                 });
@@ -640,7 +664,8 @@ describe("Dataset", function() {
 
       describe("advancing the readOffset past the pending pages unloadHorizon", function() {
         beforeEach(function() {
-          this.dataset.setReadOffset(2);
+          var offset = 2 * this.recordsPerPage;
+          this.dataset.setReadOffset(offset);
         });
 
         it("unloads the pending page", function () {
@@ -704,9 +729,10 @@ describe("Dataset", function() {
           this.pages.push( this.server.create('page', {records: records}) );
         }
 
+        var initialRecordOffset = this.recordsPerPage;
         this.options = {
           pageSize: this.recordsPerPage,
-          initialReadOffset: 1,
+          initialReadOffset: initialRecordOffset,
           loadHorizon: 2,
           fetch: (pageOffset, stats) => {
             return new Ember.RSVP.Promise((resolve, reject) => {

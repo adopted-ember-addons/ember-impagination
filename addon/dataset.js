@@ -56,9 +56,10 @@ export default class Dataset {
     this.setReadOffset(this._initialReadOffset); // Initial Page Fetch
   }
 
-  setReadOffset(offset) {
-    if (this._currentReadOffset === offset) { return; }
-    this._currentReadOffset = offset;
+  setReadOffset(recordOffset) {
+    let offset = Math.floor(recordOffset / this._pageSize);
+    if (this._currentPageOffset === offset) { return; }
+    this._currentPageOffset = offset;
 
     let state = this.state.update((next)=> {
       next.readOffset = offset;
@@ -122,7 +123,7 @@ export default class Dataset {
 
   _getStateStats(pages) {
     return {
-      totalPages: Math.max(pages.length, this._currentReadOffset + this._loadHorizon)
+      totalPages: Math.max(pages.length, this._currentPageOffset + this._loadHorizon)
     };
   }
 
