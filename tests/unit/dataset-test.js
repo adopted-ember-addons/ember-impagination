@@ -74,13 +74,13 @@ describe("Dataset", function() {
       it("has default constructor values", function() {
         expect(this.dataset._fetch).to.be.instanceOf(Function);
         expect(this.dataset._observe).to.be.instanceOf(Function);
-        expect(this.dataset._loadHorizon).to.equal(1);
-        expect(this.dataset._unloadHorizon).to.equal(Infinity);
       });
 
       it("initializes the state", function() {
         expect(this.dataset.state).to.be.instanceOf(Object);
         expect(this.dataset.state.totalSize).to.equal(0);
+        expect(this.dataset.state.loadHorizon).to.equal(1);
+        expect(this.dataset.state.unloadHorizon).to.equal(Infinity);
       });
     });
   });
@@ -238,7 +238,7 @@ describe("Dataset", function() {
         this.dataset = new Dataset(this.options);
       });
       it("sets the loadHorizon", function () {
-        expect(this.dataset._loadHorizon).to.equal(2);
+        expect(this.dataset.state.loadHorizon).to.equal(2);
       });
     });
 
@@ -248,7 +248,7 @@ describe("Dataset", function() {
         this.dataset = new Dataset(this.options);
       });
       it("sets the unloadHorizon", function () {
-        expect(this.dataset._unloadHorizon).to.equal(3);
+        expect(this.dataset.state.unloadHorizon).to.equal(3);
       });
     });
 
@@ -269,7 +269,6 @@ describe("Dataset", function() {
 
         describe("at an incremented readOffset within the same page", function() {
           beforeEach(function() {
-            // TODO: What is the offset for requesting the next page?
             this.prevState = this.state;
             var samePageOffset = this.recordsPerPage - 1;
             this.dataset.setReadOffset(samePageOffset);

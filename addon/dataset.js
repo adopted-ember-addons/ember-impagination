@@ -46,18 +46,18 @@ export default class Dataset {
     if (!options.fetch) {
       throw new Error('created Dataset without fetch()');
     }
+    var initialReadOffset = options.initialReadOffset || 0;
 
     this._pageSize = options.pageSize;
     this._fetch = options.fetch;
     this._observe = options.observe || function() {};
-    this._loadHorizon = options.loadHorizon || 1;
-    this._unloadHorizon = options.unloadHorizon || Infinity;
-    this._initialReadOffset = options.initialReadOffset || 0;
+    // this._loadHorizon = options.loadHorizon || 1;
+    // this._unloadHorizon = options.unloadHorizon || Infinity;
     this.state = new State();
     this.state.pageSize = this._pageSize;
-    this.state.loadHorizon = this._loadHorizon;
-    this.state.unloadHorizon = this._unloadHorizon;
-    this.setReadOffset(this._initialReadOffset); // Initial Page Fetch
+    this.state.loadHorizon = options.loadHorizon || 1;
+    this.state.unloadHorizon = options.unloadHorizon || Infinity;
+    this.setReadOffset(initialReadOffset); // Initial Page Fetch
   }
 
   setReadOffset(readOffset) {
