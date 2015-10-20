@@ -274,8 +274,8 @@ describe("Dataset", function() {
             var samePageOffset = this.recordsPerPage - 1;
             this.dataset.setReadOffset(samePageOffset);
           });
-          it("does not change state", function() {
-            expect(this.state).to.equal(this.prevState);
+          it("does change state", function() {
+            expect(this.state).not.to.equal(this.prevState);
           });
         });
 

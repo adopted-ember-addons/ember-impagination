@@ -58,7 +58,8 @@ export default class Dataset {
 
   setReadOffset(recordOffset) {
     let offset = Math.floor(recordOffset / this._pageSize);
-    if (this._currentPageOffset === offset) { return; }
+    if (this._currentRecordOffset === recordOffset) { return; }
+    this._currentRecordOffset = recordOffset;
     this._currentPageOffset = offset;
 
     let state = this.state.update((next)=> {
