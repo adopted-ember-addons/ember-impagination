@@ -1,0 +1,8 @@
+<h5>Show Impagination</h5>
+{{#impagination-list fetch=fetch initial-read-offset=initialReadOffset load-horizon=loadHorizon unload-horizon=unloadHorizon page-size=pageSize as |records dataset|}}
+  <div class="records-list-container" style="height: 600px">
+    {{#ember-collection items=records estimated-height=600  estimated-width=3000 cell-layout=(fixed-grid-layout 3000 30) as |record index|}}
+      <div class="color-block" style="background-color:{{record.content.hsl}}; height:30px; width:3000px;">Page: {{record.page.offset}} - {{record.index}}</div>
+    {{/ember-collection}}
+  </div>
+{{/impagination-list}}
