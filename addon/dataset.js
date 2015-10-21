@@ -23,6 +23,8 @@ class State {
     next.pageSize = this.pageSize;
     next.loadHorizon = this.loadHorizon;
     next.unloadHorizon = this.unloadHorizon;
+    next.readOffset = this.readOffset;
+    next.pageOffset = this.pageOffset;
     next.pages = this.pages.slice();
     next.stats.totalPages = this.stats.totalPages;
     change.call(this, next);
