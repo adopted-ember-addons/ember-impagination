@@ -63,9 +63,6 @@ export default class Dataset {
   setReadOffset(readOffset) {
     var pageOffset = Math.floor(readOffset / this.state.pageSize);
     if (this.state.readOffset === readOffset) { return; }
-    console.log('setting read offset in dataset = ', readOffset);
-    console.log('setting page offset in dataset = ', pageOffset);
-
     let state = this.state.update((next)=> {
       next.readOffset = readOffset;
       next.pageOffset = pageOffset;

@@ -10,7 +10,6 @@ export default Ember.Controller.extend({
       setTimeout(()=> {
         stats.totalPages =  Math.ceil( spectrum.length / pageSize);
         let recordOffset = pageOffset * pageSize;
-        console.log(`resolved records at page ${pageOffset} = `, spectrum.slice(recordOffset, recordOffset + pageSize));
         resolve(spectrum.slice(recordOffset, recordOffset + pageSize));
       }, delay);
     });

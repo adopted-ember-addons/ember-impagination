@@ -16,11 +16,11 @@ export default Ember.Component.extend({
   currentState: null,
 
   records: Ember.computed('state', function() {
+    // TODO: This should fire EVERY TIME we observe a new state
     if(this.get('dataset')){
       var collection = CollectionInterface.create({
         state: this.get('state'),
         objectReadAt: (offset)=> {
-          console.log('setReadOffset to page = ', Math.floor(offset / 10) );
           // TODO: We need to optimize capturing the readOffset
           // A debounce and schedule once capture the lowest offsets in the scrollable-area
           // we want to capture high offsets as well.
@@ -45,20 +45,16 @@ export default Ember.Component.extend({
       fetch: this.get('fetch'),
       observe: (state)=> {
         if(this.get('dataset')){
-          Ember.run(()=> {
-            this.set('state', state);
-          });
+          this.set('state', state);
         }
       }
     });
-  },
-
+  }
 });
 
 var CollectionInterface = Ember.Object.extend(Ember.Array, {
   objectAt(i) {
     let record = this.state.records[i];
-    console.log("i = ", i);
     this.objectReadAt(i);
     return record || undefined;
   },
