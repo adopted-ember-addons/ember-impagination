@@ -75,12 +75,16 @@ body {
   border: 0px solid transparent;
 }
 
-.demo_pages_page {
+.demo_pages_page_wrapper {
   display: inline-block;
+}
+
+.demo_pages_page {
   width: 40px;
-  height: 40px;
+  height: 60px;
   border-radius: 3px;
   padding-top: 15px;
+  box-sizing: border-box;
 }
 
 .unrequested {
@@ -95,4 +99,24 @@ body {
 .resolved {
   background: hsl(148.5, 100%, 50%);
   color: #303030;
+}
+
+.load-min {
+  border-left: 5px solid yellow;
+}
+
+.load-max {
+   border-right: 5px solid yellow;
+}
+
+.unload-min {
+  border-left: 5px solid white;
+}
+
+.unload-max {
+  border-right: 5px solid white;
+}
+
+.current-page {
+  border-left: 5px solid magenta;
 }

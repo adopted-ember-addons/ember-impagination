@@ -3,13 +3,13 @@ import Ember from 'ember';
 export function pageState(params) {
   let page = params[0];
   if(page.isPending){
-    return 'pending flipInY';
+    return 'pending';
   } else if(page.isResolved){
-    return 'resolved flipOutY';
+    return 'resolved';
   } else if(page.isRejected){
-    return 'rejected flipInY';
+    return 'rejected';
   } else {
-    return 'unrequested flipOutY';
+    return 'unrequested';
   }
 }
 

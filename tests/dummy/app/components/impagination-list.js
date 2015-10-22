@@ -52,7 +52,7 @@ export default Ember.Component.extend({
     }
   },
 
-  rebuildDataset: Ember.observer('page-size', 'load-horizon', 'unload-horizon', 'initial-read-offset', 'fetch', function(){
+  _newDataset: function(){
     this.dataset = new Dataset({
       pageSize: this.get('page-size'),
       loadHorizon: this.get('load-horizon'),
@@ -67,24 +67,20 @@ export default Ember.Component.extend({
         }
       }
     });
-  }),
+  },
+
+  // rebuildDataset: Ember.observer('page-size', 'load-horizon', 'unload-horizon', 'initial-read-offset', function(){
+  //   this._newDataset();
+  // }),
 
   didInsertElement(){
-    this.dataset = new Dataset({
-      pageSize: this.get('page-size'),
-      loadHorizon: this.get('load-horizon'),
-      unloadHorizon: this.get('unload-horizon'),
-      initialReadOffset: this.get('initial-read-offset'),
-      fetch: this.get('fetch'),
-      observe: (state)=> {
-        if(this.get('dataset')){
-          Ember.run(()=>{
-            this.set('state', state);
-          });
-        }
-      }
-    });
-  }
+    this._newDataset();
+  },
+
+  // didInitAttrs() {
+  //   console.log('pageSize in willRender', this.get('page-size'));
+  //   // this._newDataset();
+  // },
 });
 
 var PagesInterface = Ember.Object.extend(Ember.Array, {

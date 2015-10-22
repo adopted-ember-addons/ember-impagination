@@ -10,12 +10,11 @@
 </div>
 <div class="demo_dataset-wrapper">
   {{#impagination-list fetch=fetch initial-read-offset=initialReadOffset load-horizon=loadHorizon unload-horizon=unloadHorizon page-size=pageSize as |records state pages|}}
-    <div class="demo_read-offset">Current Read Offset: {{state.readOffset}}
-    </div>
+    <div class="demo_read-offset">Current Read Offset: {{state.readOffset}} </div>
     <div class="demo_pages">
-      {{#each pages as |page index|}}
-        <div class="{{page-state page}} demo_pages_page">{{index}}</div>
-      {{/each}}
+    {{#each pages as |page index|}}
+      {{pages-display  page=page state=state records=records index=index}}
+    {{/each}}
     </div>
     <div class="demo_records-wrapper">
       <div class="demo_records-list-container" style="height: 500px; width: 600px;">

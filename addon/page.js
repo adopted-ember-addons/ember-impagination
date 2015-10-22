@@ -7,7 +7,6 @@ class UnrequestedPage {
     this.data = new Array(size).fill({});
   }
 
-
   get isRequested() { return (this.isSettled || this.isPending); }
   get isPending() { return false; }
   get isResolved() { return false; }

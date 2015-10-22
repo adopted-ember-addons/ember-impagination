@@ -13,8 +13,8 @@ export default Ember.Controller.extend({
     });
   },
   initialReadOffset: 0,
-  loadHorizon: 2,
-  unloadHorizon: Infinity,
+  loadHorizon: 1,
+  unloadHorizon: 2,
   pageSize: 10
 });
 
