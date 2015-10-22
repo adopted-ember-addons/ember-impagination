@@ -5,7 +5,7 @@ import layout from '../templates/components/impagination-list';
 export default Ember.Component.extend({
   layout: layout,
   'initial-read-offset': 0,
-  'load-horizon': 3,
+  'load-horizon': 2,
   'unload-horizon': Infinity,
   'page-size': null,
   'fetch': null,
@@ -14,6 +14,7 @@ export default Ember.Component.extend({
   state: null,
 
   currentState: null,
+  queue: [],
 
   records: Ember.computed('state', function() {
     // TODO: This should fire EVERY TIME we observe a new state
@@ -21,13 +22,8 @@ export default Ember.Component.extend({
       var collection = CollectionInterface.create({
         state: this.get('state'),
         objectReadAt: (offset)=> {
-          // TODO: We need to optimize capturing the readOffset
-          // A debounce and schedule once capture the lowest offsets in the scrollable-area
-          // we want to capture high offsets as well.
-          // Ember.run.scheduleOnce("actions", this.dataset, 'setReadOffset', offset);
-          Ember.run(()=>{
-            this.dataset.setReadOffset(offset);
-          });
+          this.queue.push(offset);
+          Ember.run.debounce(this, 'flushQueue', offset, 25, false);
         }
       });
       return collection;
@@ -35,6 +31,16 @@ export default Ember.Component.extend({
       return [];
     }
   }),
+
+  flushQueue: function () {
+    if(this.queue.length > 0) {
+      Ember.run(() => {
+        var avgOffset = Math.ceil((Math.max(...this.queue) + Math.min(...this.queue)) / 2);
+        this.dataset.setReadOffset(avgOffset);
+        this.queue = [];
+      });
+    }
+  },
 
   didInsertElement(){
     this.dataset = new Dataset({
@@ -45,7 +51,9 @@ export default Ember.Component.extend({
       fetch: this.get('fetch'),
       observe: (state)=> {
         if(this.get('dataset')){
-          this.set('state', state);
+          Ember.run(()=>{
+            this.set('state', state);
+          });
         }
       }
     });
