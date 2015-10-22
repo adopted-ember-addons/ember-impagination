@@ -93,16 +93,18 @@ describe("Dataset", function() {
 
       this.options = {
         pageSize: this.recordsPerPage,
-        fetch: (pageOffset, stats) => {
+        fetch: (pageOffset, pageSize, stats) => {
           return new Ember.RSVP.Promise((resolve, reject) => {
             this.resolvers.push({
               resolve: resolve,
               pageOffset: pageOffset,
+              pageSize: pageSize,
               stats: stats
             });
             this.rejecters.push({
               reject: reject,
               pageOffset: pageOffset,
+              pageSize: pageSize,
               stats: stats
             });
           });
@@ -481,7 +483,7 @@ describe("Dataset", function() {
 
       describe("the end of total pages", function() {
         beforeEach(function() {
-          this.options.fetch = (pageOffset, stats) => {
+          this.options.fetch = (pageOffset, pageSize, stats) => {
             var records,
                 _this = this;
             if(pageOffset < _this.totalPages){
@@ -540,7 +542,7 @@ describe("Dataset", function() {
 
           describe("when reject() returns the total number of pages", function() {
             beforeEach(function() {
-              this.options.fetch = (pageOffset, stats) => {
+              this.options.fetch = (pageOffset, pageSize, stats) => {
                 var records,
                     _this = this;
                 if(pageOffset < _this.totalPages){
@@ -733,7 +735,7 @@ describe("Dataset", function() {
           pageSize: this.recordsPerPage,
           initialReadOffset: initialRecordOffset,
           loadHorizon: 2,
-          fetch: (pageOffset, stats) => {
+          fetch: (pageOffset, pageSize, stats) => {
             return new Ember.RSVP.Promise((resolve, reject) => {
               this.resolvers.push({
                 resolve: resolve,
