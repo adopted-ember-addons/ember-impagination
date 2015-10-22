@@ -140,8 +140,9 @@ export default class Dataset {
 
   _fetchPage(page) {
     let offset = page.offset;
+    let pageSize = this.state.pageSize;
     let stats = {totalPages: this.state.totalPages };
-    return this._fetch.call(this, offset, stats).then((records = []) => {
+    return this._fetch.call(this, offset, pageSize, stats).then((records = []) => {
       let state = this.state.update((next)=> {
         next.isPending = false;
         next.stats = stats;

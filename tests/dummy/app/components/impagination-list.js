@@ -5,7 +5,7 @@ import layout from '../templates/components/impagination-list';
 export default Ember.Component.extend({
   layout: layout,
   'initial-read-offset': 0,
-  'load-horizon': 2,
+  'load-horizon': 1,
   'unload-horizon': Infinity,
   'page-size': null,
   'fetch': null,
@@ -13,7 +13,6 @@ export default Ember.Component.extend({
   dataset: null,
   state: null,
 
-  currentState: null,
   queue: [],
 
   records: Ember.computed('state', function() {
@@ -32,6 +31,17 @@ export default Ember.Component.extend({
     }
   }),
 
+  pages: Ember.computed('state', function() {
+    if(this.get('dataset')){
+      var pages = PagesInterface.create({
+        state: this.get('state'),
+      });
+      return pages;
+    } else {
+      return [];
+    }
+  }),
+
   flushQueue: function () {
     if(this.queue.length > 0) {
       Ember.run(() => {
@@ -41,6 +51,23 @@ export default Ember.Component.extend({
       });
     }
   },
+
+  rebuildDataset: Ember.observer('page-size', 'load-horizon', 'unload-horizon', 'initial-read-offset', 'fetch', function(){
+    this.dataset = new Dataset({
+      pageSize: this.get('page-size'),
+      loadHorizon: this.get('load-horizon'),
+      unloadHorizon: this.get('unload-horizon'),
+      initialReadOffset: this.get('initial-read-offset'),
+      fetch: this.get('fetch'),
+      observe: (state)=> {
+        if(this.get('dataset')){
+          Ember.run(()=>{
+            this.set('state', state);
+          });
+        }
+      }
+    });
+  }),
 
   didInsertElement(){
     this.dataset = new Dataset({
@@ -58,6 +85,26 @@ export default Ember.Component.extend({
       }
     });
   }
+});
+
+var PagesInterface = Ember.Object.extend(Ember.Array, {
+  objectAt(i) {
+    let page = this.state.pages[i];
+    return page || undefined;
+  },
+
+  length: Ember.computed(function () {
+    var lastPage = {
+      records: []
+    };
+    let totalPages = 0;
+    let state = this.state;
+    if(state.pages.length > 0) {
+      lastPage = state.pages[state.pages.length - 1];
+      totalPages = (state.pages.length);
+    }
+    return totalPages;
+  })
 });
 
 var CollectionInterface = Ember.Object.extend(Ember.Array, {

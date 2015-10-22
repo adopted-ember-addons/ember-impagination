@@ -1,12 +1,10 @@
 import Ember from 'ember';
 
 export default Ember.Controller.extend({
-  // colorCount: 1000,
-  fetch: function (pageOffset, stats) {
-    let spectrum = new RGBSpectrum(1000).colors;
-    let delay = 50; //ms
+  fetch: function (pageOffset, pageSize, stats) {
+    let spectrum = new RGBSpectrum(200).colors;
+    let delay = 1000; //ms
     return new Ember.RSVP.Promise((resolve)=> {
-      let pageSize = 10;
       setTimeout(()=> {
         stats.totalPages =  Math.ceil( spectrum.length / pageSize);
         let recordOffset = pageOffset * pageSize;

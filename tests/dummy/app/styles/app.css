@@ -1,3 +1,98 @@
-.records-list-container {
+body {
+  background-color: #303030;
+  padding: 0;
+  margin: 0;
+}
+
+.demo_records-wrapper {
+  width: 100%;
+  text-align: center;
+  margin-top: 50px;
+}
+
+.demo_records-list-container {
   position:relative;
+  margin: auto;
+}
+
+.demo_record {
+  color: #303030;
+  font-family: Arial;
+  box-sizing: border-box;
+  border: 1px solid #303030;
+  text-align: center;
+  font-size: 45px;
+  padding: 10px;
+  vertical-align: middle;
+  background-color: white;
+  border-radius: 5px;
+}
+
+.demo_dataset-wrapper {
+  margin-top: 50px;
+}
+
+.demo_read-offset, .demo_pages, .demo_inputs {
+  color: white;
+  position:relative;
+  margin: 25px;
+  font-family: Arial;
+  font-size: 25px;
+  text-align: center;
+}
+
+.demo_read-offset {
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+.demo_inputs {
+  background-color: black;
+  height: 60px;
+  padding: 0;
+  padding-top: 20px;
+  margin: 0;
+  text-align: right;
+  padding-right: 20px;
+}
+
+.demo_inputs label {
+  font-size: 15px;
+}
+
+.demo_inputs input {
+  border: 1px solid gray;
+  height: 30px;
+  width: 80px;
+  font-size: 20px;
+  padding: 3px;
+  text-align: center;
+  border-radius: 3px;
+}
+
+.demo_pages {
+  border: 0px solid transparent;
+}
+
+.demo_pages_page {
+  display: inline-block;
+  width: 40px;
+  height: 40px;
+  border-radius: 3px;
+  padding-top: 15px;
+}
+
+.unrequested {
+  background: black;
+}
+
+.pending {
+  background: white;
+  color: #303030;
+}
+
+.resolved {
+  background: hsl(148.5, 100%, 50%);
+  color: #303030;
 }
