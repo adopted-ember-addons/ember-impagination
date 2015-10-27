@@ -17,10 +17,15 @@
     {{/each}}
     </div>
     <div class="demo_records-wrapper">
-      <div class="demo_records-list-container" style="height: 500px; width: 600px;">
-        {{#ember-collection items=records estimated-height=500px  estimated-width=600px cell-layout=(fixed-grid-layout 600 70) as |record index|}}
+      <div class="demo_records-list-container" style="height: 525px; width: 600px;">
+        {{#virtual-each
+           height=525
+           itemHeight=70
+           positionIndex=state.readOffset
+           items=records as |record actualIndex virtualIndex|
+        }}
           <div class="demo_record" style={{color-block record.content.hsl}}>P{{record.page.offset}} - R{{record.index}}</div>
-        {{/ember-collection}}
+        {{/virtual-each}}
       </div>
     </div>
   {{/impagination-list}}

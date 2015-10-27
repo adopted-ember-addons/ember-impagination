@@ -5,7 +5,7 @@ import layout from '../templates/components/impagination-list';
 export default Ember.Component.extend({
   layout: layout,
   'initial-read-offset': 0,
-  'load-horizon': 1,
+  'load-horizon': 2,
   'unload-horizon': Infinity,
   'page-size': null,
   'fetch': null,
@@ -18,13 +18,14 @@ export default Ember.Component.extend({
   records: Ember.computed('state', function() {
     // TODO: This should fire EVERY TIME we observe a new state
     if(this.get('dataset')){
-      var collection = CollectionInterface.create({
-        state: this.get('state'),
-        objectReadAt: (offset)=> {
-          this.queue.push(offset);
-          Ember.run.debounce(this, 'flushQueue', offset, 25, false);
+      var collection = new ImpaginationVirtualEachAdapter(
+        this.get('state'),
+        (offset)=> {
+          Ember.run(() => {
+            this.dataset.setReadOffset(offset);
+          });
         }
-      });
+      );
       return collection;
     } else {
       return [];
@@ -34,7 +35,7 @@ export default Ember.Component.extend({
   pages: Ember.computed('state', function() {
     if(this.get('dataset')){
       var pages = PagesInterface.create({
-        state: this.get('state'),
+        state: this.get('state')
       });
       return pages;
     } else {
@@ -75,7 +76,7 @@ export default Ember.Component.extend({
 
   didInsertElement(){
     this._newDataset();
-  },
+  }
 
   // didInitAttrs() {
   //   console.log('pageSize in willRender', this.get('page-size'));
@@ -103,14 +104,20 @@ var PagesInterface = Ember.Object.extend(Ember.Array, {
   })
 });
 
-var CollectionInterface = Ember.Object.extend(Ember.Array, {
-  objectAt(i) {
-    let record = this.state.records[i];
-    this.objectReadAt(i);
-    return record || undefined;
-  },
+var ImpaginationVirtualEachAdapter = class {
+  constructor(state, objectReadAt) {
+    this.state = state;
+    this.objectReadAt = objectReadAt;
+  }
 
-  length: Ember.computed(function () {
+  slice(start, end) {
+    if(start < 0) { return []; }
+    let records = this.state.records.slice(start, end);
+    this.objectReadAt(start);
+    return records || undefined;
+  }
+
+  get length() {
     var lastPage = {
       records: []
     };
@@ -121,5 +128,5 @@ var CollectionInterface = Ember.Object.extend(Ember.Array, {
       totalRecords = (state.pages.length - 1) * state.pageSize + lastPage.records.length;
     }
     return totalRecords;
-  })
-});
+  }
+};
