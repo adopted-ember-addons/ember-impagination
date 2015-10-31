@@ -9,19 +9,15 @@
   {{input value=pageSize type=number id="ps"}}
 </div>
 <div class="demo_dataset-wrapper">
-  {{#impagination-list fetch=fetch initial-read-offset=initialReadOffset load-horizon=loadHorizon unload-horizon=unloadHorizon page-size=pageSize as |records state pages|}}
-    <div class="demo_read-offset">Current Read Offset: {{state.readOffset}} </div>
-    <div class="demo_pages">
-    {{#each pages as |page index|}}
-      {{pages-display  page=page state=state records=records index=index}}
-    {{/each}}
-    </div>
+  {{#impagination-collection fetch=fetch initial-read-offset=initialReadOffset load-horizon=loadHorizon unload-horizon=unloadHorizon page-size=pageSize as |records datasetState pages|}}
+    {{record-player  pages=pages datasetState=datasetState records=records}}
+    <div class="demo_read-offset">Current Read Offset: {{datasetState.readOffset}} </div>
     <div class="demo_records-wrapper">
       <div class="demo_records-list-container" style="height: 500px; width: 600px;">
         {{#ember-collection items=records estimated-height=500px  estimated-width=600px cell-layout=(fixed-grid-layout 600 70) as |record index|}}
-          <div class="demo_record" style={{color-block record.content.hsl}}>P{{record.page.offset}} - R{{record.index}}</div>
+          <div class="demo_record" style={{color-block record.content.hsl}}>Record {{index}}</div>
         {{/ember-collection}}
       </div>
     </div>
-  {{/impagination-list}}
+  {{/impagination-collection}}
 </div>

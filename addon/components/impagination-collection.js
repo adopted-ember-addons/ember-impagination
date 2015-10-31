@@ -1,6 +1,6 @@
 import Ember from 'ember';
+import layout from '../templates/components/impagination-collection';
 import Dataset from 'ember-impagination/dataset';
-import layout from '../templates/components/impagination-list';
 
 export default Ember.Component.extend({
   layout: layout,
@@ -10,16 +10,19 @@ export default Ember.Component.extend({
   'page-size': null,
   'fetch': null,
 
+  // dataset: null,
+
   dataset: null,
-  state: null,
+
+  datasetState: null,
 
   queue: [],
 
-  records: Ember.computed('state', function() {
-    // TODO: This should fire EVERY TIME we observe a new state
+  records: Ember.computed('datasetState', function() {
+    // TODO: This should fire EVERY TIME we observe a new datasetState
     if(this.get('dataset')){
       var collection = CollectionInterface.create({
-        state: this.get('state'),
+        datasetState: this.get('datasetState'),
         objectReadAt: (offset)=> {
           this.queue.push(offset);
           Ember.run.debounce(this, 'flushQueue', offset, 25, false);
@@ -31,10 +34,10 @@ export default Ember.Component.extend({
     }
   }),
 
-  pages: Ember.computed('state', function() {
+  pages: Ember.computed('datasetState', function() {
     if(this.get('dataset')){
       var pages = PagesInterface.create({
-        state: this.get('state'),
+        datasetState: this.get('datasetState'),
       });
       return pages;
     } else {
@@ -59,33 +62,24 @@ export default Ember.Component.extend({
       unloadHorizon: this.get('unload-horizon'),
       initialReadOffset: this.get('initial-read-offset'),
       fetch: this.get('fetch'),
-      observe: (state)=> {
+      observe: (datasetState)=> {
         if(this.get('dataset')){
           Ember.run(()=>{
-            this.set('state', state);
+            this.set('datasetState', datasetState);
           });
         }
       }
     });
   },
 
-  // rebuildDataset: Ember.observer('page-size', 'load-horizon', 'unload-horizon', 'initial-read-offset', function(){
-  //   this._newDataset();
-  // }),
-
   didInsertElement(){
     this._newDataset();
-  },
-
-  // didInitAttrs() {
-  //   console.log('pageSize in willRender', this.get('page-size'));
-  //   // this._newDataset();
-  // },
+  }
 });
 
 var PagesInterface = Ember.Object.extend(Ember.Array, {
   objectAt(i) {
-    let page = this.state.pages[i];
+    let page = this.datasetState.pages[i];
     return page || undefined;
   },
 
@@ -94,10 +88,10 @@ var PagesInterface = Ember.Object.extend(Ember.Array, {
       records: []
     };
     let totalPages = 0;
-    let state = this.state;
-    if(state.pages.length > 0) {
-      lastPage = state.pages[state.pages.length - 1];
-      totalPages = (state.pages.length);
+    let datasetState = this.datasetState;
+    if(datasetState && datasetState.pages.length > 0) {
+      lastPage = datasetState.pages[datasetState.pages.length - 1];
+      totalPages = (datasetState.pages.length);
     }
     return totalPages;
   })
@@ -105,7 +99,7 @@ var PagesInterface = Ember.Object.extend(Ember.Array, {
 
 var CollectionInterface = Ember.Object.extend(Ember.Array, {
   objectAt(i) {
-    let record = this.state.records[i];
+    let record = this.datasetState.records[i];
     this.objectReadAt(i);
     return record || undefined;
   },
@@ -115,10 +109,10 @@ var CollectionInterface = Ember.Object.extend(Ember.Array, {
       records: []
     };
     let totalRecords = 0;
-    let state = this.state;
-    if(state.pages.length > 0) {
-      lastPage = state.pages[state.pages.length -1];
-      totalRecords = (state.pages.length - 1) * state.pageSize + lastPage.records.length;
+    let datasetState = this.datasetState;
+    if(datasetState && datasetState.pages.length > 0) {
+      lastPage = datasetState.pages[datasetState.pages.length -1];
+      totalRecords = (datasetState.pages.length - 1) * datasetState.pageSize + lastPage.records.length;
     }
     return totalRecords;
   })

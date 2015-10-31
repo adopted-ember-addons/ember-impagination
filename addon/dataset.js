@@ -1,6 +1,6 @@
 import Page from './page';
 
-class State {
+class DatasetState {
   constructor() {
     this.isPending = false;
     this.isResolved = true;
@@ -14,7 +14,7 @@ class State {
   }
 
   update(change) {
-    let next = new State();
+    let next = new DatasetState();
     next.isPending = this.isPending;
     next.isResolved = this.isResolved;
     next.isRejected = this.isRejected;
@@ -55,17 +55,17 @@ export default class Dataset {
     this._observe = options.observe || function() {};
     // this._loadHorizon = options.loadHorizon || 1;
     // this._unloadHorizon = options.unloadHorizon || Infinity;
-    this.state = new State();
-    this.state.pageSize = this._pageSize;
-    this.state.loadHorizon = options.loadHorizon || 1;
-    this.state.unloadHorizon = options.unloadHorizon || Infinity;
+    this.datasetState = new DatasetState();
+    this.datasetState.pageSize = this._pageSize;
+    this.datasetState.loadHorizon = options.loadHorizon || 1;
+    this.datasetState.unloadHorizon = options.unloadHorizon || Infinity;
     this.setReadOffset(initialReadOffset); // Initial Page Fetch
   }
 
   setReadOffset(readOffset) {
-    var pageOffset = Math.floor(readOffset / this.state.pageSize);
-    if (this.state.readOffset === readOffset) { return; }
-    let state = this.state.update((next)=> {
+    var pageOffset = Math.floor(readOffset / this.datasetState.pageSize);
+    if (this.datasetState.readOffset === readOffset) { return; }
+    let datasetState = this.datasetState.update((next)=> {
       next.readOffset = readOffset;
       next.pageOffset = pageOffset;
       var pages = next.pages;
@@ -102,7 +102,7 @@ export default class Dataset {
         }
       }
     });
-    this._observe(this.state = state);
+    this._observe(this.datasetState = datasetState);
   }
 
   /* Unloads a page at the given index and returns the unloaded page */
@@ -140,26 +140,26 @@ export default class Dataset {
 
   _fetchPage(page) {
     let offset = page.offset;
-    let pageSize = this.state.pageSize;
-    let stats = {totalPages: this.state.totalPages };
+    let pageSize = this.datasetState.pageSize;
+    let stats = {totalPages: this.datasetState.totalPages };
     return this._fetch.call(this, offset, pageSize, stats).then((records = []) => {
-      let state = this.state.update((next)=> {
+      let datasetState = this.datasetState.update((next)=> {
         next.isPending = false;
         next.stats = stats;
         if(page !== next.pages[offset]) { return; }
         next.pages[offset] = page.resolve(records);
         this._adjustTotalPages(next.pages, stats);
       });
-      this._observe(this.state = state);
+      this._observe(this.datasetState = datasetState);
     }).catch((error = {}) => {
-      let state = this.state.update((next)=> {
+      let datasetState = this.datasetState.update((next)=> {
         next.isPending = false;
         next.stats = stats;
         if(page !== next.pages[offset]) { return; }
         next.pages[offset] = page.reject(error);
         this._adjustTotalPages(next.pages, stats);
       });
-      this._observe(this.state = state);
+      this._observe(this.datasetState = datasetState);
     });
   }
 }
