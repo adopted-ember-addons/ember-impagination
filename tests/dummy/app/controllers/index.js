@@ -2,7 +2,7 @@ import Ember from 'ember';
 
 export default Ember.Controller.extend({
   fetch: function (pageOffset, pageSize, stats) {
-    let spectrum = new RGBSpectrum(200).colors;
+    let spectrum = new RGBSpectrum(300).colors;
     let delay = 200; //ms
     return new Ember.RSVP.Promise((resolve)=> {
       setTimeout(()=> {
@@ -13,7 +13,7 @@ export default Ember.Controller.extend({
     });
   },
   initialReadOffset: 0,
-  loadHorizon: 2,
+  loadHorizon: 3,
   unloadHorizon: 4,
   pageSize: 10
 });

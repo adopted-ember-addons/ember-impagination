@@ -25,7 +25,7 @@ export default Ember.Component.extend({
         datasetState: this.get('datasetState'),
         objectReadAt: (offset)=> {
           this.queue.push(offset);
-          Ember.run.debounce(this, 'flushQueue', offset, 25, false);
+          Ember.run.debounce(this, 'flushQueue', offset, 1, false);
         }
       });
       return collection;
