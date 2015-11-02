@@ -5,7 +5,7 @@ import Dataset from 'ember-impagination/dataset';
 export default Ember.Component.extend({
   layout: layout,
   'initial-read-offset': 0,
-  'load-horizon': 1,
+  'load-horizon': 2,
   'unload-horizon': Infinity,
   'page-size': null,
   'fetch': null,
@@ -28,6 +28,7 @@ export default Ember.Component.extend({
           Ember.run.debounce(this, 'flushQueue', offset, 1, false);
         }
       });
+      Object.defineProperty(collection, "length", { get: collection.length });
       return collection;
     } else {
       return [];
@@ -104,7 +105,14 @@ var CollectionInterface = Ember.Object.extend(Ember.Array, {
     return record || undefined;
   },
 
-  length: Ember.computed(function () {
+  slice(start, end) {
+    if(start < 0) { return []; }
+    let records = this.datasetState.records.slice(start, end);
+    this.objectReadAt(start);
+    return records || undefined;
+  },
+
+  length: function() {
     var lastPage = {
       records: []
     };
@@ -115,5 +123,5 @@ var CollectionInterface = Ember.Object.extend(Ember.Array, {
       totalRecords = (datasetState.pages.length - 1) * datasetState.pageSize + lastPage.records.length;
     }
     return totalRecords;
-  })
+  }
 });

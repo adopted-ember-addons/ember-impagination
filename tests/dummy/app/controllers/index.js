@@ -1,6 +1,8 @@
 import Ember from 'ember';
 
 export default Ember.Controller.extend({
+  emberCollection: true,
+
   fetch: function (pageOffset, pageSize, stats) {
     let spectrum = new RGBSpectrum(300).colors;
     let delay = 200; //ms
