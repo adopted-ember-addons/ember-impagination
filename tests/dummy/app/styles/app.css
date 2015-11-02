@@ -187,3 +187,13 @@ body {
   background-color: black;
   opacity: .4;
 }
+
+.virtual-each {
+  overflow-y: auto;
+}
+
+.infinite-list-content {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
