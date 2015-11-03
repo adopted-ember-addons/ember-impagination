@@ -42,7 +42,11 @@
     "ember-addon"
   ],
   "dependencies": {
-    "ember-cli-babel": "^5.1.3"
+    "broccoli-babel-transpiler": "^5.4.5",
+    "broccoli-funnel": "^0.2.12",
+    "broccoli-merge-trees": "^0.2.4",
+    "ember-cli-babel": "^5.1.3",
+    "impagination": "cowboyd/impagination#extract-to-simple-npm-package"
   },
   "ember-addon": {
     "configPath": "tests/dummy/config"
