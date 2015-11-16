@@ -46,7 +46,7 @@
     "broccoli-funnel": "^0.2.12",
     "broccoli-merge-trees": "^0.2.4",
     "ember-cli-babel": "^5.1.3",
-    "impagination": "cowboyd/impagination#extract-to-simple-npm-package"
+    "impagination": "flexyford/impagination#62c1d4f491c082d36ccfe88fb010fc5820e8eacf"
   },
   "ember-addon": {
     "configPath": "tests/dummy/config"
