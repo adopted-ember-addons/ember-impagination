@@ -7,10 +7,8 @@ export default Ember.Component.extend({
   'records': null,
   'pages': null,
   'datasetState': null,
-  totalRecords: Ember.computed('datasetState.pages', 'datasetState.pageSize', function(){
-    return this.get('datasetState.pages.length') * this.get('datasetState.pageSize');
-  }),
   elementWidth: null,
+  totalRecords: Ember.computed.readOnly('datasetState.length'),
   pageWidth: Ember.computed('incrementWidth', 'datasetState.pageSize', function(){
     return this.get('incrementWidth') * this.get('datasetState.pageSize');
   }),
@@ -21,15 +19,16 @@ export default Ember.Component.extend({
     let incrementWidth = this.get('incrementWidth');
     return this.get('datasetState.readOffset') * incrementWidth;
   }),
-  pageStyle: Ember.computed(function(){
+  pageStyle: Ember.computed('pageWidth', function() {
     return Ember.String.htmlSafe("width:"+this.get('pageWidth')+"px;");
   }),
   readHeadStyle: Ember.computed('readHeadOffset', function(){
     return Ember.String.htmlSafe("left:"+this.get('readHeadOffset')+"px;");
   }),
   loadHorizonStyle: Ember.computed('datasetState.loadHorizon', 'pageWidth', 'readHeadOffset', function(){
-    let left = this.get('readHeadOffset') - (this.get('datasetState.loadHorizon')*this.get('pageWidth'));
-    let width = 2*this.get('datasetState.loadHorizon')*this.get('pageWidth');
+    let left = this.get('readHeadOffset') - (this.get('datasetState.loadHorizon')*this.get('pageWidth')) / this.get('datasetState.pageSize');
+    let width = 2*this.get('datasetState.loadHorizon')*this.get('pageWidth') / this.get('datasetState.pageSize');
+
     return Ember.String.htmlSafe("left:"+left+"px; width:"+width+"px;");
   }),
   unloadHorizonLeftStyle: Ember.computed('elementWidth', 'datasetState.unloadHorizon', 'pageWidth', 'readHeadOffset', function(){

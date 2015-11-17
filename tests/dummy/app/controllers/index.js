@@ -1,7 +1,7 @@
 import Ember from 'ember';
 
 export default Ember.Controller.extend({
-  emberCollection: true,
+  emberCollection: false,
 
   fetch: function (pageOffset, pageSize, stats) {
     let spectrum = new RGBSpectrum(300).colors;
@@ -15,8 +15,8 @@ export default Ember.Controller.extend({
     });
   },
   initialReadOffset: 0,
-  loadHorizon: 3,
-  unloadHorizon: 4,
+  loadHorizon: 30,
+  unloadHorizon: 40,
   pageSize: 10
 });
 
