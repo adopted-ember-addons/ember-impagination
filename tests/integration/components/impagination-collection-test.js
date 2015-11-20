@@ -4,26 +4,33 @@ import {
   describeComponent,
   it
 } from 'ember-mocha';
+import {
+  beforeEach
+} from 'mocha';
 import hbs from 'htmlbars-inline-precompile';
+import { Server } from '../../test-server';
 
 describeComponent(
   'impagination-collection',
-  'Integration: ImpaginationCollectionComponent',
+  'Integration | Component | ImpaginationCollection',
   {
     integration: true
   },
   function() {
-    it('renders', function() {
-      // Set any properties with this.set('myProperty', 'value');
-      // Handle any actions with this.on('myAction', function(val) { ... });
-      // Template block usage:
-      // this.render(hbs`
-      //   {{#impagination-collection}}
-      //     template content
-      //   {{/impagination-collection}}
-      // `);
+    beforeEach(function() {
+      this.server = new Server();
+      var fetch = (pageOffset, pageSize, stats)=> {
+        return this.server.request(pageOffset, pageSize, stats);
+      };
+      this.set('fetch', fetch);
+    });
 
-      this.render(hbs`{{impagination-collection}}`);
+    it('renders', function() {
+      this.render(hbs`
+      {{impagination-collection
+        fetch=fetch
+        page-size=10
+      }}`);
       expect(this.$()).to.have.length(1);
     });
   }
