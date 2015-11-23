@@ -46,7 +46,7 @@ describeComponent(
       expect(this.server.requests.length).to.equal(3);
     });
 
-    describe("reading records from the begining with {{each}}", function() {
+    describe("exercising the CollectionInterface with {{each}}", function() {
       beforeEach(function() {
         this.render(hbs`
         {{#impagination-collection
@@ -56,15 +56,22 @@ describeComponent(
           load-horizon=30
           unload-horizon=50
           as |records|}}
+          <div class="records">Total Records: {{records.length}}</div>
           {{#each records as |record|}}
-            <p class="record">{{record.content.name}}</p>
+            <div class="record">{{record.content.name}}</div>
           {{/each}}
         {{/impagination-collection}}
         `);
       });
+
+      it("requests pages from the server", function() {
+        expect(this.server.requests.length).to.equal(3);
+      });
+
       it("renders a set of empty records up to the loadHorizon", function() {
-        expect(this.$('p.record').length).to.equal(30);
-        expect(this.$('p.record').first().text()).to.equal('');
+        expect(this.$('.records').first().text()).to.equal('Total Records: 30');
+        expect(this.$('.record').length).to.equal(30);
+        expect(this.$('.record').first().text()).to.equal('');
       });
 
       describe("resolving fetches", function() {
@@ -73,33 +80,18 @@ describeComponent(
         });
 
         it("renders a set of resolved records up to the loadHorizon", function() {
-          expect(this.$('p').length).to.equal(30);
-          expect(this.$('p').first().text()).to.equal('Record 0');
+          expect(this.$('.record').length).to.equal(30);
+          expect(this.$('.record').first().text()).to.equal('Record 0');
         });
       });
-    });
-    describe("reading records from the middle with {{each}}", function() {
-      beforeEach(function() {
-        this.render(hbs`
-        {{#impagination-collection
-          fetch=fetch
-          initial-read-offset=30
-          page-size=10
-          load-horizon=30
-          unload-horizon=50
-          as |records|}}
-          <p class="records">{{records.length}}</p>
-        {{/impagination-collection}}
-        `);
-      });
-
-      describe("resolving fetches", function() {
+      describe("rejecting fetches", function() {
         beforeEach(function() {
-          this.server.resolveAll();
+          this.server.rejectAll();
         });
 
-        it("renders a set of resolved records up to the loadHorizon", function() {
-          expect(this.$('p').first().text()).to.equal('60');
+        it("renders empty rejected records up to the loadHorizon", function() {
+          expect(this.$('.record').length).to.equal(30);
+          expect(this.$('.record').first().text()).to.equal('');
         });
       });
     });
