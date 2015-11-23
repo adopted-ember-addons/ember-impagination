@@ -46,31 +46,25 @@ describeComponent(
       expect(this.server.requests.length).to.equal(3);
     });
 
-    describe("reading records", function() {
+    describe("reading records from the begining with {{each}}", function() {
       beforeEach(function() {
-        var observe = (state) => {
-          this.datasetState = state;
-        };
-        this.set('observe', observe);
         this.render(hbs`
         {{#impagination-collection
           fetch=fetch
-          observe=observe
+          initial-read-offset=0
           page-size=10
           load-horizon=30
           unload-horizon=50
           as |records|}}
-          <div class="impagination-collection">
-            {{#each records as |record|}}
-              <p>{{record.content.name}}</p>
-            {{/each}}
-          </div>
+          {{#each records as |record|}}
+            <p class="record">{{record.content.name}}</p>
+          {{/each}}
         {{/impagination-collection}}
         `);
       });
       it("renders a set of empty records up to the loadHorizon", function() {
-        expect(this.$('p').length).to.equal(30);
-        expect(this.$('p').first().text()).to.equal('');
+        expect(this.$('p.record').length).to.equal(30);
+        expect(this.$('p.record').first().text()).to.equal('');
       });
 
       describe("resolving fetches", function() {
@@ -82,9 +76,32 @@ describeComponent(
           expect(this.$('p').length).to.equal(30);
           expect(this.$('p').first().text()).to.equal('Record 0');
         });
-
+      });
+    });
+    describe("reading records from the middle with {{each}}", function() {
+      beforeEach(function() {
+        this.render(hbs`
+        {{#impagination-collection
+          fetch=fetch
+          initial-read-offset=30
+          page-size=10
+          load-horizon=30
+          unload-horizon=50
+          as |records|}}
+          <p class="records">{{records.length}}</p>
+        {{/impagination-collection}}
+        `);
       });
 
+      describe("resolving fetches", function() {
+        beforeEach(function() {
+          this.server.resolveAll();
+        });
+
+        it("renders a set of resolved records up to the loadHorizon", function() {
+          expect(this.$('p').first().text()).to.equal('60');
+        });
+      });
     });
   }
 );

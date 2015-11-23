@@ -19,12 +19,6 @@ export default Ember.Component.extend({
     });
   }),
 
-  pages: Ember.computed('datasetState', function() {
-    return PagesInterface.create({
-      datasetState: this.get('datasetState')
-    });
-  }),
-
   dataset: Ember.computed('page-size', 'load-horizon', 'unload-horizon', 'fetch', function() {
     return new Dataset({
       pageSize: this.get('page-size'),
@@ -52,7 +46,7 @@ export default Ember.Component.extend({
     this._super.apply(this, arguments);
 
     this.setInitialState();
-    this.get('dataset').setReadOffset(this.get('initialReadOffset') || 0);
+    this.get('dataset').setReadOffset(this.get('initial-read-offset') || 0);
   }
 });
 
