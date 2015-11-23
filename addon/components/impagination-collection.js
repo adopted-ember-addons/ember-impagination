@@ -33,7 +33,7 @@ export default Ember.Component.extend({
       fetch: this.get('fetch'),
       observe: (datasetState)=> {
         Ember.run(() => {
-          this.set('datasetState', datasetState);
+          this.safeSet('datasetState', datasetState);
         });
       }
     });
@@ -43,6 +43,10 @@ export default Ember.Component.extend({
   setInitialState: Ember.observer('dataset', function() {
     this.set('datasetState', this.get('dataset.state'));
   }),
+
+  safeSet: function(key, value) {
+    if (!this.isDestroyed) { this.set(key, value); }
+  },
 
   didInitAttrs() {
     this._super.apply(this, arguments);
@@ -75,7 +79,7 @@ var CollectionInterface = Ember.Object.extend(Ember.Array, {
 
   objectAt(i) {
     let record = this.datasetState.get(i);
-    Ember.run.debounce(this, 'objectReadAt', i, 1, false);
+    Ember.run.debounce(this, 'objectReadAt', i, 1, true);
     return record;
   },
 
