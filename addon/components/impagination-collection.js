@@ -71,6 +71,8 @@ var CollectionInterface = Ember.Object.extend(Ember.Array, {
     });
   }),
 
+  readOffset: Ember.computed.readOnly('datasetState.readOffset'),
+
   objectAt(i) {
     let record = this.datasetState.get(i);
     Ember.run.debounce(this, 'objectReadAt', i, 1, true);
