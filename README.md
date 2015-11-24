@@ -49,34 +49,21 @@ Once we have setup our attributes we can invoke them in the template.
 
 ```hbs
 {{!-- app/templates/index.hbs --}}
-{#impagination-dataset fetch=fetch page-size=pageSize read-offset=readOffset load-horizon=loadHorizon unload-horizon=unloadHorizon as |records|}}
-  <div class="demo_records-wrapper">
-    <div class="demo_records-list-container" style="height: 500px; width: 600px;">
-      {{#if emberCollection}}
-        {{#ember-collection items=records estimated-height=500px  estimated-width=600px cell-layout=(fixed-grid-layout 600 70) as |record index|}}
-          <div class="demo_record" style={{color-block record.content.hsl}}>Record {{index}}</div>
-        {{/ember-collection}}
-      {{else}}
-        {{#virtual-each items=records height=500 itemHeight=70 as |record index|}}
-          <div class="demo_record" style={{color-block record.content.hsl}}>Record {{index}}</div>
-        {{/virtual-each}}
-      {{/if}}
-    </div>
-  </div>
-  {{/impagination-dataset}}
-  ```
-
-Immediately, this will call fetch twice (for records 0-4, and 5-9)
-
-```hbs
-<div class="records">Total Records: {{records.length}}</div>
-{{#each records as |record|}}
-  <div class="record">Record {{record.id}}</div>
-{{/each}}
+{#impagination-dataset 
+  fetch=fetch 
+  page-size=pageSize 
+  load-horizon=loadHorizon 
+  unload-horizon=unloadHorizon 
+  read-offset=readOffset 
+  as |records|}}
+  <div class="records">Total Records: {{records.length}}</div>
+  {{#each records as |record|}}
+    <div class="record">Record {{record.id}}</div>
+  {{/each}}
+{{/impagination-dataset}}
 ```
 
-And yield the following
-
+Immediately, this will call fetch twice (for records 0-4, and 5-9)
 ```
 Total Records: 10
 Record 0
