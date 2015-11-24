@@ -1,0 +1,33 @@
+<div class="demo_inputs">
+  <label for="ro">Initial Read Offset:</label>
+  {{input value=initialReadOffset type=number id="ro"}}
+  <label for="lh">Load Horizon:</label>
+  {{input value=loadHorizon type=number id="lh"}}
+  <label for="uh">Unload Horizon:</label>
+  {{input value=unloadHorizon type=number id="uh"}}
+  <label for="ps">Page Size:</label>
+  {{input value=pageSize type=number id="ps"}}
+</div>
+<div class="demo_dataset-wrapper">
+  {{#impagination-collection fetch=fetch read-offset=initialReadOffset load-horizon=loadHorizon unload-horizon=unloadHorizon page-size=pageSize as |records|}}
+    {{record-player  pages=records.pages records=records loadHorizon=loadHorizon unloadHorizon=unloadHorizon}}
+    <div class="demo_read-offset">Current Read Offset: {{datasetState.readOffset}} </div>
+    <div class="demo_records-wrapper">
+      <div class="demo_records-list-container" style="height: 500px; width: 600px;">
+        {{#if emberCollection}}
+          {{#ember-collection items=records estimated-height=500px  estimated-width=600px cell-layout=(fixed-grid-layout 600 70) as |record index|}}
+            <div class="demo_record" style={{color-block record.content.hsl}}>Record {{index}}</div>
+          {{/ember-collection}}
+        {{else}}
+          {{#virtual-each
+             height=500
+             itemHeight=70
+             items=records as |record index virtualIndex|
+          }}
+            <div class="demo_record" style={{color-block record.content.hsl}}>Record {{index}}</div>
+          {{/virtual-each}}
+        {{/if}}
+      </div>
+    </div>
+  {{/impagination-collection}}
+</div>
