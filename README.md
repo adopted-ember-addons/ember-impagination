@@ -11,7 +11,7 @@ We scroll through the ROYGBIV color spectrum by loading and unloading pages of r
 
 ![](http://g.recordit.co/iltQTaYwSb.gif)
 
-The color-demo contains implementations for [{{virtual-each}}](https://github.com/jasonmit/virtual-each) although you will find an [{{ember-collection}}](https://github.com/emberjs/ember-collection) implementation in the dummy application. *virtual-each* is the recommend ember-scroll-component for *ember-impagination*.
+The demo is implemented using [{{virtual-each}}](https://github.com/jasonmit/virtual-each), although you will find an [{{ember-collection}}](https://github.com/emberjs/ember-collection) implementation in the dummy application as well. *virtual-each* is the recommend ember-scroll-component for *ember-impagination*.
 
 ## Installation
 
