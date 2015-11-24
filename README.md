@@ -56,7 +56,7 @@ Once we have setup our attributes we can invoke them in the template.
 
 ```hbs
 {{!-- app/templates/index.hbs --}}
-{#impagination-dataset 
+{{#impagination-dataset 
   fetch=fetch 
   page-size=pageSize 
   load-horizon=loadHorizon 
