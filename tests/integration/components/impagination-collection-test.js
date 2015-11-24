@@ -1,3 +1,4 @@
+/*global it, beforeEach */
 /* jshint expr:true */
 import { expect } from 'chai';
 import {
