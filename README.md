@@ -19,14 +19,14 @@ To create an `impagination-dataset` there are two required parameters:
 ```javascript
 // app/route/record.js
 export default Ember.Route.extend({
-  pageSize: 5,       // *required* fetch in pages of 5
+  pageSize: 5,       // fetch in pages of 5 (*required*)
   readOffset: 0,     // the current index of the dataset. load/unloadHorizons extend from this index.
   loadHorizon: 10,   // fetch records "within" this range from the readOffset (default: pageSize)
   unloadHorizon: 10, // unload records which are "outside" this range from the readOffset (default: Infinity)
    
 
   // fetch() function is invoked whenever a page is requested within the loadHorizon
-  fetch: function(pageOffset, pageSize, stats) { // *required* function which returns a "thenable"
+  fetch: function(pageOffset, pageSize, stats) { // function which returns a "thenable" (*required*)
     let params = {
       page: pageOffset,
     };
