@@ -13,8 +13,7 @@ The color-demo presents a finite scroll implementation of ember-impagination. St
 
 ## Usage
 
-To create an `impagination-dataset` there are two required parameters:
-`fetch` and `page-size`
+To create an `impagination-dataset` there are two required parameters, `fetch` and `page-size`. See [Impagination](https://github.com/flexyford/impagination) for further attribute descriptions.
 
 ```javascript
 // app/route/record.js
