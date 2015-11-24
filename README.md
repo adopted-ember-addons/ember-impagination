@@ -4,7 +4,7 @@
 [Impagination](https://github.com/flexyford/impagination) implementation for Ember.
 
 ## Demo
-[Ember-Impagination Demo](https://github.com/thefrontside/ember-impagination/tree/color-demo)
+[Ember-Impagination Demo](http://thefrontside.github.io/ember-impagination/index)
 The color-demo presents a finite scroll implementation of ember-impagination. Starting at RED, we scroll through all of the ROYGBIV color spectrum, fetching pages of colors dependent upon passed-in attributes. The color-demo contains implementations for [{{virtual-each}}](https://github.com/jasonmit/virtual-each) and [{{ember-collection}}](https://github.com/emberjs/ember-collection). *virtual-each* is the recommend ember-scroll-component for *ember-impagination*.
 
 ## Installation
