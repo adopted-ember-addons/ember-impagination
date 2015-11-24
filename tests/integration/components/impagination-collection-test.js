@@ -48,10 +48,11 @@ describeComponent(
 
     describe("exercising the CollectionInterface with {{each}}", function() {
       beforeEach(function() {
+        this.set('readOffset', 0);
         this.render(hbs`
         {{#impagination-collection
           fetch=fetch
-          initial-read-offset=0
+          read-offset=readOffset
           page-size=10
           load-horizon=30
           unload-horizon=50
@@ -84,6 +85,7 @@ describeComponent(
           expect(this.$('.record').first().text()).to.equal('Record 0');
         });
       });
+
       describe("rejecting fetches", function() {
         beforeEach(function() {
           this.server.rejectAll();
@@ -94,6 +96,17 @@ describeComponent(
           expect(this.$('.record').first().text()).to.equal('');
         });
       });
+
+      describe("incrementing the readOffset", function() {
+        beforeEach(function() {
+          this.set('readOffset', 10);
+        });
+
+        it("requests another page from the server", function() {
+          expect(this.server.requests.length).to.equal(4);
+        });
+      });
+
     });
   }
 );

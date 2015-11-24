@@ -4,7 +4,6 @@ import Dataset from 'impagination/dataset';
 
 export default Ember.Component.extend({
   layout: layout,
-  'initial-read-offset': 0,
   'load-horizon': 2,
   'unload-horizon': Infinity,
   'page-size': null,
@@ -42,11 +41,11 @@ export default Ember.Component.extend({
     if (!this.isDestroyed) { this.set(key, value); }
   },
 
-  didInitAttrs() {
+  didReceiveAttrs() {
     this._super.apply(this, arguments);
 
     this.setInitialState();
-    this.get('dataset').setReadOffset(this.get('initial-read-offset') || 0);
+    this.get('dataset').setReadOffset(this.get('read-offset') || 0);
   }
 });
 
@@ -97,7 +96,6 @@ var CollectionInterface = Ember.Object.extend(Ember.Array, {
     if (length < 0) {
       return [];
     }
-
     Ember.run.schedule('afterRender', this, 'objectReadAt', start);
     return Array.from(new Array(length), (_, i)=> {
       return this.datasetState.get(start + i);
