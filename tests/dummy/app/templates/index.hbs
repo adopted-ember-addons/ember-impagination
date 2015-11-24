@@ -11,7 +11,7 @@
 <div class="demo_dataset-wrapper">
   {{#impagination-collection fetch=fetch read-offset=initialReadOffset load-horizon=loadHorizon unload-horizon=unloadHorizon page-size=pageSize as |records|}}
     {{record-player  pages=records.pages records=records loadHorizon=loadHorizon unloadHorizon=unloadHorizon}}
-    <div class="demo_read-offset">Current Read Offset: {{datasetState.readOffset}} </div>
+    <div class="demo_read-offset">Current Read Offset: {{records.readOffset}} </div>
     <div class="demo_records-wrapper">
       <div class="demo_records-list-container" style="height: 500px; width: 600px;">
         {{#if emberCollection}}
