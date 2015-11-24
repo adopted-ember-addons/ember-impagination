@@ -5,7 +5,13 @@
 
 ## Demo
 [Ember-Impagination Demo](http://thefrontside.github.io/ember-impagination/index)
-The color-demo presents a finite scroll implementation of ember-impagination. Starting at RED, we scroll through all of the ROYGBIV color spectrum, fetching pages of colors dependent upon passed-in attributes. The color-demo contains implementations for [{{virtual-each}}](https://github.com/jasonmit/virtual-each) and [{{ember-collection}}](https://github.com/emberjs/ember-collection). *virtual-each* is the recommend ember-scroll-component for *ember-impagination*.
+
+The color-demo presents a finite scroll implementation of ember-impagination. 
+We scroll through the ROYGBIV color spectrum by loading and unloading pages of records, where each record is a unique color-hue. Resolved (Loaded) Pages are green, Pending (Loading) pages are white. Unrequested (Unloaded) pages are black.
+
+![](http://g.recordit.co/iltQTaYwSb.gif)
+
+The demo is implemented using [{{virtual-each}}](https://github.com/jasonmit/virtual-each), although you will find an [{{ember-collection}}](https://github.com/emberjs/ember-collection) implementation in the dummy application as well. *virtual-each* is the recommend ember-scroll-component for *ember-impagination*.
 
 ## Installation
 
@@ -50,7 +56,7 @@ Once we have setup our attributes we can invoke them in the template.
 
 ```hbs
 {{!-- app/templates/index.hbs --}}
-{#impagination-dataset 
+{{#impagination-dataset 
   fetch=fetch 
   page-size=pageSize 
   load-horizon=loadHorizon 
