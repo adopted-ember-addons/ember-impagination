@@ -5,6 +5,9 @@ import {
   describeComponent,
   it
 } from 'ember-mocha';
+import {
+  beforeEach
+} from 'mocha';
 import hbs from 'htmlbars-inline-precompile';
 import { Server } from '../../test-server';
 
