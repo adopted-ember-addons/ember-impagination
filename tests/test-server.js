@@ -60,6 +60,11 @@ export class Server {
     this.requests.forEach((request) => request.resolve());
     return Ember.RSVP.Promise.all(this.requests);
   }
+
+  rejectAll() {
+    this.requests.forEach((request) => request.reject());
+    return Ember.RSVP.Promise.all(this.requests);
+  }
 }
 
 /**

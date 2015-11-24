@@ -9,8 +9,8 @@
   {{input value=pageSize type=number id="ps"}}
 </div>
 <div class="demo_dataset-wrapper">
-  {{#impagination-collection fetch=fetch initial-read-offset=initialReadOffset load-horizon=loadHorizon unload-horizon=unloadHorizon page-size=pageSize as |records datasetState pages|}}
-    {{record-player  pages=records.pages datasetState=datasetState records=records}}
+  {{#impagination-collection fetch=fetch read-offset=initialReadOffset load-horizon=loadHorizon unload-horizon=unloadHorizon page-size=pageSize as |records|}}
+    {{record-player  pages=records.pages records=records loadHorizon=loadHorizon unloadHorizon=unloadHorizon}}
     <div class="demo_read-offset">Current Read Offset: {{datasetState.readOffset}} </div>
     <div class="demo_records-wrapper">
       <div class="demo_records-list-container" style="height: 500px; width: 600px;">

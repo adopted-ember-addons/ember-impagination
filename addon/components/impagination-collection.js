@@ -4,7 +4,6 @@ import Dataset from 'impagination/dataset';
 
 export default Ember.Component.extend({
   layout: layout,
-  'initial-read-offset': 0,
   'load-horizon': 2,
   'unload-horizon': Infinity,
   'page-size': null,
@@ -19,12 +18,6 @@ export default Ember.Component.extend({
     });
   }),
 
-  pages: Ember.computed('datasetState', function() {
-    return PagesInterface.create({
-      datasetState: this.get('datasetState')
-    });
-  }),
-
   dataset: Ember.computed('page-size', 'load-horizon', 'unload-horizon', 'fetch', function() {
     return new Dataset({
       pageSize: this.get('page-size'),
@@ -33,7 +26,7 @@ export default Ember.Component.extend({
       fetch: this.get('fetch'),
       observe: (datasetState)=> {
         Ember.run(() => {
-          this.set('datasetState', datasetState);
+          this.safeSet('datasetState', datasetState);
         });
       }
     });
@@ -44,11 +37,15 @@ export default Ember.Component.extend({
     this.set('datasetState', this.get('dataset.state'));
   }),
 
-  didInitAttrs() {
+  safeSet: function(key, value) {
+    if (!this.isDestroyed) { this.set(key, value); }
+  },
+
+  didReceiveAttrs() {
     this._super.apply(this, arguments);
 
     this.setInitialState();
-    this.get('dataset').setReadOffset(this.get('initialReadOffset') || 0);
+    this.get('dataset').setReadOffset(this.get('read-offset') || 0);
   }
 });
 
@@ -73,9 +70,11 @@ var CollectionInterface = Ember.Object.extend(Ember.Array, {
     });
   }),
 
+  readOffset: Ember.computed.readOnly('datasetState.readOffset'),
+
   objectAt(i) {
     let record = this.datasetState.get(i);
-    Ember.run.debounce(this, 'objectReadAt', i, 1, false);
+    Ember.run.debounce(this, 'objectReadAt', i, 1, true);
     return record;
   },
 
@@ -97,7 +96,6 @@ var CollectionInterface = Ember.Object.extend(Ember.Array, {
     if (length < 0) {
       return [];
     }
-
     Ember.run.schedule('afterRender', this, 'objectReadAt', start);
     return Array.from(new Array(length), (_, i)=> {
       return this.datasetState.get(start + i);
