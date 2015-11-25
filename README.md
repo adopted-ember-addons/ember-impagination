@@ -6,7 +6,9 @@
 
 > Impagination is built using an event-driven immutable style, so it is ideal for use with UI frameworks like Ember . . .
 
-Hence, we present *Ember-Impagination*
+Hence, we present *Ember-Impagination*, which provides you with a component, `{{impagination-dataset as |data|}}`, you can use to feed data into your templates while having that data look exactly like a simple `Ember.Array`.
+
+> Note: *Ember-Impagination* does not provide any of the visual elements in a system like infinite scroll. You'll still need to use a special component like `virtual-each` or `ember-collection`. Instead, *Ember-Impagination* simplifies feeding your components fetched data.
 
 ## Installation
 * `ember install ember-impagination`
@@ -18,9 +20,11 @@ The demo presents a finite scroll implementation of *Ember-Impagination*. It scr
 
 ![](http://g.recordit.co/iltQTaYwSb.gif)
 
-The demo is implemented using [virtual-each](https://github.com/jasonmit/virtual-each) due to the simplicity of the component. Ember-Impagination can be utilized with more flexible virtualization component like [ember-collection](https://github.com/emberjs/ember-collection), or the simplest template helper such as an `{{each}}`. By design, *Ember-Impagination* leverages Glimmer and yields paginated data from your server's API to components which expect an array.
+The demo is implemented using [virtual-each](https://github.com/jasonmit/virtual-each) due to the simplicity of the component. However, *Ember-Impagination* can also be utilized with other components like [ember-collection](https://github.com/emberjs/ember-collection), or even a simple `{{each}}`. By design, *Ember-Impagination* leverages Glimmer and yields paginated data from your server's API to components which expect an array.
 
 ## Usage
+
+### Impagination-Dataset Component
 
 To create an `impagination-dataset` there are two *required* parameters, `fetch` and `page-size`. Optional parameters include `load-horizon`, `unload-horizon`, `read-offset`, `unfetch`. See [Impagination](https://github.com/flexyford/impagination) for detailed attribute descriptions.
 
@@ -37,6 +41,10 @@ To create an `impagination-dataset` there are two *required* parameters, `fetch`
   {{/each}}
 {{/impagination-dataset}}
 ```
+
+> In most cases, using a simple `{{each}}` would defeat the purpose of using a data layer like *Ember-Impagination*, and for truly infinite datasets might result in truly infinite loops :scream: 
+
+Now, in your route, you can define the actual `(un)fetch` functions that tell `{{impagination-dataset}}` how it should request each individual page, and the `(un)loadHorizon` which specify how many pages to request ahead/behind.
 
 ```javascript
 // app/route/record.js
@@ -76,6 +84,17 @@ Record 1
 Record 2
 ...
 Record 9
+```
+### Create your own Dataset
+If `{{impagination-dataset}}` is not an ideal component for your unique `Impagination` needs, you can get into the nitty gritty, and use `Impagination` directly. If you find yourself creating your own `Dataset`, let us know how you are using `Dataset` and `Impagination`. It may be a reason for imporvements or another ember addon.
+
+```js
+import Dataset from 'impagination/dataset';
+
+let dataset = new Dataset({
+  pageSize: 5,
+  observe: (state) => {}
+});
 ```
 
 ## Running Tests
