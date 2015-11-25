@@ -1,7 +1,7 @@
 # Ember-Impagination
 [![Build Status](https://travis-ci.org/thefrontside/ember-impagination.svg)](https://travis-ci.org/thefrontside/ember-impagination)
 
-*Ember-Impagination* is an Ember port of [Impagination](https://github.com/flexyford/impagination), a front-end data-layer for the paginated API on your server. *Ember-Impagination* leverage the power of Glimmer and provides your component the data it needs to render quickly each and every time. 
+*Ember-Impagination* is an Ember port of [Impagination](https://github.com/flexyford/impagination), a front-end data-layer for the paginated API on your server. *Ember-Impagination* leverages the power of Glimmer and provides your component the data it needs to render quickly each and every time. 
 > Whatever your use-case: infinite scrolling lists, a carousel browser, or even a classic page-by-page result list, Impagination frees you to focus on what you want to do with your data, not the micro-logistics of when to fetch it. All you provide Impagination is the logic to fetch a single page, plus how many pages you want it to pre-fetch ahead of you, and it will figure out the rest.
 
 > Impagination is built using an event-driven immutable style, so it is ideal for use with UI frameworks like Ember . . .
@@ -18,7 +18,7 @@ The demo presents a finite scroll implementation of *Ember-Impagination*. It scr
 
 ![](http://g.recordit.co/iltQTaYwSb.gif)
 
-The demo is implemented using [virtual-each](https://github.com/jasonmit/virtual-each) due to the simplicity of the component. Ember-Impagination can be utilized with more flexible virtualization component like [ember-collection](https://github.com/emberjs/ember-collection), or the simplest template helper such as an `{{each}}`. By design, *Ember-Impagination* utilizes Glimmer and yields paginated data from your server's API to components which expect an array.
+The demo is implemented using [virtual-each](https://github.com/jasonmit/virtual-each) due to the simplicity of the component. Ember-Impagination can be utilized with more flexible virtualization component like [ember-collection](https://github.com/emberjs/ember-collection), or the simplest template helper such as an `{{each}}`. By design, *Ember-Impagination* leverages Glimmer and yields paginated data from your server's API to components which expect an array.
 
 ## Usage
 
