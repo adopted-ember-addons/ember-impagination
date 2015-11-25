@@ -2,6 +2,8 @@
 [![Build Status](https://travis-ci.org/thefrontside/ember-impagination.svg)](https://travis-ci.org/thefrontside/ember-impagination)
 
 *Ember-Impagination* is an Ember port of [Impagination](https://github.com/flexyford/impagination), a front-end data-layer for the paginated API on your server. *Ember-Impagination* leverages the power of Glimmer and provides your component the data it needs to render quickly each and every time. 
+> Impagination README:
+
 > Whatever your use-case: infinite scrolling lists, a carousel browser, or even a classic page-by-page result list, Impagination frees you to focus on what you want to do with your data, not the micro-logistics of when to fetch it. All you provide Impagination is the logic to fetch a single page, plus how many pages you want it to pre-fetch ahead of you, and it will figure out the rest.
 
 > Impagination is built using an event-driven immutable style, so it is ideal for use with UI frameworks like Ember . . .
