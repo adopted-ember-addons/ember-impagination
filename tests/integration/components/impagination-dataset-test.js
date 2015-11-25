@@ -13,8 +13,8 @@ import hbs from 'htmlbars-inline-precompile';
 import { Server } from '../../test-server';
 
 describeComponent(
-  'impagination-collection',
-  'Integration | Component | ImpaginationCollection',
+  'impagination-dataset',
+  'Integration | Component | ImpaginationDataset',
   {
     integration: true
   },
@@ -29,7 +29,7 @@ describeComponent(
 
     it('renders', function() {
       this.render(hbs`
-      {{impagination-collection
+      {{impagination-dataset
         fetch=fetch
         page-size=10
       }}`);
@@ -39,7 +39,7 @@ describeComponent(
 
     it('renders with loadHorizon', function() {
       this.render(hbs`
-      {{impagination-collection
+      {{impagination-dataset
         fetch=fetch
         page-size=5
         load-horizon=15
@@ -51,7 +51,7 @@ describeComponent(
       beforeEach(function() {
         this.set('readOffset', 0);
         this.render(hbs`
-        {{#impagination-collection
+        {{#impagination-dataset
           fetch=fetch
           read-offset=readOffset
           page-size=10
@@ -62,7 +62,7 @@ describeComponent(
           {{#each records as |record|}}
             <div class="record">{{record.content.name}}</div>
           {{/each}}
-        {{/impagination-collection}}
+        {{/impagination-dataset}}
         `);
       });
 

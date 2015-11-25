@@ -1,5 +1,5 @@
 import Ember from 'ember';
-import layout from '../templates/components/impagination-collection';
+import layout from '../templates/components/impagination-dataset';
 import Dataset from 'impagination/dataset';
 
 export default Ember.Component.extend({
