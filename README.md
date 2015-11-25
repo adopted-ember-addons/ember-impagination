@@ -88,7 +88,7 @@ Record 2
 Record 9
 ```
 ### Create your own Dataset
-If `{{impagination-dataset}}` is not an ideal component for your unique `Impagination` needs, you can get into the nitty gritty, and use `Impagination` directly. If you find yourself creating your own `Dataset`, let us know how you are using `Dataset` and `Impagination`. It may be a reason for imporvements or another ember addon.
+If `{{impagination-dataset}}` is not an ideal component for your unique `Impagination` needs, you can get into the nitty gritty, and use `Impagination` directly. If you find yourself creating your own `Dataset`, let us know how you are using `Dataset` and `Impagination`. It may be a reason for improvements or another ember addon.
 
 ```js
 import Dataset from 'impagination/dataset';
