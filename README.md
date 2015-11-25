@@ -95,6 +95,16 @@ import Dataset from 'impagination/dataset';
 
 let dataset = new Dataset({
   pageSize: 5,
+  fetch: function(pageOffset, pageSize, stats) {
+    return new Ember.RSVP.Promise((resolve)=> {
+      let data = // Array
+      resolve(data);
+    });
+    return this.store.query('record', params).then((data) => {
+      stats.totalPages = data.get('totalPages');
+      return data.get('records');
+    });
+  },
   observe: (state) => {}
 });
 ```
