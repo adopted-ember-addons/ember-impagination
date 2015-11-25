@@ -1,7 +1,7 @@
 # Ember-Impagination
 [![Build Status](https://travis-ci.org/thefrontside/ember-impagination.svg)](https://travis-ci.org/thefrontside/ember-impagination)
 
-*Ember-Impagination* is an Ember port of [Impagination](https://github.com/flexyford/impagination), a front-end data-layer for the paginated API on your server. *Ember-Impagination* leverages the power of Glimmer and provides your component the data it needs to render quickly each and every time. 
+*Ember-Impagination* is an Ember port of [Impagination](https://github.com/flexyford/impagination), a front-end data-layer for the paginated API on your server. *Ember-Impagination* leverages the power of Glimmer and provides your component the data it needs to render quickly each and every time.
 > Impagination README:
 
 > Whatever your use-case: infinite scrolling lists, a carousel browser, or even a classic page-by-page result list, Impagination frees you to focus on what you want to do with your data, not the micro-logistics of when to fetch it. All you provide Impagination is the logic to fetch a single page, plus how many pages you want it to pre-fetch ahead of you, and it will figure out the rest.
@@ -18,7 +18,7 @@ Hence, we present *Ember-Impagination*.
 * `ember install ember-impagination`
 
 ## Demo
-[Ember-Impagination Demo](http://thefrontside.github.io/ember-impagination/index)
+[Ember-Impagination Demo](http://thefrontside.github.io/ember-impagination)
 
 The demo presents a finite scroll implementation of *Ember-Impagination*. It scrolls through the ROYGBIV color spectrum by loading and unloading pages of records, where each record is a unique color-hue. At the top of the demo, you will find a visualization for pages. Resolved (Loaded) Pages are green, Pending (Loading) pages are white, and Unrequested (Unloaded) pages are black. The white-bar represents the top-most index of the scroll view.
 
@@ -46,7 +46,7 @@ To create an `impagination-dataset` there are two *required* parameters, `fetch`
 {{/impagination-dataset}}
 ```
 
-> In most cases, using a simple `{{each}}` would defeat the purpose of using a data layer like *Ember-Impagination*, and for truly infinite datasets might result in truly infinite loops :scream: 
+> In most cases, using a simple `{{each}}` would defeat the purpose of using a data layer like *Ember-Impagination*, and for truly infinite datasets might result in truly infinite loops :scream:
 
 Now, in your route, you can define the actual `(un)fetch` functions that tell `{{impagination-dataset}}` how it should request each individual page, and the `(un)loadHorizon` which specify how many pages to request ahead/behind.
 
