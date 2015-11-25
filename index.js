@@ -4,6 +4,7 @@
 var BabelTranspiler = require('broccoli-babel-transpiler');
 var Funnel = require('broccoli-funnel');
 var MergeTrees = require('broccoli-merge-trees');
+var path = require('path');
 
 module.exports = {
   name: 'ember-impagination',
@@ -27,7 +28,9 @@ module.exports = {
     // transpile the impagination sources into ES5. However, we want
     // to leave the ES6 module declaration in place because they'll be
     // handled later by ember-cli.
-    var transpiled = new BabelTranspiler('node_modules/impagination/src', {
+    var src = require.resolve('impagination');
+    src = path.join(src, '..', '..', 'src');
+    var transpiled = new BabelTranspiler(src, {
       loose: true,
       blacklist: ['es6.modules']
     });
