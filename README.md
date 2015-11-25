@@ -8,7 +8,9 @@
 
 > Impagination is built using an event-driven immutable style, so it is ideal for use with UI frameworks like Ember . . .
 
-Hence, we present *Ember-Impagination*, which provides you with a component, `{{impagination-dataset as |data|}}`, you can use to feed data into your templates while having that data look exactly like a simple `Ember.Array`.
+Hence, we present *Ember-Impagination*.
+
+*Ember-Impagination* provides you with a component, `{{impagination-dataset as |data|}}`, you can use to feed data into your templates while having that data look exactly like an `Ember.Array`.
 
 > Note: *Ember-Impagination* does not provide any of the visual elements in a system like infinite scroll. You'll still need to use a special component like `virtual-each` or `ember-collection`. Instead, *Ember-Impagination* simplifies feeding your components fetched data.
 
