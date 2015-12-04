@@ -8,8 +8,10 @@ export default Ember.Component.extend({
   'unload-horizon': Infinity,
   'page-size': null,
   'fetch': null,
+  'read-offset': 0,
   datasetState: null,
   queue: [],
+  'auto-update': false,
 
   records: Ember.computed('datasetState', function() {
     return CollectionInterface.create({
@@ -78,8 +80,14 @@ var CollectionInterface = Ember.Object.extend(Ember.Array, {
     return record;
   },
 
+  setToEnd() {
+    this.get('dataset').setReadOffset(this.length - 1);
+  },
+
   objectReadAt(offset) {
-    this.get('dataset').setReadOffset(offset);
+    if(this.get('auto-update')) {
+      this.get('dataset').setReadOffset(offset);
+    }
   },
 
   slice(start, end) {
