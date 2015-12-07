@@ -11,20 +11,22 @@ export default Ember.Component.extend({
   'read-offset': 0,
   datasetState: null,
   queue: [],
-  'auto-update': false,
+  'auto-update': true,
 
   records: Ember.computed('datasetState', function() {
     return CollectionInterface.create({
       datasetState: this.get('dataset.state'),
-      dataset: this.get('dataset')
+      dataset: this.get('dataset'),
+      autoUpdate: this.get('auto-update')
     });
   }),
 
   dataset: Ember.computed('page-size', 'load-horizon', 'unload-horizon', 'fetch', function() {
+    var round = Math.round;
     return new Dataset({
-      pageSize: this.get('page-size'),
-      loadHorizon: this.get('load-horizon'),
-      unloadHorizon: this.get('unload-horizon'),
+      pageSize: round(this.get('page-size')),
+      loadHorizon: round(this.get('load-horizon')),
+      unloadHorizon: round(this.get('unload-horizon')),
       fetch: this.get('fetch'),
       observe: (datasetState)=> {
         Ember.run(() => {
@@ -47,7 +49,7 @@ export default Ember.Component.extend({
     this._super.apply(this, arguments);
 
     this.setInitialState();
-    this.get('dataset').setReadOffset(this.get('read-offset') || 0);
+    this.get('dataset').setReadOffset(Math.round(this.get('read-offset')) || 0);
   }
 });
 
@@ -80,12 +82,8 @@ var CollectionInterface = Ember.Object.extend(Ember.Array, {
     return record;
   },
 
-  setToEnd() {
-    this.get('dataset').setReadOffset(this.length - 1);
-  },
-
   objectReadAt(offset) {
-    if(this.get('auto-update')) {
+    if(this.get('autoUpdate')) {
       this.get('dataset').setReadOffset(offset);
     }
   },
