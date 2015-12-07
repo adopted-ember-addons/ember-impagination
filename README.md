@@ -1,4 +1,6 @@
 # Ember-Impagination
+[![npm version](https://badge.fury.io/js/ember-impagination.svg)](https://badge.fury.io/js/ember-impagination)
+[![Ember Observer Score](http://emberobserver.com/badges/ember-impagination.svg)](http://emberobserver.com/addons/ember-impagination)
 [![Build Status](https://travis-ci.org/thefrontside/ember-impagination.svg)](https://travis-ci.org/thefrontside/ember-impagination)
 
 *Ember-Impagination* is an Ember binding for [Impagination](https://github.com/flexyford/impagination), a front-end data-layer for the paginated API on your server. *Ember-Impagination* leverages the power of Glimmer and provides your component the data it needs to render quickly each and every time.
