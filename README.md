@@ -111,6 +111,40 @@ let dataset = new Dataset({
 });
 ```
 
+#### Manually Setting the ReadOffset
+Remember our previous statement: 
+> In most cases, using a simple `{{each}}` would defeat the purpose of using a data layer like *Ember-Impagination*, and for truly infinite datasets might result in truly infinite loops :scream:
+
+In the circumstance that an `{{each}}` is your desired implementation, the `auto-update` flag will need to be disabled, and the `read-offset` will need to be updated by the logic inside `impagination-dataset`.
+
+A suggested approach is to update the `read-offset` utilizing the [ember-in-viewport](https://github.com/dockyard/ember-in-viewport) mixin. You will habe to roll your own `{{viewport-watcher}}` component which extends the Mixin.
+
+```hbs
+{{!-- app/templates/index.hbs --}}
+{{#impagination-dataset
+  fetch=fetch
+  page-size=pageSize
+  auto-update=false            // Disable Automaticlly Updating the readOffset
+  read-offset=readOffset       // Manually update this readOffset with a child component
+  as |records|}}
+  {{#each records as |record index|}}
+    {{#viewport-watcher read-offset=(mut readOffset) index=index}}
+      <div class="record">Record {{record.id}}</div>
+    {{/viewport-watcher}}
+  {{/each}}
+{{/impagination-dataset}}
+```
+
+``` js
+// app/components/viewport-watcher.js
+export default Ember.Component.extend(InViewportMixin, {
+  didEnterViewport() {
+    this.set('read-offset', this.get('index')); // Updates the `impagination-dataset`'s `read-offset` 
+                                                // to the most recent `record` entering the viewport
+  },
+});
+```
+
 ## Running Tests
 
 * `ember test`
