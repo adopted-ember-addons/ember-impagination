@@ -117,7 +117,7 @@ Remember our previous statement:
 
 In the circumstance that an `{{each}}` is your desired implementation, the `auto-update` flag will need to be disabled, and the `read-offset` will need to be updated by the logic inside `impagination-dataset`.
 
-A suggested approach is to update the `read-offset` utilizing the [ember-in-viewport](https://github.com/dockyard/ember-in-viewport) mixin. You will have to roll your own `{{record-in-viewport}}` component or [use ours from the demo app]().
+A suggested approach is to update the `read-offset` utilizing the [ember-in-viewport](https://github.com/dockyard/ember-in-viewport) mixin. You will have to roll your own `{{record-in-viewport}}` component or [use ours from the demo app](https://github.com/thefrontside/ember-impagination/blob/add-option-to-disable-automatic-updates/tests/dummy/app/components/record-in-viewport.js).
 
 ```hbs
 {{!-- app/templates/index.hbs --}}
