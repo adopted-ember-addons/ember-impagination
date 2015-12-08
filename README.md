@@ -117,7 +117,7 @@ Remember our previous statement:
 
 In the circumstance that an `{{each}}` is your desired implementation, the `auto-update` flag will need to be disabled, and the `read-offset` will need to be updated by the logic inside `impagination-dataset`.
 
-A suggested approach is to update the `read-offset` utilizing the [ember-in-viewport](https://github.com/dockyard/ember-in-viewport) mixin. You will have to roll your own `{{viewport-watcher}}` component which extends the Mixin.
+A suggested approach is to update the `read-offset` utilizing the [ember-in-viewport](https://github.com/dockyard/ember-in-viewport) mixin. You will have to roll your own `{{record-in-viewport}}` component or [use ours from the demo app]().
 
 ```hbs
 {{!-- app/templates/index.hbs --}}
@@ -127,22 +127,14 @@ A suggested approach is to update the `read-offset` utilizing the [ember-in-view
   auto-update=false            // Disable Automaticlly Updating the readOffset
   read-offset=readOffset       // Manually update this readOffset with a child component
   as |records|}}
-  {{#each records as |record index|}}
-    {{#viewport-watcher read-offset=(mut readOffset) index=index}}
-      <div class="record">Record {{record.id}}</div>
-    {{/viewport-watcher}}
-  {{/each}}
+    {{#each records.pages as |page index|}}
+      {{record-in-viewport dataset=records.dataset size=pageSize pageIndex=index}}
+      {{#each page.records as |record|}}
+        <div class="demo_record" style={{color-block record.content.hsl}}>Record {{record.index}}</div>
+      {{/each}}
+      {{record-in-viewport dataset=records.dataset size=pageSize pageIndex=index}}
+    {{/each}}
 {{/impagination-dataset}}
-```
-
-``` js
-// app/components/viewport-watcher.js
-export default Ember.Component.extend(InViewportMixin, {
-  didEnterViewport() {
-    this.set('read-offset', this.get('index')); // Updates the `impagination-dataset`'s `read-offset` 
-                                                // to the most recent `record` entering the viewport
-  },
-});
 ```
 
 ## Running Tests
