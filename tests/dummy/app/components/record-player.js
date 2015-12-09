@@ -9,40 +9,53 @@ export default Ember.Component.extend({
   'datasetState': null,
   elementWidth: null,
   totalRecords: Ember.computed.readOnly('records.length'),
-  pageWidth: Ember.computed('incrementWidth', 'pages.firstObject.size', function(){
+
+  pageWidth: Ember.computed('incrementWidth', 'pages.firstObject.size', function() {
     return this.get('incrementWidth') * this.get('pages.firstObject.size');
   }),
-  incrementWidth: Ember.computed('elementWidth', 'totalRecords', function(){
+
+  incrementWidth: Ember.computed('elementWidth', 'totalRecords', function() {
     return this.get('elementWidth') / this.get('totalRecords');
   }),
-  readHeadOffset: Ember.computed('records.readOffset', 'incrementWidth', function(){
+
+  readHeadOffset: Ember.computed('records.readOffset', 'incrementWidth', function() {
     let incrementWidth = this.get('incrementWidth');
+
     return this.get('records.readOffset') * incrementWidth;
   }),
+
   pageStyle: Ember.computed('pageWidth', function() {
-    return Ember.String.htmlSafe("width:"+this.get('pageWidth')+"px;");
+    return Ember.String.htmlSafe(`width: ${this.get('pageWidth')}px;`);
   }),
-  readHeadStyle: Ember.computed('readHeadOffset', function(){
-    return Ember.String.htmlSafe("left:"+this.get('readHeadOffset')+"px;");
+
+  readHeadStyle: Ember.computed('readHeadOffset', function() {
+    return Ember.String.htmlSafe(`left: ${this.get('readHeadOffset')}px;`);
   }),
-  loadHorizonStyle: Ember.computed('loadHorizon', 'incrementWidth', 'readHeadOffset', 'pages.firstObject', function(){
+
+  loadHorizonStyle: Ember.computed('loadHorizon', 'incrementWidth', 'readHeadOffset', 'pages.firstObject', function() {
     let left = this.get('readHeadOffset') - (this.get('loadHorizon') * this.get('incrementWidth'));
     let width = 2 * this.get('loadHorizon') * this.get('incrementWidth');
 
-    return Ember.String.htmlSafe("left:"+left+"px; width:"+width+"px;");
+    return Ember.String.htmlSafe(`left: ${left}px; width: ${width}px;`);
   }),
-  unloadHorizonLeftStyle: Ember.computed('elementWidth', 'unloadHorizon', 'incrementWidth', 'readHeadOffset', function(){
+
+  unloadHorizonLeftStyle: Ember.computed('elementWidth', 'unloadHorizon', 'incrementWidth', 'readHeadOffset', function() {
     let right = this.get('elementWidth') - this.get('readHeadOffset') + (this.get('unloadHorizon')*this.get('incrementWidth'));
-    return Ember.String.htmlSafe("right:"+right+"px;");
+
+    return Ember.String.htmlSafe(`right: ${right}px;`);
   }),
-  unloadHorizonRightStyle: Ember.computed('unloadHorizon', 'incrementWidth', 'readHeadOffset', function(){
+
+  unloadHorizonRightStyle: Ember.computed('unloadHorizon', 'incrementWidth', 'readHeadOffset', function() {
     let left = this.get('readHeadOffset') + (this.get('unloadHorizon')*this.get('incrementWidth'));
-    return Ember.String.htmlSafe("left:"+left+"px;");
+
+    return Ember.String.htmlSafe(`left: ${left}px;`);
   }),
-  _adjustWidth(){
+
+  _adjustWidth() {
     this.set('elementWidth', this.$().width());
   },
-  didInsertElement: function(){
+
+  didInsertElement: function() {
     this._adjustWidth();
-  },
+  }
 });
