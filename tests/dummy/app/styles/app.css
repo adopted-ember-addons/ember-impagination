@@ -71,6 +71,11 @@ body {
   border-radius: 3px;
 }
 
+.demo_inputs input[type='checkbox'] {
+  width: 14px;
+  height: 14px;
+}
+
 /* .demo_pages { */
 /*   border: 0px solid transparent; */
 /* } */

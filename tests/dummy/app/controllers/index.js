@@ -3,9 +3,10 @@ import Ember from 'ember';
 export default Ember.Controller.extend({
   emberCollection: false,
 
-  fetch: function (pageOffset, pageSize, stats) {
+  fetch: function(pageOffset, pageSize, stats) {
     let spectrum = new RGBSpectrum(300).colors;
     let delay = 200; //ms
+
     return new Ember.RSVP.Promise((resolve)=> {
       setTimeout(()=> {
         stats.totalPages =  Math.ceil( spectrum.length / pageSize);
@@ -14,6 +15,7 @@ export default Ember.Controller.extend({
       }, delay);
     });
   },
+
   initialReadOffset: 0,
   loadHorizon: 30,
   unloadHorizon: 40,
