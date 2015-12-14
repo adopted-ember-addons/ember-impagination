@@ -121,10 +121,10 @@ describeComponent(
           unload-horizon=50
           as |records|}}
           <div class="records">Total Records: {{records.length}}</div>
-          {{#virtual-each
+          {{#virtual-each records
             height=450
             itemHeight=90
-            items=records as |record|}}
+            as |record|}}
             <div class="record">{{record.content.name}}</div>
           {{/virtual-each}}
         {{/impagination-dataset}}
