@@ -176,7 +176,10 @@ describeComponent(
     describe("filtering records", function() {
       beforeEach(function() {
         var evenRecords = (record)=> {
-          return record.index % 2 === 0;
+          if(record) {
+            return record.id % 2 === 0;
+          }
+          return false;
         };
         this.set('filter', evenRecords);
         this.set('readOffset', 0);
@@ -202,7 +205,7 @@ describeComponent(
       });
 
       it("renders a set of empty records up to the loadHorizon", function() {
-        expect(this.$('.filtered_records').first().text()).to.equal('Total Filtered Records: 15');
+        expect(this.$('.filtered_records').first().text()).to.equal('Total Filtered Records: 0');
       });
 
       describe("resolving fetches", function() {
