@@ -8,13 +8,15 @@ export default Ember.Component.extend({
   'unload-horizon': Infinity,
   'page-size': null,
   'fetch': null,
+  'filter': null,
   datasetState: null,
   queue: [],
 
   records: Ember.computed('datasetState', function() {
     return CollectionInterface.create({
       datasetState: this.get('dataset.state'),
-      dataset: this.get('dataset')
+      dataset: this.get('dataset'),
+      filter: this.get('filter')
     });
   }),
 
@@ -60,7 +62,20 @@ var CollectionInterface = Ember.Object.extend(Ember.Array, {
   init() {
     this._super.apply(this, arguments);
 
-    this.length = this.datasetState.length;
+    var records = Array.from(new Array(this.datasetState.length), (_, i)=> {
+      return this.datasetState.get(i);
+    });
+
+    if(!!this.filter) {
+      this._records = records.filter(
+        (record, index, records) => {
+          return this.filter(record, index, records);
+        }
+      );
+    } else {
+      this._records = records;
+    }
+    this.length = this._records.length;
   },
 
   pages: Ember.computed('datasetState.pages', function() {
@@ -73,12 +88,14 @@ var CollectionInterface = Ember.Object.extend(Ember.Array, {
   readOffset: Ember.computed.readOnly('datasetState.readOffset'),
 
   objectAt(i) {
-    let record = this.datasetState.get(i);
-    Ember.run.debounce(this, 'objectReadAt', i, 1, true);
+    let record = this._records[i];
+    Ember.run.debounce(this, 'objectReadAt', record, 1, true);
     return record;
   },
 
-  objectReadAt(offset) {
+  objectReadAt(record) {
+    let page = record.page;
+    let offset = page.offset * page.size + record.index;
     this.get('dataset').setReadOffset(offset);
   },
 
@@ -88,7 +105,7 @@ var CollectionInterface = Ember.Object.extend(Ember.Array, {
     }
 
     if (typeof end !== "number") {
-      end = this.datasetState.length;
+      end = this._records.length;
     }
 
     let length = end - start;
@@ -96,9 +113,8 @@ var CollectionInterface = Ember.Object.extend(Ember.Array, {
     if (length < 0) {
       return [];
     }
-    Ember.run.schedule('afterRender', this, 'objectReadAt', start);
-    return Array.from(new Array(length), (_, i)=> {
-      return this.datasetState.get(start + i);
-    });
+
+    Ember.run.schedule('afterRender', this, 'objectReadAt', this._records[start]);
+    return this._records.slice(start, end);
   }
 });
