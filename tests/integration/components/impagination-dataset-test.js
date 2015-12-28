@@ -173,5 +173,47 @@ describeComponent(
         });
       });
     });
+    describe("filtering records", function() {
+      beforeEach(function() {
+        var evenRecords = (record)=> {
+          return record.index % 2 === 0;
+        };
+        this.set('filter', evenRecords);
+        this.set('readOffset', 0);
+        this.render(hbs`
+        {{#impagination-dataset
+          fetch=fetch
+          filter=filter
+          read-offset=readOffset
+          page-size=10
+          load-horizon=30
+          unload-horizon=50
+          as |filteredRecords|}}
+          <div class="filtered_records">Total Filtered Records: {{filteredRecords.length}}</div>
+          {{#each filteredRecords as |record|}}
+            <div class="record">{{record.content.name}}</div>
+          {{/each}}
+        {{/impagination-dataset}}
+        `);
+      });
+
+      it("requests pages from the server", function() {
+        expect(this.server.requests.length).to.equal(3);
+      });
+
+      it("renders a set of empty records up to the loadHorizon", function() {
+        expect(this.$('.filtered_records').first().text()).to.equal('Total Filtered Records: 15');
+      });
+
+      describe("resolving fetches", function() {
+        beforeEach(function() {
+          this.server.resolveAll();
+        });
+
+        it("renders a set of resolved records up to the loadHorizon", function() {
+          expect(this.$('.record').length).to.equal(15);
+        });
+      });
+    });
   }
 );
