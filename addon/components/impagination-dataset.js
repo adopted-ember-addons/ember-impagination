@@ -96,9 +96,11 @@ var CollectionInterface = Ember.Object.extend(Ember.Array, {
   },
 
   objectReadAt(record) {
-    let page = record.page;
-    let offset = page.offset * page.size + record.index;
-    this.get('dataset').setReadOffset(offset);
+    if(record) {
+      let page = record.page;
+      let offset = page.offset * page.size + record.index;
+      this.get('dataset').setReadOffset(offset);
+    }
   },
 
   slice(start, end) {
