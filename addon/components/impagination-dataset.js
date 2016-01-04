@@ -69,8 +69,8 @@ var CollectionInterface = Ember.Object.extend(Ember.Array, {
     if(!!this.filter) {
       this._records = records.filter(
         (record, index, records) => {
-          let item = record.content;
-          let items = records.map((record) => {return record.content;});
+          let item = record && record.content;
+          let items = records.map((record) => {return record && record.content;});
           return this.filter(item, index, items);
         }
       );
