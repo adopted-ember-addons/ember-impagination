@@ -27,7 +27,7 @@ export default Ember.Component.extend({
       observe: (datasetState)=> {
         Ember.run(() => {
           this.safeSet('datasetState', datasetState);
-          this.sendAction('on-observe', this.get('records'));
+          this.sendAction('on-observe', this.get('records'), this._actions);
         });
       }
     });
@@ -47,6 +47,18 @@ export default Ember.Component.extend({
 
     this.setInitialState();
     this.get('dataset').setReadOffset(this.get('read-offset') || 0);
+  },
+
+  actions: {
+    reset: () => {
+      this.get('dataset').setReadOffset(0);
+    },
+    refresh: () => {
+      this.get('dataset').setReadOffset(this.get('dataset.state.readOffset') || 0);
+    },
+    setReadOffset: function(offset) {
+      this.get('dataset').setReadOffset(offset || 0);
+    }
   }
 });
 
@@ -101,17 +113,5 @@ var CollectionInterface = Ember.Object.extend(Ember.Array, {
     return Array.from(new Array(length), (_, i)=> {
       return this.datasetState.get(start + i);
     });
-  },
-
-  reset() {
-    this.get('dataset').setReadOffset(0);
-  },
-
-  refresh() {
-    this.get('dataset').setReadOffset(this.get('readOffset') || 0);
-  },
-
-  setReadOffset(offset) {
-    this.get('dataset').setReadOffset(offset || 0);
   }
 });

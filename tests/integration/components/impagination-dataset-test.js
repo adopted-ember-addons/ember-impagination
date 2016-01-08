@@ -109,5 +109,57 @@ describeComponent(
       });
 
     });
+    describe("observing the dataset", function() {
+      beforeEach(function() {
+        this.observedDatasetCounter = 0;
+        var observeDataset = (dataset, actions) => {
+          this.dataset = dataset;
+          this.actions = actions;
+          this.observedDatasetCounter++;
+        };
+
+        this.set('observeDataset', observeDataset);
+        this.render(hbs`
+        {{#impagination-dataset
+          fetch=fetch
+          page-size=10
+          on-observe=observeDataset
+          as |records|}}
+          <div class="records">Total Records: {{records.length}}</div>
+        {{/impagination-dataset}}
+        `);
+      });
+
+      it("fires the on-observe action", function() {
+        expect(this.observedDatasetCounter).to.equal(1);
+        expect(this.dataset.get('readOffset')).to.equal(0);
+      });
+
+      describe("resolving fetches", function() {
+        beforeEach(function() {
+          this.server.resolveAll();
+        });
+
+        it("fires the on-observe action again", function() {
+          expect(this.server.requests.length).to.equal(1);
+          expect(this.observedDatasetCounter).to.equal(2);
+        });
+      });
+
+      describe("firing a setReadOffset Action", function() {
+        beforeEach(function() {
+          let setReadOffset = this.actions.setReadOffset;
+          setReadOffset.call(this.dataset, 10);
+        });
+
+        it("sets the new read offset on the observed dataset", function() {
+          expect(this.dataset.get('readOffset')).to.equal(10);
+        });
+
+        it("requests an additional page from the server", function() {
+          expect(this.server.requests.length).to.equal(2);
+        });
+      });
+    });
   }
 );
