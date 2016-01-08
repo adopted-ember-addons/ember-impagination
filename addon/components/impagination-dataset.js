@@ -51,13 +51,19 @@ export default Ember.Component.extend({
 
   actions: {
     reset: function() {
-      this.get('dataset').setReadOffset(0);
+      this.get('dataset').setReadOffset();
     },
     refresh: function() {
-      this.get('dataset').setReadOffset(this.get('dataset.state.readOffset') || 0);
+      let readOffset = this.get('dataset.state.readOffset');
+      this.get('dataset').setReadOffset();
+      this.get('dataset').setReadOffset(readOffset);
     },
     setReadOffset: function(offset) {
-      this.get('dataset').setReadOffset(offset || 0);
+      let readOffset = this.get('dataset.state.readOffset');
+      if(offset === readOffset) {
+        this.get('dataset').setReadOffset();
+      }
+      this.get('dataset').setReadOffset(offset);
     }
   }
 });
