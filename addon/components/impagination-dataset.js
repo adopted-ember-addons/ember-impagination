@@ -15,8 +15,7 @@ export default Ember.Component.extend({
   records: Ember.computed('datasetState', function() {
     return CollectionInterface.create({
       datasetState: this.get('dataset.state'),
-      dataset: this.get('dataset'),
-      filter: this.get('filter')
+      dataset: this.get('dataset')
     });
   }),
 
@@ -29,6 +28,7 @@ export default Ember.Component.extend({
       observe: (datasetState)=> {
         Ember.run(() => {
           this.safeSet('datasetState', datasetState);
+          this.get('records')._applyFilter(this.get('filter'));
           this.sendAction('on-observe', this.get('records'), this._actions);
         });
       }
@@ -53,12 +53,15 @@ export default Ember.Component.extend({
 
   actions: {
     reset: function() {
+      this.set('datasetState', this.get('dataset.state'));
       this.get('dataset').setReadOffset(0);
     },
     refresh: function() {
+      this.set('datasetState', this.get('dataset.state'));
       this.get('dataset').setReadOffset(this.get('dataset.state.readOffset') || 0);
     },
     setReadOffset: function(offset) {
+      this.set('datasetState', this.get('dataset.state'));
       this.get('dataset').setReadOffset(offset || 0);
     }
   }
@@ -74,22 +77,10 @@ var PagesInterface = Ember.Object.extend(Ember.Array, {
 var CollectionInterface = Ember.Object.extend(Ember.Array, {
   init() {
     this._super.apply(this, arguments);
-
-    var records = Array.from(new Array(this.datasetState.length), (_, i)=> {
+    // TODO: this can be sped up by using `pages`
+    this._records = Array.from(new Array(this.datasetState.length), (_, i)=> {
       return this.datasetState.get(i);
     });
-
-    if(!!this.filter) {
-      this._records = records.filter(
-        (record, index, records) => {
-          let item = record && record.content;
-          let items = records.map((record) => {return record && record.content;});
-          return this.filter(item, index, items);
-        }
-      );
-    } else {
-      this._records = records;
-    }
     this.length = this._records.length;
   },
 
@@ -133,5 +124,18 @@ var CollectionInterface = Ember.Object.extend(Ember.Array, {
 
     Ember.run.schedule('afterRender', this, 'objectReadAt', this._records[start]);
     return this._records.slice(start, end);
+  },
+
+  _applyFilter(filterFn) {
+    if(!!filterFn) {
+      this._records = this._records.filter(
+        (record, index, records) => {
+          let item = record && record.content;
+          let items = records.map((record) => {return record && record.content;});
+          return filterFn(item, index, items);
+        }
+      );
+      this.length = this._records.length;
+    }
   }
 });
