@@ -50,10 +50,10 @@ export default Ember.Component.extend({
   },
 
   actions: {
-    reset: () => {
+    reset: function() {
       this.get('dataset').setReadOffset(0);
     },
-    refresh: () => {
+    refresh: function() {
       this.get('dataset').setReadOffset(this.get('dataset.state.readOffset') || 0);
     },
     setReadOffset: function(offset) {
