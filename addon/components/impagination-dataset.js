@@ -20,7 +20,7 @@ export default Ember.Component.extend({
     });
   }),
 
-  dataset: Ember.computed('page-size', 'load-horizon', 'unload-horizon', 'fetch', function() {
+  dataset: Ember.computed('page-size', 'load-horizon', 'unload-horizon', 'fetch', 'on-observe', function() {
     return new Dataset({
       pageSize: this.get('page-size'),
       loadHorizon: this.get('load-horizon'),
@@ -29,6 +29,7 @@ export default Ember.Component.extend({
       observe: (datasetState)=> {
         Ember.run(() => {
           this.safeSet('datasetState', datasetState);
+          this.sendAction('on-observe', this.get('records'), this._actions);
         });
       }
     });
@@ -48,6 +49,18 @@ export default Ember.Component.extend({
 
     this.setInitialState();
     this.get('dataset').setReadOffset(this.get('read-offset') || 0);
+  },
+
+  actions: {
+    reset: function() {
+      this.get('dataset').setReadOffset(0);
+    },
+    refresh: function() {
+      this.get('dataset').setReadOffset(this.get('dataset.state.readOffset') || 0);
+    },
+    setReadOffset: function(offset) {
+      this.get('dataset').setReadOffset(offset || 0);
+    }
   }
 });
 
