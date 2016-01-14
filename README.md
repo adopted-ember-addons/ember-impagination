@@ -43,7 +43,7 @@ To create an `impagination-dataset` there are two *required* parameters, `fetch`
   as |records|}}
   <div class="records">Total Records: {{records.length}}</div>
   {{#each records as |record|}}
-    <div class="record">Record {{record.id}}</div>
+    <div class="record">Record {{record.content.id}}</div>
   {{/each}}
 {{/impagination-dataset}}
 ```
