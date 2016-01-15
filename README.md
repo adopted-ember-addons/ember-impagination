@@ -67,8 +67,9 @@ export default Ember.Route.extend({
     };
     // fetch a page of records at the pageOffset
     return this.store.query('record', params).then((data) => {
-      stats.totalPages = data.get('totalPages');
-      return data.get('records');
+      let meta = data.get('meta');
+      stats.totalPages = meta.totalPages;
+      return data.toArray();
     });
   },
   // unfetch() function is invoked whenever a page is unloaded
@@ -105,8 +106,9 @@ let dataset = new Dataset({
       resolve(data);
     });
     return this.store.query('record', params).then((data) => {
-      stats.totalPages = data.get('totalPages');
-      return data.get('records');
+      let meta = result.get('meta');
+      stats.totalPages = meta.totalPages;
+      return result.toArray();
     });
   },
   observe: (state) => {}
