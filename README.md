@@ -43,7 +43,7 @@ To create an `impagination-dataset` there are two *required* parameters, `fetch`
   as |records|}}
   <div class="records">Total Records: {{records.length}}</div>
   {{#each records as |record|}}
-    <div class="record">Record {{record.id}}</div>
+    <div class="record">Record {{record.content.id}}</div>
   {{/each}}
 {{/impagination-dataset}}
 ```
@@ -67,16 +67,15 @@ export default Ember.Route.extend({
     };
     // fetch a page of records at the pageOffset
     return this.store.query('record', params).then((data) => {
-      stats.totalPages = data.get('totalPages');
-      return data.get('records');
+      let meta = data.get('meta');
+      stats.totalPages = meta.totalPages;
+      return data.toArray();
     });
   },
   // unfetch() function is invoked whenever a page is unloaded
   unfetch: function(records, pageOffset) {
-    this.store.findByIds('record', records.map((r)=>{return r.id})).then(function (records) {
-      records.forEach((record)=>{
-        record.deleteRecord();
-      });
+    this.store.findByIds('record', records.map(r => r.id).then(function(records) {
+      records.forEach(record => record.deleteRecord());
     });
   });
 })
@@ -105,8 +104,9 @@ let dataset = new Dataset({
       resolve(data);
     });
     return this.store.query('record', params).then((data) => {
-      stats.totalPages = data.get('totalPages');
-      return data.get('records');
+      let meta = result.get('meta');
+      stats.totalPages = meta.totalPages;
+      return result.toArray();
     });
   },
   observe: (state) => {}
