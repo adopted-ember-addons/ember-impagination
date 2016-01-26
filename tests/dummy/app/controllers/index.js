@@ -2,6 +2,7 @@ import Ember from 'ember';
 
 export default Ember.Controller.extend({
   emberCollection: false,
+  virtualEach: true,
 
   fetch: function(pageOffset, pageSize, stats) {
     let spectrum = new RGBSpectrum(300).colors;

@@ -50,6 +50,7 @@ describeComponent(
     describe("exercising the CollectionInterface with {{each}}", function() {
       beforeEach(function() {
         this.set('readOffset', 0);
+        this.set('autoUpdate', true);
         this.render(hbs`
         {{#impagination-dataset
           fetch=fetch
@@ -57,8 +58,12 @@ describeComponent(
           page-size=10
           load-horizon=30
           unload-horizon=50
+          auto-update=autoUpdate
           as |records|}}
-          <div class="records">Total Records: {{records.length}}</div>
+          <div class="records">
+            <div class="total">Total Records: {{records.length}}</div>
+            <div class="offset">Read Offset: {{records.readOffset}}</div>
+          </div>
           {{#each records as |record|}}
             <div class="record">{{record.content.name}}</div>
           {{/each}}
@@ -71,7 +76,8 @@ describeComponent(
       });
 
       it("renders a set of empty records up to the loadHorizon", function() {
-        expect(this.$('.records').first().text()).to.equal('Total Records: 30');
+        expect(this.$('.records .total').first().text()).to.equal('Total Records: 30');
+        expect(this.$('.records .offset').first().text()).to.equal('Read Offset: 0');
         expect(this.$('.record').length).to.equal(30);
         expect(this.$('.record').first().text()).to.equal('');
       });
@@ -106,6 +112,37 @@ describeComponent(
         it("requests another page from the server", function() {
           expect(this.server.requests.length).to.equal(4);
         });
+
+        it("renders a set of empty records up to the loadHorizon", function() {
+          expect(this.$('.records .total').first().text()).to.equal('Total Records: 40');
+          expect(this.$('.records .offset').first().text()).to.equal('Read Offset: 0');
+          expect(this.$('.record').length).to.equal(40);
+          expect(this.$('.record').first().text()).to.equal('');
+        });
+
+        describe("resolving fetches with auto-update", function() {
+          beforeEach(function() {
+            this.server.resolveAll();
+          });
+
+          it("renders a set of resolved records up to the loadHorizon", function() {
+            expect(this.$('.record').length).to.equal(40);
+            expect(this.$('.records .offset').first().text()).to.equal('Read Offset: 0');
+          });
+        });
+
+        describe("resolving fetches without auto-update", function() {
+          beforeEach(function() {
+            this.set('autoUpdate', false);
+            this.server.resolveAll();
+          });
+
+          it("renders a set of resolved records up to the loadHorizon", function() {
+            expect(this.$('.record').length).to.equal(40);
+            expect(this.$('.records .offset').first().text()).to.equal('Read Offset: 10');
+          });
+        });
+
       });
 
     });

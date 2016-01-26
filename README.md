@@ -113,6 +113,32 @@ let dataset = new Dataset({
 });
 ```
 
+#### Manually Setting the ReadOffset
+Remember our previous statement: 
+> In most cases, using a simple `{{each}}` would defeat the purpose of using a data layer like *Ember-Impagination*, and for truly infinite datasets might result in truly infinite loops :scream:
+
+In the circumstance that an `{{each}}` is your desired implementation, the `auto-update` flag will need to be disabled, and the `read-offset` will need to be updated by the logic inside `impagination-dataset`.
+
+A suggested approach is to update the `read-offset` utilizing the [ember-in-viewport](https://github.com/dockyard/ember-in-viewport) mixin. You will have to roll your own `{{record-in-viewport}}` component or [use ours from the demo app](https://github.com/thefrontside/ember-impagination/blob/add-option-to-disable-automatic-updates/tests/dummy/app/components/record-in-viewport.js).
+
+```hbs
+{{!-- app/templates/index.hbs --}}
+{{#impagination-dataset
+  fetch=fetch
+  page-size=pageSize
+  auto-update=false            // Disable Automaticlly Updating the readOffset
+  read-offset=readOffset       // Manually update this readOffset with a child component
+  as |records|}}
+    {{#each records.pages as |page index|}}
+      {{record-in-viewport dataset=records.dataset size=pageSize pageIndex=index}}
+      {{#each page.records as |record|}}
+        <div class="demo_record" style={{color-block record.content.hsl}}>Record {{record.index}}</div>
+      {{/each}}
+      {{record-in-viewport dataset=records.dataset size=pageSize pageIndex=index}}
+    {{/each}}
+{{/impagination-dataset}}
+```
+
 ## Running Tests
 
 * `ember test`
