@@ -74,10 +74,8 @@ export default Ember.Route.extend({
   },
   // unfetch() function is invoked whenever a page is unloaded
   unfetch: function(records, pageOffset) {
-    this.store.findByIds('record', records.map((r)=>{return r.id})).then(function (records) {
-      records.forEach((record)=>{
-        record.deleteRecord();
-      });
+    this.store.findByIds('record', records.map(r => r.id).then(function(records) {
+      records.forEach(record => record.deleteRecord());
     });
   });
 })
