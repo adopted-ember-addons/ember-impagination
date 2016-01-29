@@ -23,10 +23,10 @@
             <div class="demo_record" style={{color-block record.content.hsl}}>Record {{index}}</div>
           {{/ember-collection}}
         {{else}}
-          {{#virtual-each
+          {{#virtual-each records
              height=500
              itemHeight=70
-             items=records as |record index virtualIndex|
+             as |record index virtualIndex|
           }}
             <div class="demo_record" style={{color-block record.content.hsl}}>Record {{index}}</div>
           {{/virtual-each}}

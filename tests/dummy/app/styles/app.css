@@ -35,9 +35,9 @@ body {
 .demo_read-offset, .demo_pages, .demo_inputs {
   color: white;
   position:relative;
-  margin: 25px;
+  margin: 35px;
   font-family: Arial;
-  font-size: 25px;
+  font-size: 15px;
   text-align: center;
 }
 

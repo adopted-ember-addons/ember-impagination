@@ -36,10 +36,11 @@
     "ember-disable-proxy-controllers": "^1.0.0",
     "ember-export-application-global": "^1.0.3",
     "ember-try": "0.0.6",
-    "virtual-each": "0.0.14"
+    "virtual-each": "0.2.1"
   },
   "keywords": [
-    "ember-addon"
+    "ember-addon",
+    "pagination"
   ],
   "dependencies": {
     "ember-cli-babel": "^5.1.3",
@@ -50,6 +51,7 @@
     "impagination": "^0.1.3"
   },
   "ember-addon": {
-    "configPath": "tests/dummy/config"
+    "configPath": "tests/dummy/config",
+    "demoURL": "http://thefrontside.github.io/ember-impagination"
   }
 }
