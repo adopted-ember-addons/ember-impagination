@@ -29,7 +29,7 @@ export default Ember.Component.extend({
       observe: (datasetState)=> {
         Ember.run(() => {
           this.safeSet('datasetState', datasetState);
-          this.sendAction('on-observe', this.get('records'));
+          this.sendAction('on-observe', this.get('records'), this._actions);
         });
       }
     });
@@ -49,6 +49,24 @@ export default Ember.Component.extend({
 
     this.setInitialState();
     this.get('dataset').setReadOffset(this.get('read-offset') || 0);
+  },
+
+  actions: {
+    reset: function() {
+      this.get('dataset').setReadOffset();
+    },
+    refresh: function() {
+      let readOffset = this.get('dataset.state.readOffset');
+      this.get('dataset').setReadOffset();
+      this.get('dataset').setReadOffset(readOffset);
+    },
+    setReadOffset: function(offset) {
+      let readOffset = this.get('dataset.state.readOffset');
+      if(offset === readOffset) {
+        this.get('dataset').setReadOffset();
+      }
+      this.get('dataset').setReadOffset(offset);
+    }
   }
 });
 
@@ -92,12 +110,16 @@ var CollectionInterface = Ember.Object.extend(Ember.Array, {
 
   objectAt(i) {
     let record = this._records[i];
-    Ember.run.debounce(this, 'objectReadAt', record, 1, true);
+    Ember.run.debounce(this, 'setReadHead', record, 1, true);
     return record;
   },
 
-  objectReadAt(offset) {
-    this.get('dataset').setReadOffset(offset);
+  setReadHead(record) {
+    if(record) {
+      const page = record.page;
+      const offset = page.offset * page.size + record.index;
+      this.get('dataset').setReadOffset(offset);
+    }
   },
 
   slice(start, end) {
@@ -114,25 +136,9 @@ var CollectionInterface = Ember.Object.extend(Ember.Array, {
     if (length < 0) {
       return [];
     }
+
     let record = this._records[start];
-    if(record) {
-      const page = record.page;
-      const offset = page.offset * page.size + record.index;
-      Ember.run.schedule('afterRender', this, 'objectReadAt', offset);
-    }
-
+    Ember.run.schedule('afterRender', this, 'setReadHead', record);
     return this._records.slice(start, end);
-  },
-
-  reset() {
-    this.get('dataset').setReadOffset(0);
-  },
-
-  refresh() {
-    this.get('dataset').setReadOffset(this.get('readOffset') || 0);
-  },
-
-  setReadOffset(offset) {
-    this.get('dataset').setReadOffset(offset || 0);
   }
 });
