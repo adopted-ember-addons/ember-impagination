@@ -90,6 +90,53 @@ Record 2
 ...
 Record 9
 ```
+
+#### Passing the Fetch Function
+In **Ember 1.13 and above**, we can use closure-actions to pass the fetch function into `ember-impagination`
+```handlebars
+{{#impagination-dataset fetch=(action "fetch")}}
+```
+
+```javascript
+// app/route/record.js
+export default Ember.Route.extend({
+
+  // fetch() function is invoked whenever a page is requested within the loadHorizon
+  actions: {
+    fetch(pageOffset, pageSize, stats) { // function which returns a "thenable" (*required*)
+    let params = {
+      query: query,
+    };
+    // fetch a page of records at the pageOffset
+    return this.store.query('record', params).then((data) => {
+      let meta = data.get('meta');
+      stats.totalPages = meta.totalPages;
+      return data.toArray();
+    });
+  }
+});
+```
+
+> We do not recommend deifning `fetch` inside your controller because it requires [injecting the store into the controller](https://github.com/thefrontside/ember-impagination/issues/39#issuecomment-172101680)
+
+In **Ember 1.12 and below** we cannot define `fetch` in our actions hash. We must instead bind it to our controller.
+```handlebars
+{{#impagination-dataset fetch=fetch)}}
+```
+
+```javascript
+// app/route/record.js
+export default Ember.Route.extend({
+    fetch: function(pageOffset, pageSize, stats) {
+        return this.store.query(...);
+    }),
+    setupController: function(controller, model){
+        this._super.apply(this, arguments);
+        controller.set('fetch', this.fetch.bind(this));
+    })
+});
+```
+
 ### Create your own Dataset
 If `{{impagination-dataset}}` is not an ideal component for your unique `Impagination` needs, you can get into the nitty gritty, and use `Impagination` directly. If you find yourself creating your own `Dataset`, let us know how you are using `Dataset` and `Impagination`. It may be a reason for improvements or another ember addon.
 
