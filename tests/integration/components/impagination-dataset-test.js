@@ -1,14 +1,7 @@
-/*global it, beforeEach */
 /* jshint expr:true */
 import { expect } from 'chai';
-import {
-  describeComponent,
-  it
-} from 'ember-mocha';
-import {
-  describe,
-  beforeEach
-} from 'mocha';
+import { describeComponent, it } from 'ember-mocha';
+import { describe, beforeEach } from 'mocha';
 import hbs from 'htmlbars-inline-precompile';
 import { Server } from '../../test-server';
 
