@@ -91,37 +91,60 @@ Record 2
 Record 9
 ```
 
-#### Passing the Fetch Function
-In **Ember 1.13 and above**, we can use closure-actions to pass the fetch function into `ember-impagination`
-```handlebars
-{{#impagination-dataset fetch=(action "fetch")}}
+#### Passing the Fetch Function 
+In **Ember 1.13 and above**, we can use closure-actions to pass the fetch function into `ember-impagination`. Otherwise see **Defining Fetch as a Function**.
+
+
+##### Defining Fetch on the Route
+Closure actions must reside in the controller unless you use something like [ember-route-action-helper](https://github.com/dockyard/ember-route-action-helper).
+
+```hbs
+{{!-- fetch defined in actions hash on route --}
+{{#impagination-dataset fetch=(route-action "fetch")}}
 ```
 
 ```javascript
 // app/route/record.js
-export default Ember.Route.extend({
-
-  // fetch() function is invoked whenever a page is requested within the loadHorizon
+export default Ember.Controller.extend({
   actions: {
     fetch(pageOffset, pageSize, stats) { // function which returns a "thenable" (*required*)
-    let params = {
-      query: query,
-    };
-    // fetch a page of records at the pageOffset
-    return this.store.query('record', params).then((data) => {
-      let meta = data.get('meta');
-      stats.totalPages = meta.totalPages;
-      return data.toArray();
-    });
+      let params = {query: query};
+      return this.get('store').query('record', params).then((data) => {
+        return data.toArray();
+      });
+    }
   }
 });
 ```
 
-> We do not recommend deifning `fetch` inside your controller because it requires [injecting the store into the controller](https://github.com/thefrontside/ember-impagination/issues/39#issuecomment-172101680)
+##### Defining Fetch on the Controller
+When defining fetch on your controller you will want to [inject the store into the controller](https://github.com/thefrontside/ember-impagination/issues/39#issuecomment-172101680)
+```hbs
+{{!-- fetch defined in actions hash on controller --}
+{{#impagination-dataset fetch=(action "fetch")}}
+```
 
-In **Ember 1.12 and below** we cannot define `fetch` in our actions hash. We must instead bind it to our controller.
-```handlebars
-{{#impagination-dataset fetch=fetch)}}
+```javascript
+// app/controller/record.js
+export default Ember.Controller.extend({
+  store: Ember.inject.service(),
+  actions: {
+    fetch(pageOffset, pageSize, stats) { // function which returns a "thenable" (*required*)
+      let params = {query: query};
+      return this.get('store').query('record', params).then((data) => {
+        return data.toArray();
+      });
+    }
+  }
+});
+```
+
+##### Defining Fetch as a Function
+This is the recommended implementation for Ember 1.12 and below.
+
+```hbs
+{{!-- fetch defined as a function --}
+{{#impagination-dataset fetch=fetch}}
 ```
 
 ```javascript
