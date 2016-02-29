@@ -19,10 +19,11 @@ export default Ember.Component.extend({
   }),
 
   dataset: Ember.computed('page-size', 'load-horizon', 'unload-horizon', 'fetch', function() {
+    var round = Math.round;
     return new Dataset({
-      pageSize: this.get('page-size'),
-      loadHorizon: this.get('load-horizon'),
-      unloadHorizon: this.get('unload-horizon'),
+      pageSize: round(this.get('page-size')),
+      loadHorizon: round(this.get('load-horizon')),
+      unloadHorizon: round(this.get('unload-horizon')),
       fetch: this.get('fetch'),
       observe: (datasetState)=> {
         Ember.run(() => {
@@ -45,7 +46,29 @@ export default Ember.Component.extend({
     this._super.apply(this, arguments);
 
     this.setInitialState();
-    this.get('dataset').setReadOffset(this.get('read-offset') || 0);
+    const readOffset = Math.round(this.get('read-offset')) || 0;
+    this.get('dataset').setReadOffset(readOffset);
+  },
+
+  actions: {
+    reset(offset) {
+      offset = (offset >= 0) ? offset : 0;
+      this.get('dataset').reset(offset);
+    },
+
+    reload(offset) {
+      offset = (offset >= 0) ? offset : this.get('datasetState.readOffset');
+      this.get('dataset').reload(offset);
+    },
+
+    refilter() {
+      this.get('dataset').refilter();
+    },
+
+    setReadOffset(offset){
+      offset = (offset >= 0) ? offset : this.get('datasetState.readOffset');
+      this.get('dataset').setReadOffset(offset);
+    }
   }
 });
 
