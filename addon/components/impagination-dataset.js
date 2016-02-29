@@ -20,15 +20,15 @@ export default Ember.Component.extend({
   }),
 
   dataset: Ember.computed('page-size', 'load-horizon', 'unload-horizon', 'fetch', 'on-observe', function() {
+    var round = Math.round;
     return new Dataset({
-      pageSize: this.get('page-size'),
-      loadHorizon: this.get('load-horizon'),
-      unloadHorizon: this.get('unload-horizon'),
+      pageSize: round(this.get('page-size')),
+      loadHorizon: round(this.get('load-horizon')),
+      unloadHorizon: round(this.get('unload-horizon')),
       fetch: this.get('fetch'),
       observe: (datasetState)=> {
         Ember.run(() => {
           this.safeSet('datasetState', datasetState);
-          this.get('records')._applyFilter(this.get('filter'));
           this.sendAction('on-observe', this.get('records'), this._actions);
         });
       }
@@ -48,26 +48,28 @@ export default Ember.Component.extend({
     this._super.apply(this, arguments);
 
     this.setInitialState();
-    this.get('dataset').setReadOffset(this.get('read-offset') || 0);
+    const readOffset = Math.round(this.get('read-offset')) || 0;
+    this.get('dataset').setReadOffset(readOffset);
   },
 
   actions: {
-    reset: function() {
-      this.get('dataset').setReadOffset();
+    reset(offset) {
+      offset = (offset >= 0) ? offset : 0;
+      this.get('dataset').reset(offset);
     },
-    refresh: function() {
-      let currentReadOffset = this.get('dataset.state.readOffset');
-      this.get('dataset').setReadOffset();
-      this.get('dataset').setReadOffset(currentReadOffset);
+
+    reload(offset) {
+      offset = (offset >= 0) ? offset : this.get('datasetState.readOffset');
+      this.get('dataset').reload(offset);
     },
-    setReadOffset: function(offset) {
-      let currentReadOffset = this.get('dataset.state.readOffset');
-      if(offset !== currentReadOffset) {
-        this.get('dataset').setReadOffset(offset);
-      } else {
-        this.get('dataset').setReadOffset();
-        this.get('dataset').setReadOffset(offset);
-      }
+
+    refilter() {
+      this.get('dataset').refilter();
+    },
+
+    setReadOffset(offset){
+      offset = (offset >= 0) ? offset : this.get('datasetState.readOffset');
+      this.get('dataset').setReadOffset(offset);
     }
   }
 });
@@ -82,11 +84,8 @@ var PagesInterface = Ember.Object.extend(Ember.Array, {
 var CollectionInterface = Ember.Object.extend(Ember.Array, {
   init() {
     this._super.apply(this, arguments);
-    // TODO: this can be sped up by using `pages`
-    this._records = Array.from(new Array(this.datasetState.length), (_, i)=> {
-      return this.datasetState.get(i);
-    });
-    this.length = this._records.length;
+
+    this.length = this.datasetState.length;
   },
 
   pages: Ember.computed('datasetState.pages', function() {
@@ -99,17 +98,13 @@ var CollectionInterface = Ember.Object.extend(Ember.Array, {
   readOffset: Ember.computed.readOnly('datasetState.readOffset'),
 
   objectAt(i) {
-    let record = this._records[i];
-    Ember.run.debounce(this, 'setReadHead', record, 1, true);
+    let record = this.datasetState.get(i);
+    Ember.run.debounce(this, 'objectReadAt', i, 1, true);
     return record;
   },
 
-  setReadHead(record) {
-    if(record) {
-      const page = record.page;
-      const offset = page.offset * page.size + record.index;
-      this.get('dataset').setReadOffset(offset);
-    }
+  objectReadAt(offset) {
+    this.get('dataset').setReadOffset(offset);
   },
 
   slice(start, end) {
@@ -118,7 +113,7 @@ var CollectionInterface = Ember.Object.extend(Ember.Array, {
     }
 
     if (typeof end !== "number") {
-      end = this._records.length;
+      end = this.datasetState.length;
     }
 
     let length = end - start;
@@ -126,22 +121,9 @@ var CollectionInterface = Ember.Object.extend(Ember.Array, {
     if (length < 0) {
       return [];
     }
-
-    let record = this._records[start];
-    Ember.run.schedule('afterRender', this, 'setReadHead', record);
-    return this._records.slice(start, end);
-  },
-
-  _applyFilter(filterFn) {
-    if(!!filterFn) {
-      this._records = this._records.filter(
-        (record, index, records) => {
-          let item = record && record.content;
-          let items = records.map((record) => {return record && record.content;});
-          return filterFn(item, index, items);
-        }
-      );
-      this.length = this._records.length;
-    }
+    Ember.run.schedule('afterRender', this, 'objectReadAt', start);
+    return Array.from(new Array(length), (_, i)=> {
+      return this.datasetState.get(start + i);
+    });
   }
 });
