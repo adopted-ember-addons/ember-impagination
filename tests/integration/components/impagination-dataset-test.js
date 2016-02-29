@@ -204,7 +204,7 @@ describeComponent(
       });
 
       it("renders a set of empty records up to the loadHorizon", function() {
-        expect(this.$('.filtered_records').first().text()).to.equal('Total Filtered Records: 0');
+        expect(this.$('.filtered_records').first().text()).to.equal('Total Filtered Records: 30');
       });
 
       describe("resolving fetches", function() {
@@ -212,8 +212,8 @@ describeComponent(
           this.server.resolveAll();
         });
 
-        it("renders a set of resolved records up to the loadHorizon", function() {
-          expect(this.$('.record').length).to.equal(15);
+        it("filters out half the records", function() {
+          expect(this.$('.filtered_records').first().text()).to.equal('Total Filtered Records: 15');
         });
       });
     });

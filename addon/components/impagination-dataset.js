@@ -19,13 +19,14 @@ export default Ember.Component.extend({
     });
   }),
 
-  dataset: Ember.computed('page-size', 'load-horizon', 'unload-horizon', 'fetch', 'on-observe', function() {
+  dataset: Ember.computed('page-size', 'load-horizon', 'unload-horizon', 'fetch', 'on-observe', 'filter', function() {
     var round = Math.round;
     return new Dataset({
       pageSize: round(this.get('page-size')),
       loadHorizon: round(this.get('load-horizon')),
       unloadHorizon: round(this.get('unload-horizon')),
       fetch: this.get('fetch'),
+      filter: this.get('filter'),
       observe: (datasetState)=> {
         Ember.run(() => {
           this.safeSet('datasetState', datasetState);
