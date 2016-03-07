@@ -171,7 +171,7 @@ There are a number of public `impagination` functions which we provide as action
 These functions can be called from the route/controller or from child components in the handlebars templates. In the examples below, we `reset` the dataset upon search queries through the {{search-pane}} component using both options.
 
 #### resetting from the parent route
-In order to call dataset actions from the route, we will have to observe the latest dataset and actions.
+In order to call dataset actions from the route, we will have to observe the latest dataset and dataset-actions with the `on-observe` parameter.
 
 ```handlebars
 {{#search-pane search=(action "search")}}
