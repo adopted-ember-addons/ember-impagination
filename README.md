@@ -139,7 +139,7 @@ export default Ember.Route.extend({
 ```
 
 ### Filtering Records
-We fetch records using an immutable style, but we often require filtering by mutable records in our dataset. To enable filtering, pass a filter `callback` to `ember-impagination` as you would to `Array.prototype.filter()`. The filters are applied as soon as a page is resolved. To filter a page at other times in your application see [`refilter`](#refreshing-the-dataset).
+We fetch records using an immutable style, but we often require filtering by mutable records in our dataset. To enable filtering, pass a filter `callback` to `ember-impagination` as you would to `Array.prototype.filter()`. The filters are applied as soon as a page is resolved. To filter a page at other times in your application see [`refilter`](#dataset-actions).
 
 ```handlebars
 {{#impagination-dataset fetch=(action "fetch") filter=(action "filterCallback")}}
@@ -158,7 +158,7 @@ export default Ember.Route.extend({
 });
 ```
 
-### Refreshing The Dataset
+### Dataset Actions
 There are a number of public `impagination` functions which we provide as actions.
 
 | Actions       | Params         | Default         | Description   |
