@@ -173,7 +173,7 @@ These functions can be called from the route/controller or from child components
 #### resetting from the parent route
 In order to call dataset actions from the route, we will have to observe the latest dataset and actions.
 
-```hbs
+```handlebars
 {{#search-pane search=(action "search")}}
   {{#impagination-dataset on-observe=(action "observeDataset") fetch=(action "fetch") as |dataset|}}
     {{#ember-collection items=dataset as |record|}}
@@ -183,8 +183,7 @@ In order to call dataset actions from the route, we will have to observe the lat
 {{/search-pane}}
 ```
 
-``` javascrit
-
+``` javascript
 _resetDataset() {
   let reset = this.get('actions.reset);
   reset.call(this.get('dataset'));
