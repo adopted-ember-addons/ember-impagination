@@ -161,12 +161,12 @@ export default Ember.Route.extend({
 ### Refreshing The Dataset
 There are a number of public `impagination` functions which we provide as actions.
 
-| Actions       | Params         | Default       | Description   |
-| ------------- |:--------------:|:-------------:| -------------:|
-| reset         | offset         |     0         | Destroys  all pages and fetches records at starting at `offset`
-| reload        | offset         | currentOffset | Unfetches all pages and fetches records at starting at `offset`
-| refilter      |    _none_      |   _none_      | Reapplies the filter to all resolved pages.
-| setReadOffset | offset         |   _none_      | Sets the read offset to any record index in the dataset
+| Actions       | Params         | Default         | Description   |
+| ------------- |:--------------:|:---------------:|:--------------|
+| refilter      |    _none_      |   _none_        | Reapplies the filter to all resolved pages.
+| reload        | `offset`       | _currentOffset_ | Unfetches all pages and fetches records at starting at `offset`
+| reset         | `offset`       |     0           | Destroys  all pages and fetches records at starting at `offset`
+| setReadOffset | `offset`       |   _none_        | Sets the readOffset and fetches records at continuing at `offset`
 
 These functions can be called from the route/controller or from child components in the handlebars templates. In the examples below, we `reset` the dataset upon search queries through the {{search-pane}} component using both options.
 
