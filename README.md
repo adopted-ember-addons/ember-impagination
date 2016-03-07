@@ -104,15 +104,16 @@ export default Ember.Route.extend({
   // fetch() function is invoked whenever a page is requested within the loadHorizon
   actions: {
     fetch(pageOffset, pageSize, stats) { // function which returns a "thenable" (*required*)
-    let params = {
-      query: query,
-    };
-    // fetch a page of records at the pageOffset
-    return this.store.query('record', params).then((data) => {
-      let meta = data.get('meta');
-      stats.totalPages = meta.totalPages;
-      return data.toArray();
-    });
+      let params = {
+        query: query,
+      };
+      // fetch a page of records at the pageOffset
+      return this.store.query('record', params).then((data) => {
+        let meta = data.get('meta');
+        stats.totalPages = meta.totalPages;
+        return data.toArray();
+      });
+    }
   }
 });
 ```
@@ -137,6 +138,88 @@ export default Ember.Route.extend({
 });
 ```
 
+### Filtering Records
+We fetch records using an immutable style, but we often require filtering by mutable records in our dataset. To enable filtering, pass a filter `callback` to `ember-impagination` as you would to `Array.prototype.filter()`. The filters are applied as soon as a page is resolved. To filter a page at other times in your application see [`refilter`](#refreshing-the-dataset).
+
+```handlebars
+{{#impagination-dataset fetch=(action "fetch") filter=(action "filterCallback")}}
+```
+
+```javascript
+// app/route/record.js
+export default Ember.Route.extend({
+
+  // filter() function is invoked whenever a page is resolved or refiltered
+  actions: {
+    filterCallback(record/*, index, records*/) { // function which rejects deleted records
+      return !record.get('isDeleted');
+    }
+  }
+});
+```
+
+### Refreshing The Dataset
+There are a number of public `impagination` functions which we provide as actions.
+
+| Actions       | Params         | Default       | Description   |
+| ------------- |:--------------:|:-------------:| -------------:|
+| reset         | offset         |     0         | Destroys  all pages and fetches records at starting at `offset`
+| reload        | offset         | currentOffset | Unfetches all pages and fetches records at starting at `offset`
+| refilter      |    _none_      |   _none_      | Reapplies the filter to all resolved pages.
+| setReadOffset | offset         |   _none_      | Sets the read offset to any record index in the dataset
+
+These functions can be called from the route/controller or from child components in the handlebars templates. In the examples below, we `reset` the dataset upon search queries through the {{search-pane}} component using both options.
+
+#### resetting from the parent route
+In order to call dataset actions from the route, we will have to observe the latest dataset and actions.
+
+```hbs
+{{#search-pane search=(action "search")}}
+  {{#impagination-dataset on-observe=(action "observeDataset") fetch=(action "fetch") as |dataset|}}
+    {{#ember-collection items=dataset as |record|}}
+      {{chat-search-result result=record}}
+    {{/ember-collection}}
+  {{/impagination-dataset}}
+{{/search-pane}}
+```
+
+``` javascrit
+
+_resetDataset() {
+  let reset = this.get('actions.reset);
+  reset.call(this.get('dataset'));
+}
+
+actions: {
+  observeDataset: function(dataset, actions) { // dataset and actions are passed-up
+    this.set('dataset', dataset);
+    this.set('actions', actions);
+  },
+  search(query) {
+    this.set('searchParams', query);
+    this._resetDataset()
+  }
+  fetch(pageOffset, pageSize, stats) {
+    params = this.get('params)
+    return this.store.query('records', params);
+  },
+}
+```
+
+#### resetting from child components
+Here we do not need to utilize `impagination-dataset`'s `on-observe` parameter. The `reset` action is simply called by a child component.
+
+```handlebars
+{{#impagination-dataset fetch=(action "fetch") as |dataset|}}
+  {{#search-pane search=(action "search") on-search-results=(action "reset" target=dataset)}}
+      {{#ember-collection items=dataset as |record|}}
+        {{chat-search-result result=record}}
+      {{/ember-collection}}
+  {{/search-pane}}
+{{/impagination-dataset}}
+```
+
+
 ### Create your own Dataset
 If `{{impagination-dataset}}` is not an ideal component for your unique `Impagination` needs, you can get into the nitty gritty, and use `Impagination` directly. If you find yourself creating your own `Dataset`, let us know how you are using `Dataset` and `Impagination`. It may be a reason for improvements or another ember addon.
 
@@ -159,6 +242,8 @@ let dataset = new Dataset({
   observe: (state) => {}
 });
 ```
+
+
 
 ## Running Tests
 

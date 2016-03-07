@@ -169,10 +169,7 @@ describeComponent(
     describe("filtering records", function() {
       beforeEach(function() {
         var evenRecords = (record)=> {
-          if(record) {
-            return record.id % 2 === 0;
-          }
-          return false;
+          return record.id % 2 === 0;
         };
         this.set('filter', evenRecords);
         this.set('readOffset', 0);
