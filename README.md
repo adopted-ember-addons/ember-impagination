@@ -166,14 +166,14 @@ There are a number of public `impagination` functions which we provide as action
 | refilter      |    _none_      |   _none_        | Reapplies the filter to all resolved pages.
 | reload        | `offset`       | _currentOffset_ | Unfetches all pages and fetches records at starting at `offset`
 | reset         | `offset`       |     0           | Destroys  all pages and fetches records at starting at `offset`
-| setReadOffset | `offset`       |   _none_        | Sets the readOffset and fetches records at continuing at `offset`
+| setReadOffset | `offset`       |   _none_        | Sets the readOffset and fetches records resuming at `offset`
 
 These functions can be called from the route/controller or from child components in the handlebars templates. In the examples below, we `reset` the dataset upon search queries through the {{search-pane}} component using both options.
 
 #### resetting from the parent route
-In order to call dataset actions from the route, we will have to observe the latest dataset and actions.
+In order to call dataset actions from the route, we will have to observe the latest dataset and dataset-actions with the `on-observe` parameter.
 
-```hbs
+```handlebars
 {{#search-pane search=(action "search")}}
   {{#impagination-dataset on-observe=(action "observeDataset") fetch=(action "fetch") as |dataset|}}
     {{#ember-collection items=dataset as |record|}}
@@ -183,8 +183,7 @@ In order to call dataset actions from the route, we will have to observe the lat
 {{/search-pane}}
 ```
 
-``` javascrit
-
+``` javascript
 _resetDataset() {
   let reset = this.get('actions.reset);
   reset.call(this.get('dataset'));
