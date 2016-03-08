@@ -123,8 +123,13 @@ var CollectionInterface = Ember.Object.extend(Ember.Array, {
       return [];
     }
     Ember.run.schedule('afterRender', this, 'objectReadAt', start);
-    return Array.from(new Array(length), (_, i)=> {
-      return this.datasetState.get(start + i);
-    });
+
+    let sliced = [];
+
+    for (let i = 0; i < length; i++) {
+      sliced.push(this.datasetState.get(start + i));
+    }
+
+    return sliced;
   }
 });
