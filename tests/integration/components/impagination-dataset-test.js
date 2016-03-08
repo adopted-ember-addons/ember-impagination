@@ -166,5 +166,151 @@ describeComponent(
         });
       });
     });
+    describe("filtering records", function() {
+      beforeEach(function() {
+        var evenRecords = (record)=> {
+          return record.id % 2 === 0;
+        };
+        this.set('filter', evenRecords);
+        this.set('readOffset', 0);
+        this.render(hbs`
+        {{#impagination-dataset
+          fetch=fetch
+          filter=filter
+          read-offset=readOffset
+          page-size=10
+          load-horizon=30
+          unload-horizon=50
+          as |filteredRecords|}}
+          <div class="filtered_records">Total Filtered Records: {{filteredRecords.length}}</div>
+          {{#each filteredRecords as |record|}}
+            <div class="record">{{record.content.name}}</div>
+          {{/each}}
+        {{/impagination-dataset}}
+        `);
+      });
+
+      it("requests pages from the server", function() {
+        expect(this.server.requests.length).to.equal(3);
+      });
+
+      it("renders a set of empty records up to the loadHorizon", function() {
+        expect(this.$('.filtered_records').first().text()).to.equal('Total Filtered Records: 30');
+      });
+
+      describe("resolving fetches", function() {
+        beforeEach(function() {
+          this.server.resolveAll();
+        });
+
+        it("filters out half the records", function() {
+          expect(this.$('.filtered_records').first().text()).to.equal('Total Filtered Records: 15');
+        });
+      });
+    });
+    describe("observing the dataset", function() {
+      beforeEach(function() {
+        this.observedDatasetCounter = 0;
+        var observeDataset = (dataset, actions) => {
+          this.dataset = dataset;
+          this.actions = actions;
+          this.observedDatasetCounter++;
+        };
+
+        this.set('observeDataset', observeDataset);
+        this.render(hbs`
+        {{#impagination-dataset
+          fetch=fetch
+          page-size=10
+          on-observe=observeDataset
+          as |records|}}
+          <div class="records">Total Records: {{records.length}}</div>
+        {{/impagination-dataset}}
+        `);
+      });
+
+      it("fires the on-observe action", function() {
+        expect(this.observedDatasetCounter).to.equal(1);
+        expect(this.dataset.get('readOffset')).to.equal(0);
+      });
+
+      describe("resolving fetches", function() {
+        beforeEach(function() {
+          this.server.resolveAll();
+        });
+
+        it("fires the on-observe action again", function() {
+          expect(this.server.requests.length).to.equal(1);
+          expect(this.observedDatasetCounter).to.equal(2);
+        });
+      });
+
+      describe("firing a setReadOffset Action", function() {
+        beforeEach(function() {
+          let setReadOffset = this.actions.setReadOffset;
+          setReadOffset.call(this.dataset, 10);
+        });
+
+        it("sets the new read offset on the observed dataset", function() {
+          expect(this.dataset.get('readOffset')).to.equal(10);
+        });
+
+        it("requests an additional page from the server", function() {
+          expect(this.server.requests.length).to.equal(2);
+        });
+      });
+    });
+    describe("observing the dataset", function() {
+      beforeEach(function() {
+        this.observedDatasetCounter = 0;
+        var observeDataset = (dataset, actions) => {
+          this.dataset = dataset;
+          this.actions = actions;
+          this.observedDatasetCounter++;
+        };
+
+        this.set('observeDataset', observeDataset);
+        this.render(hbs`
+        {{#impagination-dataset
+          fetch=fetch
+          page-size=10
+          on-observe=observeDataset
+          as |records|}}
+          <div class="records">Total Records: {{records.length}}</div>
+        {{/impagination-dataset}}
+        `);
+      });
+
+      it("fires the on-observe action", function() {
+        expect(this.observedDatasetCounter).to.equal(1);
+        expect(this.dataset.get('readOffset')).to.equal(0);
+      });
+
+      describe("resolving fetches", function() {
+        beforeEach(function() {
+          this.server.resolveAll();
+        });
+
+        it("fires the on-observe action again", function() {
+          expect(this.server.requests.length).to.equal(1);
+          expect(this.observedDatasetCounter).to.equal(2);
+        });
+      });
+
+      describe("firing a setReadOffset Action", function() {
+        beforeEach(function() {
+          let setReadOffset = this.actions.setReadOffset;
+          setReadOffset.call(this.dataset, 10);
+        });
+
+        it("sets the new read offset on the observed dataset", function() {
+          expect(this.dataset.get('readOffset')).to.equal(10);
+        });
+
+        it("requests an additional page from the server", function() {
+          expect(this.server.requests.length).to.equal(2);
+        });
+      });
+    });
   }
 );

@@ -90,9 +90,13 @@ export class PageRequest {
   }
 
   resolve() {
-    let records = Array.from(new Array(this.size), (_, i)=> {
-      return {name: `Record ${this.offset * this.size + i}`};
-    });
+    let records = [];
+    for(let i = 0; i < this.size; i++){
+      records.push({
+        id: i,
+        name: `Record ${this.offset * this.size + i}`
+      });
+    }
     this._resolve(records);
     return this;
   }
