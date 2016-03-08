@@ -48,7 +48,7 @@
     "broccoli-babel-transpiler": "^5.4.5",
     "broccoli-funnel": "^0.2.12",
     "broccoli-merge-trees": "^0.2.4",
-    "impagination": "^0.2.2"
+    "impagination": "^0.2.3"
   },
   "ember-addon": {
     "configPath": "tests/dummy/config",
