@@ -241,9 +241,9 @@ parameter.
 
 ``` javascript
 _resetDataset() {
-  let reset = this.get('actions.reset);
+  let reset = this.get('actions.reset');
   reset.call(this.get('dataset'));
-}
+},
 
 actions: {
   observeDataset: function(dataset, actions) { // dataset and actions are passed-up
@@ -252,10 +252,10 @@ actions: {
   },
   search(query) {
     this.set('searchParams', query);
-    this._resetDataset()
+    this._resetDataset();
   },
   fetch(pageOffset, pageSize, stats) {
-    params = this.get('params)
+    params = this.get('params');
     return this.store.query('records', params);
   }
 }
