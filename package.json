@@ -44,7 +44,7 @@
   ],
   "dependencies": {
     "ember-cli-babel": "^5.1.3",
-    "ember-cli-htmlbars": "0.7.9",
+    "ember-cli-htmlbars": "1.0.4",
     "broccoli-babel-transpiler": "^5.4.5",
     "broccoli-funnel": "^0.2.12",
     "broccoli-merge-trees": "^0.2.4",
