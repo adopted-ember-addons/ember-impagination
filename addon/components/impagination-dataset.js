@@ -108,6 +108,12 @@ var CollectionInterface = Ember.Object.extend(Ember.Array, {
     this.get('dataset').setReadOffset(offset);
   },
 
+  forEach(callback) {
+    for (let i = 0; i < this.datasetState.length; i++) {
+      callback(this.datasetState.get(i), i);
+    }
+  },
+
   slice(start, end) {
     if (typeof start !== "number") {
       start = 0;
