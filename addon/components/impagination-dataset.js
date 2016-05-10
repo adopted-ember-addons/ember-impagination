@@ -85,7 +85,6 @@ var PagesInterface = Ember.Object.extend(Ember.Array, {
 var CollectionInterface = Ember.Object.extend(Ember.Array, {
   init() {
     this._super.apply(this, arguments);
-
     this.length = this.datasetState.length;
   },
 
@@ -98,44 +97,82 @@ var CollectionInterface = Ember.Object.extend(Ember.Array, {
 
   readOffset: Ember.computed.readOnly('datasetState.readOffset'),
 
-  objectAt(i) {
-    let record = this.datasetState.get(i);
-    Ember.run.debounce(this, 'objectReadAt', i, 1, true);
-    return record;
-  },
-
   objectReadAt(offset) {
     this.get('dataset').setReadOffset(offset);
   },
 
-  forEach(callback) {
-    for (let i = 0; i < this.datasetState.length; i++) {
-      callback(this.datasetState.get(i), i);
-    }
+  /*
+  * Add support for popular Ember rendering components
+  * ----------------------------------------------------------
+  * In order to fetch additional records on scroll,
+  * the underlying Impagination library requires advancing the
+  * readOffset on the dataset to the current visible record.
+  * Ember-Impagination updates the readOffset by hijacking
+  * common Array Iteration functions.
+  *
+  * The hijacking of Array Iteration functions will be deprecated
+  * in the next major release. Ember-Impagination will
+  * include recommended Iteration Recipes for advanced customization
+  * for your Infinite Dataset Applications.
+  */
+
+  // objectAt(idx):
+  // * Advance the readOffset to `idx`
+  // | =================================================================================
+  // | Component / Helper | Release       | URL                                         |
+  // | ------------------ |:-------       | :------------------------------------------ |
+  // | Ember-Collection   | 1.0.0-alpha.6 | https://github.com/emberjs/ember-collection |
+  // | =================================================================================
+  objectAt(idx) {
+    let record = this.datasetState.get(idx);
+    Ember.run.debounce(this, 'objectReadAt', idx, 1, true);
+    return record;
   },
 
-  slice(start, end) {
-    if (typeof start !== "number") {
-      start = 0;
+  // slice([begin[, end]])
+  // Advance the readOffset to `begin`
+  // | ========================================================================
+  // | Component / Helper | Release | URL                                      |
+  // | ------------------ |:------- | :--------------------------------------- |
+  // | Virtual-Each       | 0.2.0   | https://github.com/jasonmit/virtual-each |
+  // | ========================================================================
+  slice(begin, end) {
+    if (typeof begin !== "number") {
+      begin = 0;
     }
 
     if (typeof end !== "number") {
       end = this.datasetState.length;
     }
 
-    let length = end - start;
+    let length = end - begin;
 
     if (length < 0) {
       return [];
     }
-    Ember.run.schedule('afterRender', this, 'objectReadAt', start);
+    Ember.run.schedule('afterRender', this, 'objectReadAt', begin);
 
     let sliced = [];
 
     for (let i = 0; i < length; i++) {
-      sliced.push(this.datasetState.get(start + i));
+      sliced.push(this.datasetState.get(begin + i));
     }
 
     return sliced;
+  },
+
+  // forEach(callback)
+  // * Does not advance the readOffset. This must be handled in
+  // * the route or a child component. See Dataset Actions in
+  // * https://github.com/thefrontside/ember-impagination#dataset-actions
+  // | ==============================================================================
+  // | Component / Helper | Release | URL                                            |
+  // | ------------------ |:------- | :---------------------------------------       |
+  // | Smoke-And-Mirrors  | 0.5.2   | https://github.com/runspired/smoke-and-mirrors |
+  // | ==============================================================================
+  forEach(callback) {
+    for (let i = 0; i < this.datasetState.length; i++) {
+      callback(this.datasetState.get(i), i);
+    }
   }
 });

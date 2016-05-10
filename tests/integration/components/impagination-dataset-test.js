@@ -102,7 +102,7 @@ describeComponent(
       });
     });
 
-    describe("exercising the CollectionInterface with {{virtual-each}}", function() {
+    describe("exercising the CollectionInterface with virtual-each", function() {
       beforeEach(function() {
         this.set('readOffset', 0);
         this.render(hbs`
