@@ -161,7 +161,7 @@ export default Ember.Route.extend({
 });
 ```
 
-> We do not recommend deifning `fetch` inside your controller because
+> We do not recommend defining `fetch` inside your controller because
 > it requires
 > [injecting the store into the controller](https://github.com/thefrontside/ember-impagination/issues/39#issuecomment-172101680)
 
