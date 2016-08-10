@@ -29,7 +29,7 @@
     "ember-cli-mirage": "0.1.13",
     "ember-cli-mocha": "0.10.4",
     "ember-cli-release": "0.2.3",
-    "ember-cli-sri": "^1.0.3",
+    "ember-cli-sri": "^2.1.1",
     "ember-cli-uglify": "^1.2.0",
     "ember-collection": "git+https://github.com/emberjs/ember-collection.git",
     "ember-disable-prototype-extensions": "^1.0.0",
