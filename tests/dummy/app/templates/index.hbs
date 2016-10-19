@@ -8,24 +8,31 @@
   <label for="page_size">Page Size:</label>
   {{input value=pageSize type=number id="page_size"}}
 
-  {{input type="checkbox" id="use_ember_collection" checked=emberCollection}}
+  {{input type="checkbox" id="use_ember_collection" checked=isEmberCollection}}
   <label for="use_ember_collection">Toggle Ember Collection</label>
 </div>
 
 <div class="demo_dataset-wrapper">
-  {{#impagination-dataset fetch=fetch read-offset=initialReadOffset load-horizon=loadHorizon unload-horizon=unloadHorizon page-size=pageSize as |records|}}
-    {{record-player  pages=records.pages records=records loadHorizon=loadHorizon unloadHorizon=unloadHorizon}}
+  {{#impagination-dataset fetch=fetch on-init=(action 'initializeReadOffset') load-horizon=loadHorizon unload-horizon=unloadHorizon page-size=pageSize as |records|}}
+    {{record-player lazy-pages=records.pages records=records loadHorizon=loadHorizon unloadHorizon=unloadHorizon}}
     <div class="demo_read-offset">Current Read Offset: {{records.readOffset}} </div>
     <div class="demo_records-wrapper">
       <div class="demo_records-list-container" style="height: 500px; width: 600px;">
-        {{#if emberCollection}}
-          {{#ember-collection items=records estimated-height=500px  estimated-width=600px cell-layout=(fixed-grid-layout 600 70) as |record index|}}
+        {{#if isEmberCollection}}
+          {{#ember-collection
+             items=records
+             estimated-height=500px
+             estimated-width=600px
+             cell-layout=(fixed-grid-layout containerHeight itemHeight)
+             scroll-left=scrollLeft scroll-top=scrollTop scroll-change=(action "scrollChange" records)
+             as |record index|
+          }}
             <div class="demo_record" style={{color-block record.content.hsl}}>Record {{index}}</div>
           {{/ember-collection}}
         {{else}}
           {{#virtual-each records
-             height=500
-             itemHeight=70
+             height=containerHeight
+             itemHeight=itemHeight
              as |record index virtualIndex|
           }}
             <div class="demo_record" style={{color-block record.content.hsl}}>Record {{index}}</div>
