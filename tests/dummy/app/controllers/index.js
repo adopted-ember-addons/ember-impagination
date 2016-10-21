@@ -3,6 +3,7 @@ import { task, timeout } from 'ember-concurrency';
 
 export default Ember.Controller.extend({
   isEmberCollection: true,
+  isVirtualEach: false,
 
   containerHeight: 600,
   itemHeight: 70,
@@ -23,7 +24,20 @@ export default Ember.Controller.extend({
     });
   },
 
-  'timeout-ms': 75,
+  'timeout-ms': 5,
+
+  ddauExtension: Ember.computed('isVirtualEach', function() {
+    if (this.get('isVirtualEach')) {
+      return {
+        slice: {
+          value: function(start) {
+            this.get('dataset').setReadOffset(start);
+            return this.get('datasetState').slice(...arguments);
+          }
+        }
+      };
+    }
+  }),
 
   setReadOffset: task(function * (dataset, offset) {
     yield timeout(this.get('timeout-ms'));

@@ -13,7 +13,7 @@
 </div>
 
 <div class="demo_dataset-wrapper">
-  {{#impagination-dataset fetch=fetch on-init=(action 'initializeReadOffset') load-horizon=loadHorizon unload-horizon=unloadHorizon page-size=pageSize as |records|}}
+  {{#impagination-dataset fetch=fetch ddau-extension=ddauExtension on-init=(action 'initializeReadOffset') load-horizon=loadHorizon unload-horizon=unloadHorizon page-size=pageSize as |records|}}
     {{record-player lazy-pages=records.pages records=records loadHorizon=loadHorizon unloadHorizon=unloadHorizon}}
     <div class="demo_read-offset">Current Read Offset: {{records.readOffset}} </div>
     <div class="demo_records-wrapper">
@@ -29,7 +29,8 @@
           }}
             <div class="demo_record" style={{color-block record.content.hsl}}>Record {{index}}</div>
           {{/ember-collection}}
-        {{else}}
+        {{/if}}
+        {{#if isVirtualEach}}
           {{#virtual-each records
              height=containerHeight
              itemHeight=itemHeight

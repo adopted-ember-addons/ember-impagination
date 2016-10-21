@@ -13,27 +13,40 @@ export default Ember.Component.extend({
   'on-state': Ember.K,
 
   datasetState: null,
+  'ddau-extension': null,
 
   init() {
     this._super(...arguments);
     this.get('on-init')(this.get('model'));
   },
 
+  boundProperties: Ember.computed(function() {
+    let component = this;
+    let properties = this.get('ddau-extension') || {};
+    let definedProperties =  _.cloneDeep(properties);
+    Object.keys(definedProperties).forEach((property) => {
+      Object.keys(definedProperties[property]).forEach((key) => {
+        let value = definedProperties[property][key];
+        if (typeof value === 'function') {
+          let bound = _.bind(definedProperties[property][key], component);
+          definedProperties[property][key] = bound;
+        }
+      });
+    });
+    return definedProperties;
+  }),
+
+
   model: Ember.computed('datasetState', function() {
-    debugger;
-    return Object.create(this.get('datasetState'), {
+    return Object.create(this.get('datasetState'), Object.assign({
       setReadOffset: {
-        enumerable: false,
-        writable: false,
-        configurable: false,
         value: (offset) => {
           Ember.run.once(() => {
-            debugger;
             this.get('dataset').setReadOffset(offset);
           });
         }
       }
-    });
+    }, this.get('boundProperties')));
   }),
 
   datasetState: Ember.computed('dataset', function() {
