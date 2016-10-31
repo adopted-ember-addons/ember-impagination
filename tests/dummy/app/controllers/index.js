@@ -24,6 +24,14 @@ export default Ember.Controller.extend({
     });
   },
 
+  filter: function(record) {
+    let match = record.hsl.match(/hsl\((.*)\)/);
+    match = match ? match.pop() : '';
+
+    let hue = match.split(',')[0];
+    return hue % 2 === 0;
+  },
+
   'timeout-ms': 5,
 
   ddauExtension: Ember.computed('isVirtualEach', function() {
@@ -66,7 +74,8 @@ export default Ember.Controller.extend({
     },
 
     logDatasetState(dataset) {
-      console.log(dataset);
+      console.log('dataset =', dataset);
+      console.log('_pages =', dataset._pages);
     }
   }
 });

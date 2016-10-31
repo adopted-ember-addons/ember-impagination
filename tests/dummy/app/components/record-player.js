@@ -7,6 +7,7 @@ export default Ember.Component.extend({
   'records': null,
   'lazy-pages': null,
   'datasetState': null,
+
   elementWidth: null,
 
   pages: Ember.computed('lazy-pages', function() {
@@ -61,11 +62,8 @@ export default Ember.Component.extend({
     return Ember.String.htmlSafe(`left: ${left}px;`);
   }),
 
-  _adjustWidth() {
-    this.set('elementWidth', this.$().width());
-  },
-
-  didInsertElement: function() {
-    this._adjustWidth();
+  didInsertElement() {
+    let elementWidth = this.$() && this.$().width();
+    this.set('elementWidth', elementWidth);
   }
 });
