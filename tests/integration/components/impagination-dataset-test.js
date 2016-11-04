@@ -14,7 +14,7 @@ describeComponent(
   function() {
     beforeEach(function() {
       this.server = new Server();
-      var fetch = (pageOffset, pageSize, stats)=> {
+      var fetch = (pageOffset, pageSize, stats) => {
         return this.server.request(pageOffset, pageSize, stats);
       };
       this.set('fetch', fetch);

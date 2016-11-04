@@ -1,6 +1,8 @@
 import Ember from 'ember';
 import { task, timeout } from 'ember-concurrency';
 
+const DEBUG = false;
+
 export default Ember.Controller.extend({
   isEmberCollection: true,
   isVirtualEach: false,
@@ -74,8 +76,9 @@ export default Ember.Controller.extend({
     },
 
     logDatasetState(dataset) {
-      console.log('dataset =', dataset);
-      console.log('_pages =', dataset._pages);
+      if (DEBUG) {
+        console.log('dataset =', dataset);
+      }
     }
   }
 });

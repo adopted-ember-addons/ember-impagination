@@ -44,6 +44,9 @@ export default Ember.Component.extend({
           Ember.run.once(() => {
             this.get('dataset').setReadOffset(offset);
           });
+        },
+        length: {
+          value: this.get('datasetState.length')
         }
       }
     }, this.get('boundProperties')));
@@ -65,7 +68,6 @@ export default Ember.Component.extend({
         if(this.isDestroyed) { return; }
         Ember.run(() => {
           this.set('datasetState', datasetState);
-          console.log("datasetState.store = ", datasetState.store);
           this.get('on-state')(this.get('model'));
         });
       }
