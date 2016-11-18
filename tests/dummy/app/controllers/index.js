@@ -5,8 +5,8 @@ const DEBUG = false;
 
 export default Ember.Controller.extend({
   isEmberCollection: false,
-  isVirtualEach: false,
-  isInViewport: Ember.computed.not('isEmberCollection', 'isVirtualEach'),
+  isVirtualEach: true,
+  isInViewport: false,
 
   containerHeight: 600,
   itemHeight: 70,
@@ -41,7 +41,6 @@ export default Ember.Controller.extend({
 
   setReadOffset: task(function * (dataset, offset) {
     yield timeout(this.get('timeout-ms'));
-    debugger;
     dataset.setReadOffset(offset);
   }).restartable(),
 
@@ -52,12 +51,11 @@ export default Ember.Controller.extend({
 
   actions: {
     initializeReadOffset(dataset) {
-      debugger;
-      this.get('setReadOffset').perform(dataset, this.get('initialReadOffset'));
+      this.send('setReadOffset', dataset, this.get('initialReadOffset'));
     },
 
     onSlice(dataset, start) {
-      this.get('setReadOffset').perform(dataset, start);
+      this.send('setReadOffset', dataset, start);
     },
 
     scrollChange(dataset, scrollLeft, scrollTop) {

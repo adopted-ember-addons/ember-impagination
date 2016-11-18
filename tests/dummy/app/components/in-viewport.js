@@ -5,12 +5,7 @@ export default Ember.Component.extend(InViewportMixin, {
   classNames: ['viewport'],
 
   didEnterViewport() {
-    console.log('didEnterViewport');
     this.sendAction('did-enter');
-  },
-
-  didExitViewport() {
-    console.log('didExitViewport');
   },
 
   viewportOptionsOverride: Ember.on('didInsertElement', function() {

@@ -26,8 +26,6 @@ export default Ember.Component.extend({
     let dataset = this.get('dataset');
     let store = this.get('datasetState');
 
-    debugger;
-
     let model = Object.create(store, {
       // Template Actions
       delete: {

@@ -62,7 +62,7 @@ export default Ember.Component.extend({
     return Ember.String.htmlSafe(`left: ${left}px;`);
   }),
 
-  didInsertElement() {
+  didReceiveAttrs() {
     let elementWidth = this.$() && this.$().width();
     this.set('elementWidth', elementWidth);
   }
