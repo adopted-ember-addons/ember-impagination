@@ -4,8 +4,9 @@ import { task, timeout } from 'ember-concurrency';
 const DEBUG = false;
 
 export default Ember.Controller.extend({
-  isEmberCollection: true,
+  isEmberCollection: false,
   isVirtualEach: false,
+  isInViewport: Ember.computed.not('isEmberCollection', 'isVirtualEach'),
 
   containerHeight: 600,
   itemHeight: 70,
@@ -36,21 +37,11 @@ export default Ember.Controller.extend({
 
   'timeout-ms': 5,
 
-  ddauExtension: Ember.computed('isVirtualEach', function() {
-    if (this.get('isVirtualEach')) {
-      return {
-        slice: {
-          value: function(start) {
-            this.get('dataset').setReadOffset(start);
-            return this.get('datasetState').slice(...arguments);
-          }
-        }
-      };
-    }
-  }),
+  ddauExtension: ['slice'],
 
   setReadOffset: task(function * (dataset, offset) {
     yield timeout(this.get('timeout-ms'));
+    debugger;
     dataset.setReadOffset(offset);
   }).restartable(),
 
@@ -61,7 +52,12 @@ export default Ember.Controller.extend({
 
   actions: {
     initializeReadOffset(dataset) {
+      debugger;
       this.get('setReadOffset').perform(dataset, this.get('initialReadOffset'));
+    },
+
+    onSlice(dataset, start) {
+      this.get('setReadOffset').perform(dataset, start);
     },
 
     scrollChange(dataset, scrollLeft, scrollTop) {
@@ -72,13 +68,13 @@ export default Ember.Controller.extend({
     },
 
     setReadOffset(dataset, offset) {
-      this.get('setReadOffset').perform(dataset, offset);
+      if (!isNaN(offset)) {
+        this.get('setReadOffset').perform(dataset, offset);
+      }
     },
 
     logDatasetState(dataset) {
-      if (DEBUG) {
-        console.log('dataset =', dataset);
-      }
+      if (DEBUG) { console.log('dataset =', dataset); }
     }
   }
 });

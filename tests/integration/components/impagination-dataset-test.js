@@ -17,12 +17,17 @@ describeComponent(
       var fetch = (pageOffset, pageSize, stats) => {
         return this.server.request(pageOffset, pageSize, stats);
       };
+      var init = (dataset) => {
+        dataset.setReadOffset(0);
+      };
+      this.set('init', init);
       this.set('fetch', fetch);
     });
 
     it('renders', function() {
       this.render(hbs`
       {{impagination-dataset
+        on-init=init
         fetch=fetch
         page-size=10
       }}`);
@@ -33,6 +38,7 @@ describeComponent(
     it('renders with loadHorizon', function() {
       this.render(hbs`
       {{impagination-dataset
+        on-init=init
         fetch=fetch
         page-size=5
         load-horizon=15
@@ -45,6 +51,7 @@ describeComponent(
         this.set('readOffset', 0);
         this.render(hbs`
         {{#impagination-dataset
+          on-init=init
           fetch=fetch
           read-offset=readOffset
           page-size=10
@@ -86,13 +93,15 @@ describeComponent(
         });
 
         it("renders empty rejected records up to the loadHorizon", function() {
-          expect(this.$('.record').length).to.equal(30);
-          expect(this.$('.record').first().text()).to.equal('');
+          expect(this.$('.record').length).to.equal(0);
         });
       });
 
       describe("incrementing the readOffset", function() {
         beforeEach(function() {
+          // TODO: I prefer the API of Passing-In a `readOffset`
+          // `on-init` is okay, but shouldn't be the only way to
+          // set the read offset
           this.set('readOffset', 10);
         });
 
@@ -107,6 +116,7 @@ describeComponent(
         this.set('readOffset', 0);
         this.render(hbs`
         {{#impagination-dataset
+          on-init=init
           fetch=fetch
           read-offset=readOffset
           page-size=10
@@ -175,6 +185,7 @@ describeComponent(
         this.set('readOffset', 0);
         this.render(hbs`
         {{#impagination-dataset
+          on-init=init
           fetch=fetch
           filter=filter
           read-offset=readOffset
@@ -220,9 +231,10 @@ describeComponent(
         this.set('observeDataset', observeDataset);
         this.render(hbs`
         {{#impagination-dataset
+          on-init=init
           fetch=fetch
           page-size=10
-          on-observe=observeDataset
+          on-state=observeDataset
           as |records|}}
           <div class="records">Total Records: {{records.length}}</div>
         {{/impagination-dataset}}
@@ -274,7 +286,7 @@ describeComponent(
         {{#impagination-dataset
           fetch=fetch
           page-size=10
-          on-observe=observeDataset
+          on-state=observeDataset
           as |records|}}
           <div class="records">Total Records: {{records.length}}</div>
         {{/impagination-dataset}}

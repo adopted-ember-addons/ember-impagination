@@ -1,6 +1,9 @@
 import Ember from 'ember';
-import Dataset from 'npm:impagination';
+import Dataset, {Store} from 'npm:impagination';
 import layout from '../templates/components/impagination-dataset';
+
+const { get, set } = Ember;
+const { String: { dasherize } } = Ember;
 
 export default Ember.Component.extend({
   layout: layout,
@@ -20,36 +23,45 @@ export default Ember.Component.extend({
     this.get('on-init')(this.get('model'));
   },
 
-  boundProperties: Ember.computed(function() {
-    let component = this;
-    let properties = this.get('ddau-extension') || {};
-    let definedProperties =  _.cloneDeep(properties);
-    Object.keys(definedProperties).forEach((property) => {
-      Object.keys(definedProperties[property]).forEach((key) => {
-        let value = definedProperties[property][key];
-        if (typeof value === 'function') {
-          let bound = _.bind(definedProperties[property][key], component);
-          definedProperties[property][key] = bound;
-        }
-      });
-    });
-    return definedProperties;
-  }),
-
-
   model: Ember.computed('datasetState', function() {
-    return Object.create(this.get('datasetState'), Object.assign({
+    let dataset = this.get('dataset');
+    let store = this.get('datasetState');
+
+    debugger;
+
+    let model = Object.create(store, {
+      // Template Actions
+      delete: {
+        value: (index) => dataset.delete(index)
+      },
+      put: {
+        value: (data, index) => dataset.put(data, index)
+      },
+      post: {
+        value: (data, index) => dataset.post(data, index)
+      },
+      reset: {
+        value: (offset) => dataset.reset(offset)
+      },
+      refilter: {
+        value: (callback) => dataset.refilter(callback)
+      },
       setReadOffset: {
         value: (offset) => {
-          Ember.run.once(() => {
-            this.get('dataset').setReadOffset(offset);
-          });
-        },
-        length: {
-          value: this.get('datasetState.length')
+          dataset.setReadOffset(offset);
         }
       }
-    }, this.get('boundProperties')));
+    });
+
+    let properties = this.get('ddau-extension') || [];
+    properties.forEach((prop) => {
+      model[prop] = function() {
+        this.sendAction(`on-${dasherize(prop)}`, dataset, ...arguments);
+        return store[prop].apply(model, arguments);
+      }.bind(this);
+    });
+
+    return model;
   }),
 
   datasetState: Ember.computed('dataset', function() {
@@ -58,6 +70,7 @@ export default Ember.Component.extend({
 
   dataset: Ember.computed('page-size', 'load-horizon', 'unload-horizon', 'fetch', 'on-observe', 'filter', function() {
     var round = Math.round;
+
     return new Dataset({
       pageSize: round(this.get('page-size')),
       loadHorizon: round(this.get('load-horizon')),
