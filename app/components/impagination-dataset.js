@@ -15,7 +15,6 @@ export default Ember.Component.extend({
   'on-init': Ember.K,
   'on-state': Ember.K,
 
-  datasetState: null,
   'ddau-extension': null,
 
   init() {
