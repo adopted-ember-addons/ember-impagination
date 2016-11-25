@@ -1,5 +1,5 @@
 import Ember from 'ember';
-import Dataset, {Store} from 'npm:impagination';
+import Dataset from 'npm:impagination';
 import layout from '../templates/components/impagination-dataset';
 
 const { get, set } = Ember;

@@ -7,7 +7,9 @@ const Router = Ember.Router.extend({
 });
 
 Router.map(function() {
-  this.route('index', { path: '/' });
+  this.route('intro', { path: '/'});
+  this.route('index', { path: '/color-demo'});
+  this.route('impagination-dataset-tips');
 });
 
 export default Router;

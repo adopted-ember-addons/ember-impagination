@@ -5,6 +5,8 @@ var EmberAddon = require('ember-cli/lib/broccoli/ember-addon');
 module.exports = function(defaults) {
   var app = new EmberAddon(defaults, {
     // Add options here
+    snippetPaths: ['tests/dummy/snippets'],
+    snippetSearchPaths: ['tests/dummy/app']
   });
 
   app.import('bower_components/bind-polyfill/index.js');
