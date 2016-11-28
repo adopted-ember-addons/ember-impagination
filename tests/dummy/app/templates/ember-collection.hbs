@@ -1,0 +1,21 @@
+<h2>Infinite Scroll: Ember-Collection</h2>
+
+{{code-snippet name="ember-collection-basics.hbs"}}
+{{code-snippet name="ember-collection-basics.js"}}
+
+<div class="demo_records-wrapper">
+  <div class="demo_records-list-container" style="height: 500px; width: 600px;">
+    {{#ember-collection
+       items=model
+       estimated-height=500px
+       estimated-width=600px
+       cell-layout=(fixed-grid-layout 500 70)
+       as |record index|}}
+
+      <div class="demo_record" style={{color-block record.content.hsl}}>
+        Record {{index}}
+      </div>
+
+    {{/ember-collection}}
+  </div>
+</div>

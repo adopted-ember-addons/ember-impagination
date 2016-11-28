@@ -1,18 +1,11 @@
 import Ember from 'ember';
-import { task, timeout } from 'ember-concurrency';
 
-const DEBUG = false;
+const DEBUG = true;
 
 export default Ember.Controller.extend({
-  isEmberCollection: false,
-  isVirtualEach: true,
-  isInViewport: false,
 
   containerHeight: 600,
   itemHeight: 70,
-
-  scrollLeft: 0,
-  scrollTop: 0,
 
   fetch: function(pageOffset, pageSize, stats) {
     let spectrum = new RGBSpectrum(300).colors;
@@ -27,20 +20,7 @@ export default Ember.Controller.extend({
     });
   },
 
-  filter: function(record) {
-    let match = record.hsl.match(/hsl\((.*)\)/);
-    match = match ? match.pop() : '';
-
-    let hue = match.split(',')[0];
-    return hue % 2 === 0;
-  },
-
   'timeout-ms': 5,
-
-  setReadOffset: task(function * (dataset, offset) {
-    yield timeout(this.get('timeout-ms'));
-    dataset.setReadOffset(offset);
-  }).restartable(),
 
   initialReadOffset: 0,
   loadHorizon: 30,
@@ -49,24 +29,12 @@ export default Ember.Controller.extend({
 
   actions: {
     initializeReadOffset(dataset) {
-      this.send('setReadOffset', dataset, this.get('initialReadOffset'));
+      let initReadOffset = this.get('initialReadOffset');
+      dataset.setReadOffset(initReadOffset);
     },
 
     onSlice(dataset, start) {
-      this.send('setReadOffset', dataset, start);
-    },
-
-    scrollChange(dataset, scrollLeft, scrollTop) {
-      let offset = Math.floor(scrollTop / this.get('itemHeight'));
-      this.set('scrollLeft', scrollLeft);
-      this.set('scrollTop', scrollTop);
-      this.get('setReadOffset').perform(dataset, offset);
-    },
-
-    setReadOffset(dataset, offset) {
-      if (!isNaN(offset)) {
-        this.get('setReadOffset').perform(dataset, offset);
-      }
+      dataset.setReadOffset(start);
     },
 
     logDatasetState(dataset) {

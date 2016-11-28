@@ -1,0 +1,22 @@
+<h2>Load More Button</h2>
+
+{{code-snippet name="load-more-basics.hbs"}}
+
+{{#impagination-dataset
+   fetch=fetch
+   on-init=(action 'initializeReadOffset')
+   on-state=(action 'logDatasetState')
+   page-size=pageSize
+   as |records|}}
+
+  <div class="demo_records-wrapper">
+    <div class="demo_records-list-container">
+      {{#each records as |record index|}}
+        <div class="demo_record" style={{color-block record.content.hsl}}>Record {{index}}</div>
+      {{/each}}
+    </div>
+  </div>
+
+  <button class="btn btn-primary" {{action records.setReadOffset records.length}}>Load More</button>
+
+{{/impagination-dataset}}

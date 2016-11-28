@@ -6,7 +6,6 @@ export default Ember.Component.extend({
   classNames: ['record-player'],
   'records': null,
   'lazy-pages': null,
-  'datasetState': null,
 
   elementWidth: null,
 

@@ -1,0 +1,12 @@
+{{#impagination-dataset
+   fetch=fetch
+   on-slice=(action "onSlice")
+   load-horizon=loadHorizon
+   page-size=pageSize
+   as |records|}}
+
+  {{#virtual-each records as |record index|}}
+    {{#color-block record.content.hsl}} Record {{index}} {{/color-block}}
+  {{/virtual-each}}
+
+{{/impagination-dataset}}

@@ -1,0 +1,27 @@
+<h2>Infinite Scroll: Ember In-Viewport</h2>
+
+{{code-snippet name="auto-load-more-basics.hbs"}}
+
+{{#impagination-dataset
+   fetch=fetch
+   on-state=(action 'logDatasetState')
+   page-size=15
+   as |records|}}
+
+  {{in-viewport did-enter=(action records.setReadOffset 0)}}
+
+  <div class="demo_records-wrapper">
+    <div class="demo_records-list-container">
+      {{#each records as |record index|}}
+        <div class="demo_record" style={{color-block record.content.hsl}}>
+          Record {{index}}
+        </div>
+      {{/each}}
+    </div>
+  </div>
+
+  {{in-viewport did-enter=(action records.setReadOffset records.length)}}
+
+  <button style="visibility:hidden"></button>
+
+{{/impagination-dataset}}

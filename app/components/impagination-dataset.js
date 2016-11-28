@@ -5,6 +5,10 @@ import layout from '../templates/components/impagination-dataset';
 const { get, set } = Ember;
 const { String: { dasherize } } = Ember;
 
+const accessors = ['concat', 'includes', 'join', 'slice', 'toString', 'toLocaleString', 'indexOf', 'lastIndexOf'];
+
+const iterators = ['forEach', 'every', 'some', 'filter', 'find', 'findIndex', 'keys', 'map', 'reduce', 'reduceRight', 'values'];
+
 export default Ember.Component.extend({
   layout: layout,
   'load-horizon': null,
@@ -15,16 +19,14 @@ export default Ember.Component.extend({
   'on-init': Ember.K,
   'on-state': Ember.K,
 
-  'ddau-extension': null,
-
   init() {
     this._super(...arguments);
     this.get('on-init')(this.get('model'));
   },
 
-  model: Ember.computed('datasetState', function() {
+  model: Ember.computed('datasetStore', function() {
     let dataset = this.get('dataset');
-    let store = this.get('datasetState');
+    let store = this.get('datasetStore');
 
     let model = Object.create(store, {
       // Template Actions
@@ -50,18 +52,22 @@ export default Ember.Component.extend({
       }
     });
 
-    let properties = this.get('ddau-extension') || [];
-    properties.forEach((prop) => {
-      model[prop] = function() {
-        this.sendAction(`on-${dasherize(prop)}`, dataset, ...arguments);
-        return store[prop].apply(model, arguments);
-      }.bind(this);
+
+    let methods = accessors.concat(iterators);
+    methods.forEach((method) => {
+      let action = `on-${dasherize(method)}`;
+      if(this.get(action)) {
+        model[method] = function() {
+          this.sendAction(action, dataset, ...arguments);
+          return store[method].apply(model, arguments);
+        }.bind(this);
+      }
     });
 
     return model;
   }),
 
-  datasetState: Ember.computed('dataset', function() {
+  datasetStore: Ember.computed('dataset', function() {
     return this.get('dataset').store;
   }),
 
@@ -74,10 +80,10 @@ export default Ember.Component.extend({
       unloadHorizon: round(this.get('unload-horizon')),
       fetch: this.get('fetch'),
       filter: this.get('filter'),
-      observe: (datasetState)=> {
+      observe: (datasetStore)=> {
         if(this.isDestroyed) { return; }
         Ember.run(() => {
-          this.set('datasetState', datasetState);
+          this.set('datasetStore', datasetStore);
           this.get('on-state')(this.get('model'));
         });
       }
