@@ -1,6 +1,5 @@
 import Ember from 'ember';
 import { task, timeout } from 'ember-concurrency';
-import Dataset from 'npm:impagination';
 
 const DEBUG = true;
 
@@ -31,54 +30,27 @@ export default Ember.Controller.extend({
 
   'timeout-ms': 5,
 
-  setReadOffset: task(function * (offset) {
+  setReadOffset: task(function * (dataset, offset) {
     yield timeout(this.get('timeout-ms'));
+    debugger;
     console.log('setReadOffset', offset);
-    this.get('dataset').setReadOffset(offset);
+    dataset.setReadOffset(offset);
   }).restartable(),
 
-  init() {
-    this._super(...arguments);
+  actions: {
+    initializeReadOffset(dataset) {
+      this.get('setReadOffset').perform(dataset, 0);
+    },
 
-    this.get('dataset').setReadOffset(0);
-  },
+    onObjectAt(dataset, index) {
+      debugger;
+      this.get('setReadOffset').perform(dataset, index);
+    },
 
-  model: Ember.computed('datasetStore', function() {
-    let dataset = this.get('dataset');
-    let store = this.get('datasetStore');
-
-    let Model = Ember.Object.extend(Ember.Array, {
-      length: get(this, 'datasetStore').length,
-      objectAt: (index) => {
-        this.get('setReadOffset').perform(index);
-        return get(this, 'datasetStore').getRecord(index);
-      }
-    });
-
-    return new Model(store);
-  }),
-
-  datasetStore: Ember.computed('dataset', function() {
-    return this.get('dataset').store;
-  }),
-
-  dataset: Ember.computed('page-size', 'load-horizon', 'unload-horizon', 'fetch', 'on-observe', 'filter', function() {
-    var round = Math.round;
-
-    return new Dataset({
-      pageSize: round(this.get('page-size')),
-      loadHorizon: round(this.get('load-horizon')),
-      unloadHorizon: round(this.get('unload-horizon')),
-      fetch: this.get('fetch'),
-      observe: (datasetStore)=> {
-        if(this.isDestroyed) { return; }
-        Ember.run(() => {
-          this.set('datasetStore', datasetStore);
-          this.get('on-state')(this.get('model'));
-        });
-      }
-    });
-  })
+    logDatasetState(dataset) {
+      if (DEBUG) { console.log('dataset =', dataset); }
+    }
+  }
 });
 
 class RGBSpectrum {

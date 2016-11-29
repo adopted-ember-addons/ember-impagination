@@ -1,5 +1,6 @@
 {{#impagination-dataset
    fetch=fetch
+   on-object-at=(action "setReadOffset")
    load-horizon=30
    page-size=10
    as |records|}}

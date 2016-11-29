@@ -1,4 +1,5 @@
 import Ember from 'ember';
+import { task, timeout } from 'ember-concurrency';
 
 const DEBUG = true;
 
@@ -22,19 +23,24 @@ export default Ember.Controller.extend({
 
   'timeout-ms': 5,
 
-  initialReadOffset: 0,
+  setReadOffset: task(function * (dataset, offset) {
+    yield timeout(this.get('timeout-ms'));
+    console.log('setReadOffset', offset);
+    dataset.setReadOffset(offset);
+  }).restartable(),
+
   loadHorizon: 30,
   unloadHorizon: 40,
   pageSize: 10,
 
   actions: {
     initializeReadOffset(dataset) {
-      let initReadOffset = this.get('initialReadOffset');
-      dataset.setReadOffset(initReadOffset);
+      this.get('setReadOffset').perform(dataset, 0);
     },
 
     onSlice(dataset, start) {
-      dataset.setReadOffset(start);
+      debugger;
+      this.get('setReadOffset').perform(dataset, start);
     },
 
     logDatasetState(dataset) {
