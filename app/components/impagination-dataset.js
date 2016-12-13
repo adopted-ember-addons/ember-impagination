@@ -26,26 +26,19 @@ export default Ember.Component.extend({
   'load-horizon': null,
   'unload-horizon': Infinity,
   'page-size': null,
-  'read-offset': null,
   'fetch': null,
   'filter': null,
   'on-init': Ember.K,
   'on-observe': Ember.K,
 
   init() {
+
     this._super(...arguments);
+
+    let _readOffsetAttrFound = get(this, 'read-offset') >= 0;
+    Ember.warn('Ember Impagination: `read-offset` attribute has been removed. Please use the `on-init` function instead.', _readOffsetAttrFound, {id: 'ember-impagination.attributes.read-offset'});
+
     this.get('on-init')(this.get('model'));
-  },
-
-  didReceiveAttrs(args) {
-    this._super(...arguments);
-    let { newAttrs } = args;
-
-    // setReadOffset if it changes
-    if (newAttrs['read-offset']) {
-      let readOffset = this.get('read-offset');
-      this.get('dataset').setReadOffset(readOffset);
-    };
   },
 
   arrayActions: Ember.computed(function() {
@@ -102,7 +95,7 @@ export default Ember.Component.extend({
     return Object.create(datasetState, enumerableProperties);
   }),
 
-  dataset: Ember.computed('page-size', 'load-horizon', 'unload-horizon', 'fetch', 'on-observe', 'filter', 'readOffset', function() {
+  dataset: Ember.computed('page-size', 'load-horizon', 'unload-horizon', 'fetch', 'on-observe', 'filter', function() {
     var round = Math.round;
 
     return new Dataset({
