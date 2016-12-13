@@ -32,7 +32,6 @@ export default Ember.Controller.extend({
     },
 
     logDatasetState(dataset) {
-      debugger;
       if (DEBUG) { console.log('dataset =', dataset); }
     }
   }

@@ -3,14 +3,6 @@ import Ember from 'ember';
 export default Ember.Controller.extend({
   toc: [
     {
-      name: 'Introduction',
-      route: 'intro'
-    },
-    {
-      name: 'impagination-dataset component',
-      route: 'impagination-dataset-tips'
-    },
-    {
       name: 'Load More Button',
       route: 'load-more'
     },
@@ -25,10 +17,6 @@ export default Ember.Controller.extend({
     {
       name: 'Infinite Scroll: Ember Collection',
       route: 'ember-collection'
-    },
-    {
-      name: 'Color Demo',
-      route: 'index'
     }
   ]
 });

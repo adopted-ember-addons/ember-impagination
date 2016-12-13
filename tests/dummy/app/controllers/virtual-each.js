@@ -39,7 +39,6 @@ export default Ember.Controller.extend({
     },
 
     onSlice(dataset, start) {
-      debugger;
       this.get('setReadOffset').perform(dataset, start);
     },
 

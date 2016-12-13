@@ -6,8 +6,7 @@
 {{#impagination-dataset
    fetch=fetch
    on-slice=(action "onSlice")
-   on-init=(action 'initializeReadOffset')
-   on-state=(action "logDatasetState")
+   on-observe=(action "logDatasetState")
    load-horizon=loadHorizon
    page-size=pageSize
 

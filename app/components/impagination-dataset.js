@@ -26,14 +26,26 @@ export default Ember.Component.extend({
   'load-horizon': null,
   'unload-horizon': Infinity,
   'page-size': null,
+  'read-offset': null,
   'fetch': null,
   'filter': null,
   'on-init': Ember.K,
-  'on-state': Ember.K,
+  'on-observe': Ember.K,
 
   init() {
     this._super(...arguments);
     this.get('on-init')(this.get('model'));
+  },
+
+  didReceiveAttrs(args) {
+    this._super(...arguments);
+    let { newAttrs } = args;
+
+    // setReadOffset if it changes
+    if (newAttrs['read-offset']) {
+      let readOffset = this.get('read-offset');
+      this.get('dataset').setReadOffset(readOffset);
+    };
   },
 
   arrayActions: Ember.computed(function() {
@@ -68,29 +80,29 @@ export default Ember.Component.extend({
     return this.get('Model').extend(get(this, 'enumerable'), get(this, 'arrayActions')).create();
   }),
 
-  datasetStore: Ember.computed('dataset', function() {
-    return this.get('dataset').store;
+  datasetState: Ember.computed('dataset', function() {
+    return this.get('dataset').state;
   }),
 
-  enumerable: Ember.computed('datasetStore', function() {
-    let datasetStore = get(this, 'datasetStore');
+  enumerable: Ember.computed('datasetState', function() {
+    let datasetState = get(this, 'datasetState');
 
     // All Impaginaiton getters have to be made enumerable to be consumed by Ember.Array
     let enumerableProperties = impaginationGetters.reduce(function(props, getter) {
       props[getter] = {
-        enumerable: true, get: function() { return datasetStore[getter]; }
+        enumerable: true, get: function() { return datasetState[getter]; }
       };
       return props;
     }, {
       objectAt: {
-        enumerable: true, value(index) { return datasetStore.getRecord(index);}
+        enumerable: true, value(index) { return datasetState.getRecord(index);}
       }
     });
 
-    return Object.create(datasetStore, enumerableProperties);
+    return Object.create(datasetState, enumerableProperties);
   }),
 
-  dataset: Ember.computed('page-size', 'load-horizon', 'unload-horizon', 'fetch', 'on-observe', 'filter', function() {
+  dataset: Ember.computed('page-size', 'load-horizon', 'unload-horizon', 'fetch', 'on-observe', 'filter', 'readOffset', function() {
     var round = Math.round;
 
     return new Dataset({
@@ -99,11 +111,11 @@ export default Ember.Component.extend({
       unloadHorizon: round(this.get('unload-horizon')),
       fetch: this.get('fetch'),
       filter: this.get('filter'),
-      observe: (datasetStore)=> {
+      observe: (datasetState)=> {
         if(this.isDestroyed) { return; }
         Ember.run(() => {
-          this.set('datasetStore', datasetStore);
-          this.get('on-state')(this.get('model'));
+          this.set('datasetState', datasetState);
+          this.get('on-observe')(this.get('model'));
         });
       }
     });

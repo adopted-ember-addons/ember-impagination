@@ -1,7 +1,7 @@
 import Ember from 'ember';
 import { task, timeout } from 'ember-concurrency';
 
-const DEBUG = true;
+const DEBUG = false;
 
 export default Ember.Controller.extend({
   containerHeight: 600,
@@ -15,7 +15,6 @@ export default Ember.Controller.extend({
       setTimeout(()=> {
         // stats.totalPages =  Math.ceil( spectrum.length / pageSize);
         let recordOffset = pageOffset * pageSize;
-        debugger;
         resolve(spectrum.slice(recordOffset, recordOffset + pageSize));
       }, delay);
     });
@@ -33,7 +32,6 @@ export default Ember.Controller.extend({
     },
 
     logDatasetState(dataset) {
-      debugger;
       if (DEBUG) { console.log('dataset =', dataset); }
     }
   }

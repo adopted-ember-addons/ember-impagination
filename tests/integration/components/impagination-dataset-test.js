@@ -234,7 +234,7 @@ describeComponent(
           on-init=init
           fetch=fetch
           page-size=10
-          on-state=observeDataset
+          on-observe=observeDataset
           as |records|}}
           <div class="records">Total Records: {{records.length}}</div>
         {{/impagination-dataset}}
@@ -286,7 +286,7 @@ describeComponent(
         {{#impagination-dataset
           fetch=fetch
           page-size=10
-          on-state=observeDataset
+          on-observe=observeDataset
           as |records|}}
           <div class="records">Total Records: {{records.length}}</div>
         {{/impagination-dataset}}

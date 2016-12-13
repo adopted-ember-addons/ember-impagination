@@ -11,7 +11,7 @@ export default Ember.Controller.extend({
   'page-size': 10,
   'unload-horizon': Infinity,
 
-  'on-state': function(dataset) {
+  'on-observe': function(dataset) {
     if (DEBUG) { console.log('dataset =', dataset); }
   },
 
@@ -32,8 +32,6 @@ export default Ember.Controller.extend({
 
   setReadOffset: task(function * (dataset, offset) {
     yield timeout(this.get('timeout-ms'));
-    debugger;
-    console.log('setReadOffset', offset);
     dataset.setReadOffset(offset);
   }).restartable(),
 
@@ -43,7 +41,6 @@ export default Ember.Controller.extend({
     },
 
     onObjectAt(dataset, index) {
-      debugger;
       this.get('setReadOffset').perform(dataset, index);
     },
 

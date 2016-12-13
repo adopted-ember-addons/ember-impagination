@@ -5,7 +5,7 @@
 {{#impagination-dataset
    fetch=fetch
    on-init=(action 'initializeReadOffset')
-   on-state=(action 'logDatasetState')
+   on-observe=(action 'logDatasetState')
    page-size=pageSize
    as |records|}}
 
