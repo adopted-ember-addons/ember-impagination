@@ -14,7 +14,7 @@ const iterators = ['forEach', 'every', 'some', 'filter', 'find', 'findIndex', 'k
 
 const enumerables = ['objectAt'];
 
-let impaginationGetters = [
+const impaginationGetters = [
   'hasUnrequested', 'hasRequested', 'hasPending', 'hasResolved', 'hasRejected', 'hasUnfetchable',
   'unrequested', 'requested', 'pending', 'resolved', 'rejected', 'unfetchable',
   'pages', 'length'
@@ -22,13 +22,14 @@ let impaginationGetters = [
 
 export default Ember.Component.extend({
   layout: layout,
+  tagName: '',
   'load-horizon': null,
   'unload-horizon': Infinity,
   'page-size': null,
   'fetch': null,
   'filter': null,
-  'on-init': Ember.K,
-  'on-observe': Ember.K,
+  'on-init'() {},
+  'on-observe'() {},
 
   init() {
 
