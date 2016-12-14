@@ -15,8 +15,7 @@ const iterators = ['forEach', 'every', 'some', 'filter', 'find', 'findIndex', 'k
 const enumerables = ['objectAt'];
 
 let impaginationGetters = [
-  // Coming Soon in impagination@1.0.0-alpha.3
-  // 'hasUnrequested', 'hasRequested', 'hasPending', 'hasResolved', 'hasRejected', 'hasUnfetchable',
+  'hasUnrequested', 'hasRequested', 'hasPending', 'hasResolved', 'hasRejected', 'hasUnfetchable',
   'unrequested', 'requested', 'pending', 'resolved', 'rejected', 'unfetchable',
   'pages', 'length'
 ];
@@ -36,7 +35,8 @@ export default Ember.Component.extend({
     this._super(...arguments);
 
     let _readOffsetAttrFound = get(this, 'read-offset') >= 0;
-    Ember.warn('Ember Impagination: `read-offset` attribute has been removed. Please use the `on-init` function instead.', _readOffsetAttrFound, {id: 'ember-impagination.attributes.read-offset'});
+    console.log("_readOffsetAttrFound = ", _readOffsetAttrFound);
+    Ember.warn('Ember Impagination: `read-offset` attribute has been removed. Please use the `on-init` function instead.', !_readOffsetAttrFound, {id: 'ember-impagination.attributes.read-offset'});
 
     this.get('on-init')(this.get('model'));
   },
@@ -105,8 +105,8 @@ export default Ember.Component.extend({
       fetch: this.get('fetch'),
       filter: this.get('filter'),
       observe: (datasetState)=> {
-        if(this.isDestroyed) { return; }
-        Ember.run(() => {
+        Ember.run.next(() => {
+          if(this.isDestroyed) { return; }
           this.set('datasetState', datasetState);
           this.get('on-observe')(this.get('model'));
         });

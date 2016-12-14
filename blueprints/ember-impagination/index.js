@@ -10,7 +10,7 @@ module.exports = {
       ]
     }).then(function() {
       return this.addPackagesToProject([
-        {name: 'impagination', target: "^1.0.0-alpha.2"}
+        {name: 'impagination', target: "^1.0.0-alpha.3"}
       ]);
     }.bind(this));
   }

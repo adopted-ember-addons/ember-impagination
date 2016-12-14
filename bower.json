@@ -9,8 +9,5 @@
     "showdown": "^1.5.0",
     "bootstrap": "^3.3.6",
     "bootswatch": "^3.3.6"
-  },
-  "devDependencies": {
-    "bind-polyfill": "~1.0.0"
   }
 }

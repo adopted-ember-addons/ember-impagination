@@ -5,21 +5,32 @@ import { describe, beforeEach, it } from 'mocha';
 import hbs from 'htmlbars-inline-precompile';
 import { Server } from '../../test-server';
 
+import sinon from 'sinon';
+import wait from 'ember-test-helpers/wait';
+
 describe('Integration | Component | ImpaginationDataset', function() {
   setupComponentTest('impagination-dataset', {
     integration: true
   });
 
+  let fetch, init, observe;
+
   beforeEach(function() {
     this.server = new Server();
-    var fetch = (pageOffset, pageSize, stats) => {
+
+    fetch = (pageOffset, pageSize, stats) => {
       return this.server.request(pageOffset, pageSize, stats);
     };
-    var init = (dataset) => {
+
+    init = (dataset) => {
       dataset.setReadOffset(0);
     };
+
+    observe = sinon.spy();
+
     this.set('init', init);
     this.set('fetch', fetch);
+    this.set('observe', observe);
   });
 
   it('renders', function() {
@@ -44,281 +55,196 @@ describe('Integration | Component | ImpaginationDataset', function() {
     expect(this.server.requests.length).to.equal(3);
   });
 
-  describe("exercising the CollectionInterface with {{each}}", function() {
-    beforeEach(function() {
-      this.set('readOffset', 0);
+  describe("observing the model", function() {
+    beforeEach(function(done) {
+      this.set('pageSize', 10);
       this.render(hbs`
-        {{#impagination-dataset
-          on-init=init
-          fetch=fetch
-          read-offset=readOffset
-          page-size=10
-          load-horizon=30
-          unload-horizon=50
-          as |records|}}
-          <div class="records">Total Records: {{records.length}}</div>
-          {{#each records as |record|}}
-            <div class="record">{{record.content.name}}</div>
-          {{/each}}
-        {{/impagination-dataset}}
+        {{impagination-dataset
+            on-init=init
+            on-observe=observe
+            fetch=fetch
+            page-size=pageSize
+            load-horizon=30
+            unload-horizon=50
+        }}
         `);
+
+      return wait().then(() => done());
     });
 
     it("requests pages from the server", function() {
       expect(this.server.requests.length).to.equal(3);
     });
 
-    it("renders a set of empty records up to the loadHorizon", function() {
-      expect(this.$('.records').first().text()).to.equal('Total Records: 30');
-      expect(this.$('.record').length).to.equal(30);
-      expect(this.$('.record').first().text()).to.equal('');
+    it("yields a set of empty records up to the loadHorizon", function() {
+      // Observe Called Once to set read offset
+      expect(observe.calledOnce).to.be.true;
+
+      let spyCall = observe.firstCall;
+      let model = spyCall.args[0];
+
+      // All records are Pending
+      expect(model.length).to.equal(30);
+      expect(model.every((record) => record.isPending)).to.equal(true);
+
+      // All Pages are Pending Pages
+      expect(model.pages.length).to.equal(3);
+      expect(model.pages.every((page) => page.isPending)).to.equal(true);
+
+      // Record at index 0
+      let first = model.objectAt(0);
+      expect(first.content).to.be.null;
     });
 
     describe("resolving fetches", function() {
-      beforeEach(function() {
+      beforeEach(function(done) {
         this.server.resolveAll();
+        wait().then(() => done());
       });
 
-      it("renders a set of resolved records up to the loadHorizon", function() {
-        expect(this.$('.record').length).to.equal(30);
-        expect(this.$('.record').first().text()).to.equal('Record 0');
+      it("yields a set of resolved records up to the loadHorizon", function() {
+        // Observe Called Once to set read offset
+        expect(observe.callCount).to.equal(4);
+
+        let spyCall = observe.lastCall;
+        let model = spyCall.args[0];
+
+        // All records are Resolved
+        expect(model.length).to.equal(30);
+        expect(model.every((record) => record.isResolved)).to.equal(true);
+
+        // All Pages are Resolved Pages
+        expect(model.pages.length).to.equal(3);
+        expect(model.pages.every((page) => page.isResolved)).to.equal(true);
+
+        // Record at index 0
+        let first = model.objectAt(0);
+        expect(first.content).to.deep.equal({ id: 0, name: 'Record 0' });
       });
     });
 
     describe("rejecting fetches", function() {
-      beforeEach(function() {
+      beforeEach(function(done) {
         this.server.rejectAll();
+        wait().then(() => done());
       });
 
-      it("renders empty rejected records up to the loadHorizon", function() {
-        expect(this.$('.record').length).to.equal(0);
+      it("yields empty rejected records up to the loadHorizon", function() {
+        // Observe Called Once to set read offset
+        expect(observe.callCount).to.equal(4);
+
+        let pageSize = this.get('pageSize');
+
+        for(let i = 0; i < observe.callCount; i++) {
+          let spyCall = observe.getCall(i);
+          let model = spyCall.args[0];
+
+          // length decreases for each rejected page
+          // model.length: 30 -> 20 -> 10 -> 0
+          let length = 30 - (pageSize * i);
+          expect(model.length).to.equal(length);
+        }
+
+        let spyCall = observe.lastCall;
+        let model = spyCall.args[0];
+
+        // Rejected Records are not present
+        expect(model.length).to.equal(0);
+
+        // All Pages are Rejected Pages
+        expect(model.pages.length).to.equal(3);
+        expect(model.pages.every((page) => page.isRejected)).to.equal(true);
       });
     });
 
     describe("incrementing the readOffset", function() {
-      beforeEach(function() {
-        // TODO: I prefer the API of Passing-In a `readOffset`
-        // `on-init` is okay, but shouldn't be the only way to
-        // set the read offset
-        this.set('readOffset', 10);
+      beforeEach(function(done) {
+        let spyCall = observe.firstCall;
+        let model = spyCall.args[0];
+
+        model.setReadOffset(10);
+        return wait().then(() => done());
       });
 
       it("requests another page from the server", function() {
         expect(this.server.requests.length).to.equal(4);
+
+        // Observe Called Twice now
+        // Once `on-init` hook
+        // Once for `setReadOffset`
+        expect(observe.calledTwice).to.equal(true);
       });
     });
   });
 
-  describe("exercising the CollectionInterface with {{virtual-each}}", function() {
-    beforeEach(function() {
-      this.set('readOffset', 0);
-      this.render(hbs`
-        {{#impagination-dataset
-          on-init=init
-          fetch=fetch
-          read-offset=readOffset
-          page-size=10
-          load-horizon=30
-          unload-horizon=50
-          as |records|}}
-          <div class="records">Total Records: {{records.length}}</div>
-          {{#virtual-each records
-            height=450
-            itemHeight=90
-            as |record|}}
-            <div class="record">{{record.content.name}}</div>
-          {{/virtual-each}}
-        {{/impagination-dataset}}
-        `);
-    });
-
-    it("requests pages from the server", function() {
-      expect(this.server.requests.length).to.equal(3);
-    });
-
-    it("renders a set of empty records in the viewport", function() {
-      expect(this.$('.records').first().text()).to.equal('Total Records: 30');
-      expect(this.$('.record').length).to.equal(6);
-      expect(this.$('.record').first().text()).to.equal('');
-    });
-
-    describe("resolving fetches", function() {
-      beforeEach(function() {
-        this.server.resolveAll();
-      });
-
-      it("renders a set of resolved records up to the loadHorizon", function() {
-        expect(this.$('.record').length).to.equal(6);
-        expect(this.$('.record').first().text()).to.equal('Record 0');
-      });
-    });
-
-    describe("rejecting fetches", function() {
-      beforeEach(function() {
-        this.server.rejectAll();
-      });
-
-      it("renders empty rejected records up to the loadHorizon", function() {
-        expect(this.$('.record').length).to.equal(6);
-        expect(this.$('.record').first().text()).to.equal('');
-      });
-    });
-
-    describe("incrementing the readOffset", function() {
-      beforeEach(function() {
-        this.set('readOffset', 10);
-      });
-
-      it("requests another page from the server", function() {
-        expect(this.server.requests.length).to.equal(4);
-      });
-    });
-  });
   describe("filtering records", function() {
-    beforeEach(function() {
+    beforeEach(function(done) {
       var evenRecords = (record)=> {
         return record.id % 2 === 0;
       };
+
       this.set('filter', evenRecords);
-      this.set('readOffset', 0);
+      this.set('pageSize', 10);
+
       this.render(hbs`
-        {{#impagination-dataset
+        {{impagination-dataset
           on-init=init
+          on-observe=observe
           fetch=fetch
           filter=filter
-          read-offset=readOffset
-          page-size=10
+          page-size=pageSize
           load-horizon=30
           unload-horizon=50
-          as |filteredRecords|}}
-          <div class="filtered_records">Total Filtered Records: {{filteredRecords.length}}</div>
-          {{#each filteredRecords as |record|}}
-            <div class="record">{{record.content.name}}</div>
-          {{/each}}
-        {{/impagination-dataset}}
+        }}
         `);
+      return wait().then(() => done());
     });
 
     it("requests pages from the server", function() {
       expect(this.server.requests.length).to.equal(3);
     });
 
-    it("renders a set of empty records up to the loadHorizon", function() {
-      expect(this.$('.filtered_records').first().text()).to.equal('Total Filtered Records: 30');
+    it("yields a set of empty records up to the loadHorizon", function() {
+      // Observe Called Once to set read offset
+      expect(observe.calledOnce).to.be.true;
+
+      let spyCall = observe.firstCall;
+      let model = spyCall.args[0];
+
+      // All records are Pending
+      expect(model.length).to.equal(30);
+      expect(model.every((record) => record.isPending)).to.equal(true);
+
+      // All Pages are Pending Pages
+      expect(model.pages.length).to.equal(3);
+      expect(model.pages.every((page) => page.isPending)).to.equal(true);
+
+      // Record at index 0
+      let first = model.objectAt(0);
+      expect(first.content).to.be.null;
     });
 
     describe("resolving fetches", function() {
-      beforeEach(function() {
+      beforeEach(function(done) {
         this.server.resolveAll();
+        wait().then(() => done());
       });
 
-      it("filters out half the records", function() {
-        expect(this.$('.filtered_records').first().text()).to.equal('Total Filtered Records: 15');
-      });
-    });
-  });
-  describe("observing the dataset", function() {
-    beforeEach(function() {
-      this.observedDatasetCounter = 0;
-      var observeDataset = (dataset, actions) => {
-        this.dataset = dataset;
-        this.actions = actions;
-        this.observedDatasetCounter++;
-      };
+      it("yields a set of filtered records up to the loadHorizon", function() {
+        // Observe Called Once to set read offset
+        expect(observe.callCount).to.equal(4);
 
-      this.set('observeDataset', observeDataset);
-      this.render(hbs`
-        {{#impagination-dataset
-          on-init=init
-          fetch=fetch
-          page-size=10
-          on-observe=observeDataset
-          as |records|}}
-          <div class="records">Total Records: {{records.length}}</div>
-        {{/impagination-dataset}}
-        `);
-    });
+        let filteredPageSize = this.get('pageSize') / 2;
 
-    it("fires the on-observe action", function() {
-      expect(this.observedDatasetCounter).to.equal(1);
-      expect(this.dataset.get('readOffset')).to.equal(0);
-    });
+        for(let i = 0; i < observe.callCount; i++) {
+          let spyCall = observe.getCall(i);
+          let model = spyCall.args[0];
 
-    describe("resolving fetches", function() {
-      beforeEach(function() {
-        this.server.resolveAll();
-      });
-
-      it("fires the on-observe action again", function() {
-        expect(this.server.requests.length).to.equal(1);
-        expect(this.observedDatasetCounter).to.equal(2);
-      });
-    });
-
-    describe("firing a setReadOffset Action", function() {
-      beforeEach(function() {
-        let setReadOffset = this.actions.setReadOffset;
-        setReadOffset.call(this.dataset, 10);
-      });
-
-      it("sets the new read offset on the observed dataset", function() {
-        expect(this.dataset.get('readOffset')).to.equal(10);
-      });
-
-      it("requests an additional page from the server", function() {
-        expect(this.server.requests.length).to.equal(2);
-      });
-    });
-  });
-  describe("observing the dataset", function() {
-    beforeEach(function() {
-      this.observedDatasetCounter = 0;
-      var observeDataset = (dataset, actions) => {
-        this.dataset = dataset;
-        this.actions = actions;
-        this.observedDatasetCounter++;
-      };
-
-      this.set('observeDataset', observeDataset);
-      this.render(hbs`
-        {{#impagination-dataset
-          fetch=fetch
-          page-size=10
-          on-observe=observeDataset
-          as |records|}}
-          <div class="records">Total Records: {{records.length}}</div>
-        {{/impagination-dataset}}
-        `);
-    });
-
-    it("fires the on-observe action", function() {
-      expect(this.observedDatasetCounter).to.equal(1);
-      expect(this.dataset.get('readOffset')).to.equal(0);
-    });
-
-    describe("resolving fetches", function() {
-      beforeEach(function() {
-        this.server.resolveAll();
-      });
-
-      it("fires the on-observe action again", function() {
-        expect(this.server.requests.length).to.equal(1);
-        expect(this.observedDatasetCounter).to.equal(2);
-      });
-    });
-
-    describe("firing a setReadOffset Action", function() {
-      beforeEach(function() {
-        let setReadOffset = this.actions.setReadOffset;
-        setReadOffset.call(this.dataset, 10);
-      });
-
-      it("sets the new read offset on the observed dataset", function() {
-        expect(this.dataset.get('readOffset')).to.equal(10);
-      });
-
-      it("requests an additional page from the server", function() {
-        expect(this.server.requests.length).to.equal(2);
+          // length decreases for each filtered page
+          // model.length: 30 -> 25 -> 20 -> 15
+          let length = 30 - (filteredPageSize * i);
+          expect(model.length).to.equal(length);
+        }
       });
     });
   });
