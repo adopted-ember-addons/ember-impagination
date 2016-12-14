@@ -36,7 +36,7 @@
     "ember-disable-proxy-controllers": "^1.0.0",
     "ember-export-application-global": "^1.0.3",
     "ember-try": "0.0.6",
-    "virtual-each": "0.3.0"
+    "virtual-each": "0.3.1"
   },
   "keywords": [
     "ember-addon",
