@@ -1,5 +1,4 @@
 import Ember from 'ember';
-import { task, timeout } from 'ember-concurrency';
 
 const DEBUG = false;
 
@@ -7,7 +6,7 @@ export default Ember.Controller.extend({
   containerHeight: 600,
   itemHeight: 70,
 
-  fetch: function(pageOffset, pageSize, stats) {
+  fetch: function(pageOffset, pageSize) {
     let spectrum = new RGBSpectrum(300).colors;
     let delay = 400; //ms
 
@@ -19,8 +18,6 @@ export default Ember.Controller.extend({
       }, delay);
     });
   },
-
-  'timeout-ms': 5,
 
   initialReadOffset: 0,
   pageSize: 10,

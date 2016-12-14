@@ -3,8 +3,7 @@ import { task, timeout } from 'ember-concurrency';
 
 const DEBUG = true;
 
-const { get, set } = Ember;
-const { String: { dasherize } } = Ember;
+const { get } = Ember;
 
 export default Ember.Controller.extend({
   'load-horizon': 30,
@@ -31,7 +30,7 @@ export default Ember.Controller.extend({
   'timeout-ms': 5,
 
   setReadOffset: task(function * (dataset, offset) {
-    yield timeout(this.get('timeout-ms'));
+    yield timeout( get(this, 'timeout-ms') );
     dataset.setReadOffset(offset);
   }).restartable(),
 
