@@ -83,10 +83,6 @@ attribute descriptions.
 {{/impagination-dataset}}
 ```
 
-> In most cases, using a simple `{{each}}` would defeat the purpose of
-> using a data layer like *Ember-Impagination*, and for truly infinite
-> datasets might result in truly infinite loops :scream:
-
 Now, in your route, you can define the actual `(un)fetch` functions
 that tell `{{impagination-dataset}}` how it should request each
 individual page, and the `(un)loadHorizon` which specify how many
@@ -193,7 +189,7 @@ is resolved. To filter a page at other times in your application see
 [`refilter`](#dataset-actions).
 
 ```handlebars
-{{#impagination-dataset fetch=(action "fetch") filter=(action "filterCallback")}}
+{{#impagination-dataset fetch=(action "fetch") filter=filterCallback}}
 ```
 
 ```javascript
@@ -201,23 +197,28 @@ is resolved. To filter a page at other times in your application see
 export default Ember.Route.extend({
 
   // filter() function is invoked whenever a page is resolved or refiltered
-  actions: {
-    filterCallback(record/*, index, records*/) { // function which rejects deleted records
-      return !record.get('isDeleted');
-    }
+  filterCallback(record/*, index, records*/) { // function which rejects deleted records
+    return !record.get('isDeleted');
   }
 });
 ```
+### Dataset API
+There are a number actions to update the dataset.
 
-### Dataset Actions
-There are a number of public `impagination` functions which we provide as actions.
+#### Updating the Dataset
+| Actions       | Parameters     | Description   |
+| ------------- |:--------------:|:--------------|
+| refilter      | [filterCallback] | Reapplies the filter for all resolved pages. If `filterCallback` is provided, applies and sets the new filter.
+| reset        | [offset]          | Unfetches all pages and clears the `state`. If `offset` is provided, fetches records starting at `offset`.
+| setReadOffset | [offset]         | Sets the `readOffset` and fetches records resuming at `offset`
+| ~~reload~~    | ~~[index]~~      | _Removed in `1.0.0` release. Please use `reset` instead._
 
-| Actions       | Params         | Default         | Description   |
-| ------------- |:--------------:|:---------------:|:--------------|
-| refilter      |    _none_      |   _none_        | Reapplies the filter to all resolved pages.
-| reload        | `offset`       | _currentOffset_ | Unfetches all pages and fetches records at starting at `offset`
-| reset         | `offset`       |     0           | Destroys  all pages and fetches records at starting at `offset`
-| setReadOffset | `offset`       |   _none_        | Sets the readOffset and fetches records resuming at `offset`
+#### Updating the State
+| Actions| Parameters  | Defaults        |Description   |
+| ------ |:-----------:|:--------------|:--------------|
+| post   | data, index | index = 0 | Creates record with `data` at `index`.
+| put    | data, index | index = state.readOffset | Merges `data` into record at `index`.
+| delete | index       | index= state.readOffset  | Deletes record at `index`.
 
 These functions can be called from the route/controller or from child
 components in the handlebars templates. In the examples below, we
@@ -241,14 +242,12 @@ parameter.
 
 ``` javascript
 _resetDataset() {
-  let reset = this.get('actions.reset');
-  reset.call(this.get('dataset'));
+  this.get('dataset').reset();
 },
 
 actions: {
-  observeDataset: function(dataset, actions) { // dataset and actions are passed-up
+  observeDataset: function(dataset) {
     this.set('dataset', dataset);
-    this.set('actions', actions);
   },
   search(query) {
     this.set('searchParams', query);
@@ -267,7 +266,8 @@ parameter. The `reset` action is simply called by a child component.
 
 ```handlebars
 {{#impagination-dataset fetch=(action "fetch") as |dataset|}}
-  {{#search-pane search=(action "search") on-search-results=(action "reset" target=dataset)}}
+  {{!-- reset dataset and start fetching at record index 0 --}}
+  {{#search-pane search=(action "search") on-search-results=(action dataset.reset 0)}}
       {{#ember-collection items=dataset as |record|}}
         {{chat-search-result result=record}}
       {{/ember-collection}}
