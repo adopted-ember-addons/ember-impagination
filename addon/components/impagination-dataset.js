@@ -16,7 +16,7 @@ const enumerables = ['objectAt'];
 const impaginationGetters = [
   'hasUnrequested', 'hasRequested', 'hasPending', 'hasResolved', 'hasRejected', 'hasUnfetchable',
   'unrequested', 'requested', 'pending', 'resolved', 'rejected', 'unfetchable',
-  'pages', 'length'
+  'pages', 'length', 'pageSize', 'loadHorizon', 'unloadHorizon', 'readOffset', 'stats', 'filter'
 ];
 
 export default Ember.Component.extend({
@@ -34,7 +34,6 @@ export default Ember.Component.extend({
   Dataset: null,
 
   init() {
-
     this._super(...arguments);
 
     let readOffsetAttrFound = get(this, 'read-offset') >= 0;
