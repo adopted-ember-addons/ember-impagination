@@ -5,23 +5,33 @@ export default Ember.Component.extend({
   layout: layout,
   classNames: ['record-player'],
   'records': null,
-  'pages': null,
-  'datasetState': null,
+  'lazy-pages': null,
+
   elementWidth: null,
-  totalRecords: Ember.computed.readOnly('records.length'),
 
-  pageWidth: Ember.computed('incrementWidth', 'pages.firstObject.size', function() {
-    return this.get('incrementWidth') * this.get('pages.firstObject.size');
+  pages: Ember.computed('lazy-pages', function() {
+    let unrequestedPage = {};
+    let pages = this.get('lazy-pages').slice();
+    let offset = (pages[0] && pages[0].offset) || 0;
+    for(let i = 0; i < offset; i++) {
+      pages.unshift(unrequestedPage);
+    }
+    return pages;
   }),
 
-  incrementWidth: Ember.computed('elementWidth', 'totalRecords', function() {
-    return this.get('elementWidth') / this.get('totalRecords');
+  pageWidth: Ember.computed('incrementWidth', 'lazy-pages', function() {
+    let page = this.get('lazy-pages')[0];
+    return this.get('incrementWidth') * page.size;
   }),
 
-  readHeadOffset: Ember.computed('records.readOffset', 'incrementWidth', function() {
+  incrementWidth: Ember.computed('elementWidth', 'records', function() {
+    return this.get('elementWidth') / this.get('records').length;
+  }),
+
+  readHeadOffset: Ember.computed('records', 'incrementWidth', function() {
     let incrementWidth = this.get('incrementWidth');
 
-    return this.get('records.readOffset') * incrementWidth;
+    return this.get('records').readOffset * incrementWidth;
   }),
 
   pageStyle: Ember.computed('pageWidth', function() {
@@ -32,7 +42,7 @@ export default Ember.Component.extend({
     return Ember.String.htmlSafe(`left: ${this.get('readHeadOffset')}px;`);
   }),
 
-  loadHorizonStyle: Ember.computed('loadHorizon', 'incrementWidth', 'readHeadOffset', 'pages.firstObject', function() {
+  loadHorizonStyle: Ember.computed('loadHorizon', 'incrementWidth', 'readHeadOffset', function() {
     let left = this.get('readHeadOffset') - (this.get('loadHorizon') * this.get('incrementWidth'));
     let width = 2 * this.get('loadHorizon') * this.get('incrementWidth');
 
@@ -51,11 +61,8 @@ export default Ember.Component.extend({
     return Ember.String.htmlSafe(`left: ${left}px;`);
   }),
 
-  _adjustWidth() {
-    this.set('elementWidth', this.$().width());
-  },
-
-  didInsertElement: function() {
-    this._adjustWidth();
+  didReceiveAttrs() {
+    let elementWidth = this.$() && this.$().width();
+    this.set('elementWidth', elementWidth);
   }
 });

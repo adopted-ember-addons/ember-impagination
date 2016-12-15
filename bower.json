@@ -1,19 +1,13 @@
 {
   "name": "ember-impagination",
   "dependencies": {
-    "ember": "1.13.7",
-    "ember-cli-shims": "ember-cli/ember-cli-shims#0.0.3",
-    "ember-cli-test-loader": "ember-cli/ember-cli-test-loader#0.1.3",
-    "ember-load-initializers": "ember-cli/ember-load-initializers#0.1.5",
-    "ember-resolver": "~0.1.18",
-    "jquery": "1.11.3",
-    "loader.js": "ember-cli/loader.js#3.2.1",
+    "ember": "~2.9.0",
+    "ember-cli-shims": "0.1.3",
+    "ember-cli-test-loader": "0.2.2",
     "ember-mocha": "~0.8.0",
-    "pretender": "~0.10.1",
-    "lodash": "~3.7.0",
-    "Faker": "~3.0.0"
-  },
-  "devDependencies": {
-    "bind-polyfill": "~1.0.0"
+    "font-awesome": "~4.5.0",
+    "showdown": "^1.5.0",
+    "bootstrap": "^3.3.6",
+    "bootswatch": "^3.3.6"
   }
 }

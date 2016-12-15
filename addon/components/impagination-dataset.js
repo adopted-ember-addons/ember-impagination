@@ -1,26 +1,106 @@
 import Ember from 'ember';
 import layout from '../templates/components/impagination-dataset';
-import Dataset from 'impagination/dataset';
+
+const { get } = Ember;
+const { String: { dasherize } } = Ember;
+
+
+// TODO: Since `records` are wrapped in Ember.A() not all these methods are accurate
+// We should include Ember.Array methods here instead
+const accessors = ['concat', 'includes', 'join', 'slice', 'toString', 'toLocaleString', 'indexOf', 'lastIndexOf'];
+
+const iterators = ['forEach', 'every', 'some', 'filter', 'find', 'findIndex', 'keys', 'map', 'reduce', 'reduceRight', 'values'];
+
+const enumerables = ['objectAt'];
+
+const impaginationGetters = [
+  'hasUnrequested', 'hasRequested', 'hasPending', 'hasResolved', 'hasRejected', 'hasUnfetchable',
+  'unrequested', 'requested', 'pending', 'resolved', 'rejected', 'unfetchable',
+  'pages', 'length'
+];
 
 export default Ember.Component.extend({
   layout: layout,
-  'load-horizon': 2,
+  tagName: '',
+  'load-horizon': null,
   'unload-horizon': Infinity,
   'page-size': null,
   'fetch': null,
   'filter': null,
-  datasetState: null,
-  queue: [],
+  'on-init'() {},
+  'on-observe'() {},
 
-  records: Ember.computed('datasetState', function() {
-    return CollectionInterface.create({
-      datasetState: this.get('dataset.state'),
-      dataset: this.get('dataset')
+  // Impagination Dataset Class: `app/components/impagination-dataset`
+  Dataset: null,
+
+  init() {
+
+    this._super(...arguments);
+
+    let readOffsetAttrFound = get(this, 'read-offset') >= 0;
+    Ember.warn('Ember Impagination: `read-offset` attribute has been removed. Please use the `on-init` function instead.', !readOffsetAttrFound, {id: 'ember-impagination.attributes.read-offset'});
+
+    this.get('on-init')(this.get('model'));
+  },
+
+  arrayActions: Ember.computed(function() {
+    let context = this;
+    let arrayActions = [...accessors, ...iterators, ...enumerables].reduce((props, method) => {
+      let action = `on-${dasherize(method)}`;
+      if (get(this, action)) {
+        props[method] = function() {
+          context.sendAction(action, get(context, 'dataset'), ...arguments);
+          return this._super(...arguments);
+        };
+      }
+      return props;
+    }, {});
+
+    return Ember.Mixin.create(arrayActions);
+  }),
+
+  Model: Ember.computed('dataset', function() {
+    let dataset = this.get('dataset');
+    return Ember.Object.extend(Ember.Array, {
+      delete: (index) => dataset.delete(index),
+      put: (data, index) => dataset.put(data, index),
+      post: (data, index) => dataset.post(data, index),
+      reset: (offset) => dataset.reset(offset),
+      refilter: (callback) => dataset.refilter(callback),
+      setReadOffset: (offset) => dataset.setReadOffset(offset)
     });
   }),
 
+  model: Ember.computed('enumerable', 'Model', function() {
+    return this.get('Model').extend(get(this, 'enumerable'), get(this, 'arrayActions')).create();
+  }),
+
+  datasetState: Ember.computed('dataset', function() {
+    return this.get('dataset').state;
+  }),
+
+  enumerable: Ember.computed('datasetState', function() {
+    let datasetState = get(this, 'datasetState');
+
+    // All Impaginaiton getters have to be made enumerable to be consumed by Ember.Array
+    let enumerableProperties = impaginationGetters.reduce(function(props, getter) {
+      props[getter] = {
+        enumerable: true, get: function() { return datasetState[getter]; }
+      };
+      return props;
+    }, {
+      objectAt: {
+        enumerable: true, value(index) { return datasetState.getRecord(index);}
+      }
+    });
+
+    return Object.create(datasetState, enumerableProperties);
+  }),
+
   dataset: Ember.computed('page-size', 'load-horizon', 'unload-horizon', 'fetch', 'on-observe', 'filter', function() {
-    var round = Math.round;
+    const round = Math.round;
+    let Dataset = get(this, 'Dataset');
+
     return new Dataset({
       pageSize: round(this.get('page-size')),
       loadHorizon: round(this.get('load-horizon')),
@@ -28,108 +108,12 @@ export default Ember.Component.extend({
       fetch: this.get('fetch'),
       filter: this.get('filter'),
       observe: (datasetState)=> {
-        Ember.run(() => {
-          this.safeSet('datasetState', datasetState);
-          this.sendAction('on-observe', this.get('records'), this._actions);
+        Ember.run.next(() => {
+          if(this.isDestroyed) { return; }
+          this.set('datasetState', datasetState);
+          this.get('on-observe')(this.get('model'));
         });
       }
     });
-
-  }),
-
-  setInitialState: Ember.observer('dataset', function() {
-    this.set('datasetState', this.get('dataset.state'));
-  }),
-
-  safeSet: function(key, value) {
-    if (!this.isDestroyed) { this.set(key, value); }
-  },
-
-  didReceiveAttrs() {
-    this._super.apply(this, arguments);
-
-    this.setInitialState();
-    const readOffset = Math.round(this.get('read-offset')) || 0;
-    this.get('dataset').setReadOffset(readOffset);
-  },
-
-  actions: {
-    reset(offset) {
-      offset = (offset >= 0) ? offset : 0;
-      this.get('dataset').reset(offset);
-    },
-
-    reload(offset) {
-      offset = (offset >= 0) ? offset : this.get('datasetState.readOffset');
-      this.get('dataset').reload(offset);
-    },
-
-    refilter() {
-      this.get('dataset').refilter();
-    },
-
-    setReadOffset(offset){
-      offset = (offset >= 0) ? offset : this.get('datasetState.readOffset');
-      this.get('dataset').setReadOffset(offset);
-    }
-  }
-});
-
-var PagesInterface = Ember.Object.extend(Ember.Array, {
-  objectAt(i) {
-    let page = this.pages[i];
-    return page || undefined;
-  }
-});
-
-var CollectionInterface = Ember.Object.extend(Ember.Array, {
-  init() {
-    this._super.apply(this, arguments);
-
-    this.length = this.datasetState.length;
-  },
-
-  pages: Ember.computed('datasetState.pages', function() {
-    return PagesInterface.create({
-      length: this.get('datasetState.pages.length'),
-      pages: this.get('datasetState.pages')
-    });
-  }),
-
-  readOffset: Ember.computed.readOnly('datasetState.readOffset'),
-
-  objectAt(i) {
-    let record = this.datasetState.get(i);
-    Ember.run.debounce(this, 'objectReadAt', i, 1, true);
-    return record;
-  },
-
-  objectReadAt(offset) {
-    this.get('dataset').setReadOffset(offset);
-  },
-
-  slice(start, end) {
-    if (typeof start !== "number") {
-      start = 0;
-    }
-
-    if (typeof end !== "number") {
-      end = this.datasetState.length;
-    }
-
-    let length = end - start;
-
-    if (length < 0) {
-      return [];
-    }
-    Ember.run.schedule('afterRender', this, 'objectReadAt', start);
-
-    let sliced = [];
-
-    for (let i = 0; i < length; i++) {
-      sliced.push(this.datasetState.get(start + i));
-    }
-
-    return sliced;
-  }
+  })
 });

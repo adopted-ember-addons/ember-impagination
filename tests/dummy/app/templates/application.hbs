@@ -1,1 +1,17 @@
-{{outlet}}
+<div class="container">
+  <div class="row">
+    <div class="col-sm-2">
+      <div class="sidebar-nav">
+        <h3>Ember Impagination</h3>
+        <ul class="nav nav-list">
+          {{#each toc as |section|}}
+            <li>{{link-to section.name section.route}}</li>
+          {{/each}}
+        </ul>
+      </div>
+    </div>
+    <div class="col-sm-10">
+      {{outlet}}
+    </div>
+  </div>
+</div>

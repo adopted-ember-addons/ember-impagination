@@ -65,7 +65,7 @@ which expect an array.
 
 To create an `impagination-dataset` there are two *required*
 parameters, `fetch` and `page-size`. Optional parameters include
-`load-horizon`, `unload-horizon`, `read-offset`, `unfetch`. See
+`load-horizon`, `unload-horizon`, `unfetch`. See
 [Impagination](https://github.com/flexyford/impagination) for detailed
 attribute descriptions.
 

@@ -1,0 +1,9 @@
+{{#impagination-dataset fetch=fetch page-size=pageSize as |records|}}
+
+  {{#each records as |record index|}}
+    {{#color-block record.content.hsl}} Record {{index}} {{/color-block}}
+  {{/each}}
+
+  {{in-viewport did-enter=(action records.setReadOffset records.length)}}
+
+{{/impagination-dataset}}

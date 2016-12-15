@@ -1,0 +1,19 @@
+{{#impagination-dataset
+   fetch=fetch
+   on-object-at=(action "onObjectAt")
+   load-horizon=30
+   page-size=10
+   as |records|}}
+
+  {{#ember-collection
+     items=records
+     estimated-height=500px
+     estimated-width=600px
+     cell-layout=(fixed-grid-layout 500 70)
+     as |record index|}}
+
+    {{#color-block record.content.hsl}} Record {{index}} {{/color-block}}
+
+  {{/ember-collection}}
+
+{{/impagination-dataset}}

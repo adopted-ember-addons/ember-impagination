@@ -1,0 +1,29 @@
+<h2>Infinite Scroll: Virtual-Each</h2>
+
+{{code-snippet name="virtual-each-basics.hbs"}}
+{{code-snippet name="virtual-each-basics.js"}}
+
+{{#impagination-dataset
+   fetch=fetch
+   on-slice=(action "onSlice")
+   on-observe=(action "logDatasetState")
+   load-horizon=loadHorizon
+   page-size=pageSize
+
+   as |records|}}
+
+  <div class="demo_records-wrapper">
+    <div class="demo_records-list-container"
+         style={{concat "height: " containerHeight "px; width: 600px;"}}>
+      {{#virtual-each records
+         height=containerHeight
+         itemHeight=itemHeight
+         as |record index| }}
+        <div class="demo_record" style={{color-block record.content.hsl}}>
+          Record {{index}}
+        </div>
+      {{/virtual-each}}
+    </div>
+  </div>
+
+{{/impagination-dataset}}
