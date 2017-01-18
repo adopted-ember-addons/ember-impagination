@@ -32,7 +32,7 @@
     "ember-cli-jshint": "^1.0.4",
     "ember-cli-mocha": "0.13.1",
     "ember-cli-release": "^0.2.9",
-    "ember-cli-showdown": "2.8.0",
+    "ember-cli-showdown": "2.10.0",
     "ember-cli-test-loader": "^1.1.0",
     "ember-cli-uglify": "^1.2.0",
     "ember-code-snippet": "1.8.0",
