@@ -1,13 +1,12 @@
 {
   "name": "ember-impagination",
   "dependencies": {
-    "ember": "~2.9.0",
-    "ember-cli-shims": "0.1.3",
-    "ember-cli-test-loader": "0.2.2",
     "ember-mocha": "~0.8.0",
     "font-awesome": "~4.5.0",
     "showdown": "^1.5.0",
     "bootstrap": "^3.3.6",
-    "bootswatch": "^3.3.6"
+    "bootswatch": "^3.3.6",
+    "ember": "~2.10.0",
+    "ember-cli-shims": "0.1.3"
   }
 }
