@@ -5,8 +5,11 @@ var EmberAddon = require('ember-cli/lib/broccoli/ember-addon');
 module.exports = function(defaults) {
   var app = new EmberAddon(defaults, {
     // Add options here
-    babel: {
+    'ember-cli-babel': {
       includePolyfill: true
+    },
+    'ember-cli-bootswatch': {
+      'theme': 'default'
     },
     // WARN: Phantom2.1 fails with @media queries.
     // https://github.com/ariya/phantomjs/issues/14173#issuecomment-212663559
