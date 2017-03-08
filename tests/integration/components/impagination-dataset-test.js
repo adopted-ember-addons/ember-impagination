@@ -98,7 +98,7 @@ describe('Integration | Component | ImpaginationDataset', function() {
 
     describe("when the dataset is recomputed", function() {
       beforeEach(function() {
-        this.set('page-size', 100);
+        this.set('pageSize', 100);
       });
       it("fires the on-init hook again", function() {
         expect(init.calledTwice).to.equal(true);
