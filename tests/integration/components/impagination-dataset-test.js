@@ -98,11 +98,10 @@ describe('Integration | Component | ImpaginationDataset', function() {
 
     describe("when the dataset is recomputed", function() {
       beforeEach(function() {
-        init.reset();
         this.set('page-size', 100);
       });
       it("fires the on-init hook again", function() {
-        expect(init).to.have.been.called;
+        expect(init.calledTwice).to.equal(true);
       });
     });
 
