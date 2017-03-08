@@ -22,9 +22,9 @@ describe('Integration | Component | ImpaginationDataset', function() {
       return this.server.request(pageOffset, pageSize, stats);
     };
 
-    init = (dataset) => {
+    init = sinon.spy((dataset) => {
       dataset.setReadOffset(0);
-    };
+    });
 
     observe = sinon.spy();
 
@@ -95,6 +95,16 @@ describe('Integration | Component | ImpaginationDataset', function() {
       let first = model.objectAt(0);
       expect(first.content).to.be.null;
     });
+
+    describe("when the dataset is recomputed", function() {
+      beforeEach(function() {
+        this.set('pageSize', 100);
+      });
+      it("fires the on-init hook again", function() {
+        expect(init.calledTwice).to.equal(true);
+      });
+    });
+
 
     describe("resolving fetches", function() {
       beforeEach(function(done) {

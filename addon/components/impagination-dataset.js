@@ -38,9 +38,13 @@ export default Ember.Component.extend({
 
     let readOffsetAttrFound = get(this, 'read-offset') >= 0;
     Ember.warn('Ember Impagination: `read-offset` attribute has been removed. Please use the `on-init` function instead.', !readOffsetAttrFound, {id: 'ember-impagination.attributes.read-offset'});
-
-    this.get('on-init')(this.get('model'));
+    this.fireOnInit();
   },
+
+  fireOnInit: Ember.observer('dataset', function() {
+    let model = this.get('model');
+    this.get('on-init')(model);
+  }),
 
   arrayActions: Ember.computed(function() {
     let context = this;
