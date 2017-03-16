@@ -1,7 +1,7 @@
 ---
 language: node_js
 node_js:
-  - "4"
+  - "6"
 
 sudo: false
 
@@ -33,10 +33,6 @@ before_install:
 install:
   - npm install
   - bower install
-
-branches:
-  only:
-    - "master"
 
 script:
   # Usually, it's ok to finish the test scenario without reverting
