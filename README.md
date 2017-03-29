@@ -112,7 +112,7 @@ export default Ember.Route.extend({
   unfetch: function(records, pageOffset) {
     this.store.findByIds('record', records.map(r => r.id).then(function(records) {
       records.forEach(record => record.deleteRecord());
-    });
+    }));
   }
 })
 ```
