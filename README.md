@@ -37,6 +37,113 @@ your templates while having that data look exactly like an
 ## Installation
 * `ember install ember-impagination`
 
+## Migrating
+> TODO: Add a Migration Guide
+For help upgrading between major versions, check out
+the [Migration Guide](#).
+
+## Usage:
+
+To create an `impagination-dataset` there are two *required*
+parameters, `fetch` and `page-size`. See
+[Impagination](https://github.com/flexyford/impagination)
+for detailed attribute descriptions.
+
+``` handlebars
+{{!-- app/templates/index.hbs --}}
+{{#impagination-dataset
+  fetch=(route-action 'fetch')
+  on-init=(action 'initializeReadOffset')
+  page-size=10
+  as |records|}}
+
+  {{#each records as |record|}}
+    <div class="record-title">{{record.title}}</div>
+  {{/each}}
+
+{{/impagination-dataset}}
+```
+
+### Impagination Dataset Attributes
+
+#### `fetch(pageOffset, pageSize, stats)`
+The `fetch` function is invoked whenever a page is requested. It must
+return a `thenable` which returns an array of records.
+
+We highly recommend using the [ember-route-action-helper] for defining
+the `fetch` function.
+
+> ember install ember-route-action-helper
+
+``` javascript
+// application/route.js
+import Ember from 'ember';
+
+export default Ember.Route.extend({
+  actions: {
+    fetch(pageOffset, pageSize, stats) {
+      // fetch a page of records at the pageOffset
+      return this.store.query('record', { page: pageOffset });
+    }
+  }
+});
+```
+
+#### `on-init(dataset)`
+The `on-init` hook is invoked whenever the underlying impagination
+dataset is created.
+The most standard use-case for this is to kick off an action that sets
+the initial read offset, thereby causing the first page to be
+fetched.
+This hook fires whenever the component is initialized.
+
+``` javascript
+// application/controller.js
+import Ember from 'ember';
+
+export default Ember.Route.extend({
+  actions: {
+    initializeReadOffset(dataset) {
+      // Initial readOffset set to `0`
+      dataset.setReadOffset(0);
+    }
+  }
+});
+```
+
+#### `page-size`
+The number of records per page.
+
+
+#### `load-horizon` _optional_
+Default: `page-size`
+
+The minimum range of records to fetch from database. Fetches records "inclusive" (+/- `load-horizon`) of the current
+readOffset. Defaults to fetching one page of records inclusive of the
+`readOffset`.
+
+#### `unload-horizon` _optional_
+Default: `Infinity`
+
+The maximum range of records to persist in the dataset. Unload records
+"exclusive" (+/- `unload-horizon`) of the current readOffset.
+Defaults to never unloading any records.
+
+#### 'filter(record, index, records)' _optional_
+Default: `null`
+
+The `filter` function is invoked whenever a page of records are
+resolved. It filters the records which are returned by
+`{{impaginaiton-dataset as |records|}}`
+Filtering is diabled by default, so all records are returned.
+
+#### **Coming Soon** 'unfetch(records, pageOffset) _optional_
+Default: `function() {/* no-op */}`
+
+The `unfetch` function is invoked whenever a page of records is
+unloaded as a result of being outside the `unload-horizon`.
+
+
 ## Demo
 [Ember-Impagination Demo](http://thefrontside.github.io/ember-impagination)
 
