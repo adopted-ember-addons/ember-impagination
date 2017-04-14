@@ -3,6 +3,10 @@
 [![Ember Observer Score](http://emberobserver.com/badges/ember-impagination.svg)](http://emberobserver.com/addons/ember-impagination)
 [![Build Status](https://travis-ci.org/thefrontside/ember-impagination.svg?branch=master)](https://travis-ci.org/thefrontside/ember-impagination)
 
+*Ember-Impagination* feeds paginated data into your
+templates in the form of an `Ember.Array`. It does not
+provide any additional markup. Checkout the [Advanced Usage](#) for Infinite Scroll examples.
+
 *Ember-Impagination* is an Ember binding for
 [Impagination](https://github.com/flexyford/impagination), a front-end
 data-layer for the paginated API on your server. *Ember-Impagination*
@@ -19,20 +23,7 @@ needs to render quickly each and every time.
 > pre-fetch ahead of you, and it will figure out the rest.
 
 > Impagination is built using an event-driven immutable style, so it
-> is ideal for use with UI frameworks like Ember . . .
-
-Hence, we present *Ember-Impagination*.
-
-*Ember-Impagination* provides you with a component,
-`{{impagination-dataset as |data|}}`, you can use to feed data into
-your templates while having that data look exactly like an
-`Ember.Array`.
-
-> Note: *Ember-Impagination* does not provide any of the visual
-> elements in a system like infinite scroll. You'll still need to use
-> a special component like `virtual-each` or
-> `ember-collection`. Instead, *Ember-Impagination* simplifies feeding
-> your components fetched data.
+> is ideal for use with UI frameworks like Ember
 
 ## Installation
 * `ember install ember-impagination`
@@ -41,6 +32,21 @@ your templates while having that data look exactly like an
 > TODO: Add a Migration Guide
 For help upgrading between major versions, check out
 the [Migration Guide](#).
+
+## Demo
+[Ember-Impagination Demo](http://thefrontside.github.io/ember-impagination)
+
+The demo presents a finite scroll implementation of
+*Ember-Impagination*. It scrolls through the ROYGBIV color spectrum by
+loading and unloading pages of records, where each record is a unique
+color-hue.
+
+![](http://g.recordit.co/iltQTaYwSb.gif)
+
+> At the top of this demo, you will find a visualization for
+pages. Resolved (Loaded) Pages are green, Pending (Loading) pages are
+white, and Unrequested (Unloaded) pages are black. The white-bar
+represents the top-most index of the scroll view.
 
 ## Usage:
 
@@ -129,6 +135,18 @@ The maximum range of records to persist in the dataset. Unload records
 "exclusive" (+/- `unload-horizon`) of the current readOffset.
 Defaults to never unloading any records.
 
+#### `on-observe(dataset)`
+The `on-observe` hook is invoked whenever the underlying impagination
+dataset is updated.
+The most standard use-case for this is to invoke an action that sets
+the read offset as the user clicks or scrolls the dataset.
+This hook fires whenever the component updates. Updating
+the `readOffset` causes pages to be loaded and unloaded based on the
+`load-horizon` and `unload-horizon` respectively.
+
+Checkout the [Advanced Usage](#) for Infinite Scroll examples which
+use `on-observe`.
+
 #### 'filter(record, index, records)' _optional_
 Default: `null`
 
@@ -142,29 +160,6 @@ Default: `function() {/* no-op */}`
 
 The `unfetch` function is invoked whenever a page of records is
 unloaded as a result of being outside the `unload-horizon`.
-
-
-## Demo
-[Ember-Impagination Demo](http://thefrontside.github.io/ember-impagination)
-
-The demo presents a finite scroll implementation of
-*Ember-Impagination*. It scrolls through the ROYGBIV color spectrum by
-loading and unloading pages of records, where each record is a unique
-color-hue. At the top of the demo, you will find a visualization for
-pages. Resolved (Loaded) Pages are green, Pending (Loading) pages are
-white, and Unrequested (Unloaded) pages are black. The white-bar
-represents the top-most index of the scroll view.
-
-![](http://g.recordit.co/iltQTaYwSb.gif)
-
-The demo is implemented using
-[virtual-each](https://github.com/jasonmit/virtual-each) due to the
-simplicity of the component. However, *Ember-Impagination* can also be
-utilized with other components like
-[ember-collection](https://github.com/emberjs/ember-collection), or
-even a simple `{{each}}`. By design, *Ember-Impagination* leverages
-Glimmer and yields paginated data from your server's API to components
-which expect an array.
 
 ## Usage
 
