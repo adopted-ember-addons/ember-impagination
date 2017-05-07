@@ -53,7 +53,7 @@
     "ember-resolver": "^4.0.0",
     "ember-sinon": "0.7.0",
     "impagination": "1.0.0-alpha.3",
-    "virtual-each": "^0.5.0",
+    "virtual-each": "^0.5.1",
     "ember-source": "~2.13.0",
     "loader.js": "^4.4.0"
   },
