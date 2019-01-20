@@ -17,7 +17,8 @@
   "repository": "https://github.com/thefrontside/ember-impagination",
   "scripts": {
     "build": "ember build",
-    "start": "ember server",
+    "lint:js": "eslint ./*.js addon addon-test-support app config lib server test-support tests",
+    "start": "ember serve",
     "test": "ember try:each"
   },
   "dependencies": {
@@ -28,11 +29,11 @@
     "broccoli-asset-rev": "^2.4.5",
     "ember-ajax": "^3.0.0",
     "ember-browserify": "1.2.2",
-    "ember-cli": "~2.16.2",
+    "ember-cli": "~2.18.2",
     "ember-cli-bootswatch": "1.13.3",
     "ember-cli-chai": "0.4.1",
     "ember-cli-dependency-checker": "^2.0.0",
-    "ember-cli-eslint": "^4.0.0",
+    "ember-cli-eslint": "^4.2.1",
     "ember-cli-github-pages": "0.1.0",
     "ember-cli-htmlbars-inline-precompile": "^1.0.0",
     "ember-cli-inject-live-reload": "^1.4.1",
@@ -53,7 +54,9 @@
     "ember-math-helpers": "2.10.0",
     "ember-resolver": "^4.0.0",
     "ember-sinon": "0.7.0",
-    "ember-source": "~2.16.0",
+    "ember-source": "~2.18.0",
+    "eslint-plugin-ember": "^5.0.0",
+    "eslint-plugin-node": "^5.2.1",
     "impagination": "1.0.0-alpha.3",
     "loader.js": "^4.7.0",
     "virtual-each": "^0.5.1"
