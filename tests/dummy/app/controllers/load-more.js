@@ -1,8 +1,9 @@
-import Ember from 'ember';
+import { Promise as EmberPromise } from 'rsvp';
+import Controller from '@ember/controller';
 
 const DEBUG = false;
 
-export default Ember.Controller.extend({
+export default Controller.extend({
   containerHeight: 600,
   itemHeight: 70,
 
@@ -10,7 +11,7 @@ export default Ember.Controller.extend({
     let spectrum = new RGBSpectrum(300).colors;
     let delay = 400; //ms
 
-    return new Ember.RSVP.Promise((resolve)=> {
+    return new EmberPromise((resolve)=> {
       setTimeout(()=> {
         // stats.totalPages =  Math.ceil( spectrum.length / pageSize);
         let recordOffset = pageOffset * pageSize;

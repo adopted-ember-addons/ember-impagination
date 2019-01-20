@@ -1,8 +1,15 @@
-import Ember from 'ember';
+import { next } from '@ember/runloop';
+import EmberArray from '@ember/array';
+import Mixin from '@ember/object/mixin';
+import { warn } from '@ember/debug';
+import Component from '@ember/component';
+import { dasherize } from '@ember/string';
+import EmberObject, {
+  get,
+  observer,
+  computed
+} from '@ember/object';
 import layout from '../templates/components/impagination-dataset';
-
-const { get } = Ember;
-const { String: { dasherize } } = Ember;
 
 
 // TODO: Since `records` are wrapped in Ember.A() not all these methods are accurate
@@ -19,7 +26,7 @@ const impaginationGetters = [
   'pages', 'length', 'pageSize', 'loadHorizon', 'unloadHorizon', 'readOffset', 'stats', 'filter'
 ];
 
-export default Ember.Component.extend({
+export default Component.extend({
   layout: layout,
   tagName: '',
   'load-horizon': null,
@@ -37,16 +44,16 @@ export default Ember.Component.extend({
     this._super(...arguments);
 
     let readOffsetAttrFound = get(this, 'read-offset') >= 0;
-    Ember.warn('Ember Impagination: `read-offset` attribute has been removed. Please use the `on-init` function instead.', !readOffsetAttrFound, {id: 'ember-impagination.attributes.read-offset'});
+    warn('Ember Impagination: `read-offset` attribute has been removed. Please use the `on-init` function instead.', !readOffsetAttrFound, {id: 'ember-impagination.attributes.read-offset'});
     this.fireOnInit();
   },
 
-  fireOnInit: Ember.observer('dataset', function() {
+  fireOnInit: observer('dataset', function() {
     let model = this.get('model');
     this.get('on-init')(model);
   }),
 
-  arrayActions: Ember.computed(function() {
+  arrayActions: computed(function() {
     let context = this;
     let arrayActions = [...accessors, ...iterators, ...enumerables].reduce((props, method) => {
       let action = `on-${dasherize(method)}`;
@@ -59,12 +66,12 @@ export default Ember.Component.extend({
       return props;
     }, {});
 
-    return Ember.Mixin.create(arrayActions);
+    return Mixin.create(arrayActions);
   }),
 
-  Model: Ember.computed('dataset', function() {
+  Model: computed('dataset', function() {
     let dataset = this.get('dataset');
-    return Ember.Object.extend(Ember.Array, {
+    return EmberObject.extend(EmberArray, {
       delete: (index) => dataset.delete(index),
       put: (data, index) => dataset.put(data, index),
       post: (data, index) => dataset.post(data, index),
@@ -74,15 +81,15 @@ export default Ember.Component.extend({
     });
   }),
 
-  model: Ember.computed('enumerable', 'Model', function() {
+  model: computed('enumerable', 'Model', function() {
     return this.get('Model').extend(get(this, 'enumerable'), get(this, 'arrayActions')).create();
   }),
 
-  datasetState: Ember.computed('dataset', function() {
+  datasetState: computed('dataset', function() {
     return this.get('dataset').state;
   }),
 
-  enumerable: Ember.computed('datasetState', function() {
+  enumerable: computed('datasetState', function() {
     let datasetState = get(this, 'datasetState');
 
     // All Impaginaiton getters have to be made enumerable to be consumed by Ember.Array
@@ -100,7 +107,7 @@ export default Ember.Component.extend({
     return Object.create(datasetState, enumerableProperties);
   }),
 
-  dataset: Ember.computed('page-size', 'load-horizon', 'unload-horizon', 'fetch', 'on-observe', 'filter', function() {
+  dataset: computed('page-size', 'load-horizon', 'unload-horizon', 'fetch', 'on-observe', 'filter', function() {
     const round = Math.round;
     let Dataset = get(this, 'Dataset');
 
@@ -111,7 +118,7 @@ export default Ember.Component.extend({
       fetch: this.get('fetch'),
       filter: this.get('filter'),
       observe: (datasetState)=> {
-        Ember.run.next(() => {
+        next(() => {
           if(this.isDestroyed) { return; }
           this.set('datasetState', datasetState);
           this.get('on-observe')(this.get('model'));

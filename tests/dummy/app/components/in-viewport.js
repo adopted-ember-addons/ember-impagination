@@ -1,14 +1,15 @@
-import Ember from 'ember';
+import { on } from '@ember/object/evented';
+import Component from '@ember/component';
 import InViewportMixin from 'ember-in-viewport';
 
-export default Ember.Component.extend(InViewportMixin, {
+export default Component.extend(InViewportMixin, {
   classNames: ['viewport'],
 
   didEnterViewport() {
     this.sendAction('did-enter');
   },
 
-  viewportOptionsOverride: Ember.on('didInsertElement', function() {
+  viewportOptionsOverride: on('didInsertElement', function() {
     // Spying on scrolling behavior is opt-in
     this.set('viewportSpy', true);
   })

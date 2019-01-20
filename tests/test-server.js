@@ -1,4 +1,4 @@
-import Ember from 'ember';
+import { Promise as EmberPromise } from 'rsvp';
 
 /**
  * A simulation server for making page reqests that are compatible with
@@ -58,12 +58,12 @@ export class Server {
    */
   resolveAll() {
     this.requests.forEach((request) => request.resolve());
-    return Ember.RSVP.Promise.all(this.requests);
+    return EmberPromise.all(this.requests);
   }
 
   rejectAll() {
     this.requests.forEach((request) => request.reject());
-    return Ember.RSVP.Promise.all(this.requests);
+    return EmberPromise.all(this.requests);
   }
 }
 
@@ -75,7 +75,7 @@ export class PageRequest {
     this.offset = pageOffset;
     this.size = pageSize;
     this.stats = stats;
-    this.promise = new Ember.RSVP.Promise((resolve, reject) => {
+    this.promise = new EmberPromise((resolve, reject) => {
       this._resolve = resolve;
       this._reject = reject;
     });
