@@ -3,4 +3,8 @@
 <div class="record-player_unload-horizon-left" style={{unloadHorizonLeftStyle}}></div>
 <div class="record-player_unload-horizon-right" style={{unloadHorizonRightStyle}}></div>
 
-<div class="record-player_pages">{{#each pages as |page index|}}<div class="record-player_page {{page-state page}}" style={{pageStyle}}></div>{{/each}}</div>
+<div class="record-player_pages">
+  {{#each pages as |page|}}
+    <div class="record-player_page {{page-state page}}" style={{pageStyle}}></div>
+  {{/each}}
+</div>

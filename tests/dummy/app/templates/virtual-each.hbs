@@ -14,7 +14,7 @@
 
   <div class="demo_records-wrapper">
     <div class="demo_records-list-container"
-         style={{concat "height: " containerHeight "px; width: 600px;"}}>
+         style={{html-safe (concat "height: " containerHeight "px; width: 600px;")}}>
       {{#virtual-each records
          height=containerHeight
          itemHeight=itemHeight
