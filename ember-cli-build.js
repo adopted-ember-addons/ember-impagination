@@ -11,9 +11,6 @@ module.exports = function(defaults) {
     'ember-cli-bootswatch': {
       'theme': 'default'
     },
-    // WARN: Phantom2.1 fails with @media queries.
-    // https://github.com/ariya/phantomjs/issues/14173#issuecomment-212663559
-    // 'ember-cli-bootswatch': 'paper',
     snippetPaths: ['tests/dummy/snippets'],
     snippetSearchPaths: ['tests/dummy/app']
   });
