@@ -2502,9 +2502,10 @@ ember-cli-broccoli-sane-watcher@^2.0.4:
     rsvp "^3.0.18"
     sane "^1.1.1"
 
-ember-cli-chai@0.4.0:
-  version "0.4.0"
-  resolved "https://registry.yarnpkg.com/ember-cli-chai/-/ember-cli-chai-0.4.0.tgz#912f960f9fc525b8ab9e69e84f580d63b2ec82e4"
+ember-cli-chai@0.4.1:
+  version "0.4.1"
+  resolved "https://registry.yarnpkg.com/ember-cli-chai/-/ember-cli-chai-0.4.1.tgz#fcbe60c2c779dbddff886273b0d53fb3a23932d0"
+  integrity sha1-/L5gwsd5293/iGJzsNU/s6I5MtA=
   dependencies:
     broccoli-funnel "^1.0.9"
     broccoli-merge-trees "^1.1.5"
@@ -2662,9 +2663,10 @@ ember-cli-shims@^1.1.0:
     ember-cli-version-checker "^1.2.0"
     silent-error "^1.0.1"
 
-ember-cli-showdown@3.1.1:
-  version "3.1.1"
-  resolved "https://registry.yarnpkg.com/ember-cli-showdown/-/ember-cli-showdown-3.1.1.tgz#852eda956f6f0867ea6ab7f9422a7a442944b3fe"
+ember-cli-showdown@3.1.2:
+  version "3.1.2"
+  resolved "https://registry.yarnpkg.com/ember-cli-showdown/-/ember-cli-showdown-3.1.2.tgz#6c9d404a62f58a0b3ac83c30a2d38aa57df73ea3"
+  integrity sha1-bJ1ASmL1igs6yDwwotOKpX33PqM=
   dependencies:
     broccoli-funnel "^1.0.1"
     broccoli-merge-trees "^1.1.1"
@@ -2818,9 +2820,10 @@ ember-collection@^1.0.0-alpha.7:
     ember-cli-htmlbars "^1.0.1"
     layout-bin-packer "^1.2.0"
 
-ember-concurrency@0.8.3:
-  version "0.8.3"
-  resolved "https://registry.yarnpkg.com/ember-concurrency/-/ember-concurrency-0.8.3.tgz#f3adc58bc7a69c7d9ec27fe9cbe75cb8c0adf3bf"
+ember-concurrency@0.8.5:
+  version "0.8.5"
+  resolved "https://registry.yarnpkg.com/ember-concurrency/-/ember-concurrency-0.8.5.tgz#e0741fc74b71029877b1795a5d2aeab3e23fd7a0"
+  integrity sha1-4HQfx0txAph3sXlaXSrqs+I/16A=
   dependencies:
     babel-core "^6.24.1"
     ember-cli-babel "^6.1.0"
