@@ -1,16 +1,15 @@
-import { on } from '@ember/object/evented';
 import Component from '@ember/component';
 import InViewportMixin from 'ember-in-viewport';
+import { tryInvoke }  from '@ember/utils';
 
 export default Component.extend(InViewportMixin, {
   classNames: ['viewport'],
 
   didEnterViewport() {
-    this.sendAction('did-enter');
+    tryInvoke(this, 'did-enter');
   },
-
-  viewportOptionsOverride: on('didInsertElement', function() {
+  didInsertElement() {
     // Spying on scrolling behavior is opt-in
     this.set('viewportSpy', true);
-  })
+  }
 });

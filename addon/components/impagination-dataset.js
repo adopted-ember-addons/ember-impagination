@@ -120,7 +120,8 @@ export default Component.extend({
       observe: (datasetState)=> {
         next(() => {
           if(this.isDestroyed) { return; }
-          this.set('datasetState', datasetState);
+          // eslint-disable-next-line ember/no-side-effects
+          this.set('datasetState', datasetState); // TODO fix lint
           this.get('on-observe')(this.get('model'));
         });
       }
