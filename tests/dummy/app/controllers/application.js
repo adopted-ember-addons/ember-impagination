@@ -1,7 +1,7 @@
-import Ember from 'ember';
+import Controller from '@ember/controller';
 
-export default Ember.Controller.extend({
-  toc: [
+export default Controller.extend({
+  toc: Object.freeze([
     {
       name: 'Load More Button',
       route: 'load-more'
@@ -18,5 +18,5 @@ export default Ember.Controller.extend({
       name: 'Infinite Scroll: Ember Collection',
       route: 'ember-collection'
     }
-  ]
+  ])
 });

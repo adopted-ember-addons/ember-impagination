@@ -1,6 +1,6 @@
-import Ember from 'ember';
+import EmberObject, { computed } from '@ember/object';
 
-export default Ember.Object.extend({
+export default EmberObject.extend({
   isRequested: null,
   isPending: null,
   isResolved: null,
@@ -12,9 +12,9 @@ export default Ember.Object.extend({
   loadHorizon: null,
   unloadHorizon: null,
   totalPages: null,
-  isCurrentPage: Ember.computed(function(){}),
-  isLoadMin: Ember.computed(function(){}),
-  isLoadMax: Ember.computed(function(){}),
-  isUnloadMin: Ember.computed(function(){}),
-  isUnloadMax: Ember.computed(function(){}),
+  isCurrentPage: computed(function(){}),
+  isLoadMin: computed(function(){}),
+  isLoadMax: computed(function(){}),
+  isUnloadMin: computed(function(){}),
+  isUnloadMax: computed(function(){}),
 });

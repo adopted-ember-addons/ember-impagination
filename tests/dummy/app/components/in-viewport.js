@@ -1,15 +1,17 @@
-import Ember from 'ember';
+import Component from '@ember/component';
 import InViewportMixin from 'ember-in-viewport';
+import { tryInvoke }  from '@ember/utils';
 
-export default Ember.Component.extend(InViewportMixin, {
+export default Component.extend(InViewportMixin, {
   classNames: ['viewport'],
 
   didEnterViewport() {
-    this.sendAction('did-enter');
+    tryInvoke(this, 'did-enter');
+    this.toggleProperty("setOffset");
   },
-
-  viewportOptionsOverride: Ember.on('didInsertElement', function() {
+  didInsertElement() {
+    this._super(...arguments);
     // Spying on scrolling behavior is opt-in
     this.set('viewportSpy', true);
-  })
+  }
 });

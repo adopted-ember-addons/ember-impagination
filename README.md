@@ -1,4 +1,5 @@
 # Ember-Impagination
+
 [![npm version](https://badge.fury.io/js/ember-impagination.svg)](https://badge.fury.io/js/ember-impagination)
 [![Ember Observer Score](http://emberobserver.com/badges/ember-impagination.svg)](http://emberobserver.com/addons/ember-impagination)
 [![Build Status](https://travis-ci.org/thefrontside/ember-impagination.svg?branch=master)](https://travis-ci.org/thefrontside/ember-impagination)
@@ -10,14 +11,12 @@ leverages the power of Glimmer and provides your component the data it
 needs to render quickly each and every time.
 
 > Impagination README:
-
 > Whatever your use-case: infinite scrolling lists, a carousel
 > browser, or even a classic page-by-page result list, Impagination
 > frees you to focus on what you want to do with your data, not the
 > micro-logistics of when to fetch it. All you provide Impagination is
 > the logic to fetch a single page, plus how many pages you want it to
 > pre-fetch ahead of you, and it will figure out the rest.
-
 > Impagination is built using an event-driven immutable style, so it
 > is ideal for use with UI frameworks like Ember . . .
 
@@ -35,9 +34,11 @@ your templates while having that data look exactly like an
 > your components fetched data.
 
 ## Installation
+
 * `ember install ember-impagination`
 
 ## Demo
+
 [Ember-Impagination Demo](http://thefrontside.github.io/ember-impagination)
 
 The demo presents a finite scroll implementation of
@@ -48,7 +49,7 @@ pages. Resolved (Loaded) Pages are green, Pending (Loading) pages are
 white, and Unrequested (Unloaded) pages are black. The white-bar
 represents the top-most index of the scroll view.
 
-![](http://g.recordit.co/iltQTaYwSb.gif)
+![ember-impagination](http://g.recordit.co/iltQTaYwSb.gif)
 
 The demo is implemented using
 [virtual-each](https://github.com/jasonmit/virtual-each) due to the
@@ -119,7 +120,9 @@ export default Ember.Route.extend({
 
 This setup will immediatly call fetch twice (for records 0-4 [page 0]
 and records 5-9 [page 1])
-```
+
+```text
+
 Total Records: 10
 Record 0
 Record 1
@@ -129,6 +132,7 @@ Record 9
 ```
 
 #### Passing the Fetch Function
+
 In **Ember 1.13 and above**, we can use closure-actions to pass the
 fetch function into `ember-impagination`
 
@@ -181,6 +185,7 @@ export default Ember.Route.extend({
 ```
 
 ### Filtering Records
+
 We fetch records using an immutable style, but we often require
 filtering by mutable records in our dataset. To enable filtering, pass
 a filter `callback` to `ember-impagination` as you would to
@@ -202,23 +207,27 @@ export default Ember.Route.extend({
   }
 });
 ```
+
 ### Dataset API
+
 There are a number actions to update the dataset.
 
 #### Updating the Dataset
-| Actions       | Parameters     | Description   |
-| ------------- |:--------------:|:--------------|
-| refilter      | [filterCallback] | Reapplies the filter for all resolved pages. If `filterCallback` is provided, applies and sets the new filter.
-| reset        | [offset]          | Unfetches all pages and clears the `state`. If `offset` is provided, fetches records starting at `offset`.
-| setReadOffset | [offset]         | Sets the `readOffset` and fetches records resuming at `offset`
-| ~~reload~~    | ~~[index]~~      | _Removed in `1.0.0` release. Please use `reset` instead._
+
+| Actions       |    Parameters    | Description                                                                                                    |
+| ------------- | :--------------: | :------------------------------------------------------------------------------------------------------------- |
+| refilter      | [filterCallback] | Reapplies the filter for all resolved pages. If `filterCallback` is provided, applies and sets the new filter. |
+| reset         |     [offset]     | Unfetches all pages and clears the `state`. If `offset` is provided, fetches records starting at `offset`.     |
+| setReadOffset |     [offset]     | Sets the `readOffset` and fetches records resuming at `offset`                                                 |
+| ~~reload~~    |   ~~[index]~~    | _Removed in `1.0.0` release. Please use `reset` instead._                                                      |
 
 #### Updating the State
-| Actions| Parameters  | Defaults        |Description   |
-| ------ |:-----------:|:--------------|:--------------|
-| post   | data, index | index = 0 | Creates record with `data` at `index`.
-| put    | data, index | index = state.readOffset | Merges `data` into record at `index`.
-| delete | index       | index= state.readOffset  | Deletes record at `index`.
+
+| Actions | Parameters  | Defaults                 | Description                            |
+| ------- | :---------: | :----------------------- | :------------------------------------- |
+| post    | data, index | index = 0                | Creates record with `data` at `index`. |
+| put     | data, index | index = state.readOffset | Merges `data` into record at `index`.  |
+| delete  |    index    | index= state.readOffset  | Deletes record at `index`.             |
 
 These functions can be called from the route/controller or from child
 components in the handlebars templates. In the examples below, we
@@ -226,6 +235,7 @@ components in the handlebars templates. In the examples below, we
 component using both options.
 
 #### resetting from the parent route
+
 In order to call dataset actions from the route, we will have to
 observe the latest dataset and dataset-actions with the `on-observe`
 parameter.
@@ -261,6 +271,7 @@ actions: {
 ```
 
 #### resetting from child components
+
 Here we do not need to utilize `impagination-dataset`'s `on-observe`
 parameter. The `reset` action is simply called by a child component.
 
@@ -275,8 +286,8 @@ parameter. The `reset` action is simply called by a child component.
 {{/impagination-dataset}}
 ```
 
-
 ### Create your own Dataset
+
 If `{{impagination-dataset}}` is not an ideal component for your
 unique `Impagination` needs, you can get into the nitty gritty, and
 use `Impagination` directly. If you find yourself creating your own
@@ -305,16 +316,28 @@ let dataset = new Dataset({
 });
 ```
 
+### Running tests
 
+* `ember test` – Runs the test suite on the current Ember version
+* `ember test --server` – Runs the test suite in "watch mode"
+* `ember try:each` – Runs the test suite against multiple Ember versions
 
-## Running Tests
+### Running the dummy application
 
-* `ember test`
-* `ember test --server`
+* `ember serve`
+* Visit the dummy application at [http://localhost:4200](http://localhost:4200).
 
+For more information on using ember-cli, visit [https://ember-cli.com/](https://ember-cli.com/).
 
-## Code of Conduct
+### Code of Conduct
+
 Please note that this project is released with a Contributor Code of
 Conduct. By participating in this project you agree to abide by its
 terms, which can be found in the `CODE_OF_CONDUCT.md` file in this
 repository.
+
+### License
+
+------------------------------------------------------------------------------
+
+This project is licensed under the [MIT License](LICENSE.md).

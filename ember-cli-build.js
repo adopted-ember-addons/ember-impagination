@@ -1,9 +1,9 @@
-/* global require, module */
-/* eslint-env node */
+'use strict';
+
 const EmberAddon = require('ember-cli/lib/broccoli/ember-addon');
 
 module.exports = function(defaults) {
-  var app = new EmberAddon(defaults, {
+  let app = new EmberAddon(defaults, {
     // Add options here
     'ember-cli-babel': {
       includePolyfill: true
@@ -11,9 +11,6 @@ module.exports = function(defaults) {
     'ember-cli-bootswatch': {
       'theme': 'default'
     },
-    // WARN: Phantom2.1 fails with @media queries.
-    // https://github.com/ariya/phantomjs/issues/14173#issuecomment-212663559
-    // 'ember-cli-bootswatch': 'paper',
     snippetPaths: ['tests/dummy/snippets'],
     snippetSearchPaths: ['tests/dummy/app']
   });

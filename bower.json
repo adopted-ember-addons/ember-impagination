@@ -1,7 +1,6 @@
 {
   "name": "ember-impagination",
   "dependencies": {
-    "ember-mocha": "0.11.0",
     "font-awesome": "~4.5.0",
     "showdown": "^1.5.0",
     "bootstrap": "^3.3.6",

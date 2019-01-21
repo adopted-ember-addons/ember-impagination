@@ -4,11 +4,10 @@
 
 {{#impagination-dataset
    fetch=fetch
-   on-observe=(action 'logDatasetState')
+   on-observe=(action "logDatasetState")
    page-size=15
    as |records|}}
-
-  {{in-viewport did-enter=(action records.setReadOffset 0)}}
+  {{in-viewport did-enter=(action records.setReadOffset 0) setOffset=setOffset}}
 
   <div class="demo_records-wrapper">
     <div class="demo_records-list-container">
@@ -20,7 +19,9 @@
     </div>
   </div>
 
-  {{in-viewport did-enter=(action records.setReadOffset records.length)}}
+  {{#if setOffset}}
+    {{in-viewport did-enter=(action records.setReadOffset records.length) setOffset=setOffset}} 
+  {{/if}}
 
   <button style="visibility:hidden"></button>
 

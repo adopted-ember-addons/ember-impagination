@@ -1,9 +1,10 @@
-import Ember from 'ember';
+import { Promise as EmberPromise } from 'rsvp';
+import Controller from '@ember/controller';
 import { task, timeout } from 'ember-concurrency';
 
 const DEBUG = false;
 
-export default Ember.Controller.extend({
+export default Controller.extend({
   isEmberCollection: false,
   isVirtualEach: true,
   isInViewport: false,
@@ -18,7 +19,7 @@ export default Ember.Controller.extend({
     let spectrum = new RGBSpectrum(300).colors;
     let delay = 400; //ms
 
-    return new Ember.RSVP.Promise((resolve)=> {
+    return new EmberPromise((resolve)=> {
       setTimeout(()=> {
         stats.totalPages =  Math.ceil( spectrum.length / pageSize);
         let recordOffset = pageOffset * pageSize;
