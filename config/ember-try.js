@@ -16,9 +16,16 @@ module.exports = function() {
           env: {
             EMBER_OPTIONAL_FEATURES: JSON.stringify({ 'jquery-integration': true }),
           },
+          bower: {
+            dependencies: {
+              ember: null,
+              'ember-cli-shims': null,
+              'ember-data': null,
+            },
+          },
           npm: {
             devDependencies: {
-              '@ember/jquery': '^0.5.1',
+              '@ember/jquery': '^0.5.2',
               'ember-source': '~2.16.0'
             }
           }
@@ -28,15 +35,29 @@ module.exports = function() {
           env: {
             EMBER_OPTIONAL_FEATURES: JSON.stringify({ 'jquery-integration': true }),
           },
+          bower: {
+            dependencies: {
+              ember: null,
+              'ember-cli-shims': null,
+              'ember-data': null,
+            },
+          },
           npm: {
             devDependencies: {
-              '@ember/jquery': '^0.5.1',
+              '@ember/jquery': '^0.5.2',
               'ember-source': '~2.18.0'
             }
           }
         },
         {
           name: 'ember-release',
+          bower: {
+            dependencies: {
+              ember: null,
+              'ember-cli-shims': null,
+              'ember-data': null,
+            },
+          },
           npm: {
             devDependencies: {
               'ember-source': urls[0]
@@ -45,6 +66,13 @@ module.exports = function() {
         },
         {
           name: 'ember-beta',
+          bower: {
+            dependencies: {
+              ember: null,
+              'ember-cli-shims': null,
+              'ember-data': null,
+            },
+          },
           npm: {
             devDependencies: {
               'ember-source': urls[1]
@@ -53,6 +81,13 @@ module.exports = function() {
         },
         {
           name: 'ember-canary',
+          bower: {
+            dependencies: {
+              ember: null,
+              'ember-cli-shims': null,
+              'ember-data': null,
+            },
+          },
           npm: {
             devDependencies: {
               'ember-source': urls[2]
@@ -72,9 +107,16 @@ module.exports = function() {
               'jquery-integration': true
             })
           },
+          bower: {
+            dependencies: {
+              ember: null,
+              'ember-cli-shims': null,
+              'ember-data': null,
+            },
+          },
           npm: {
             devDependencies: {
-              '@ember/jquery': '^0.5.1'
+              '@ember/jquery': '^0.5.2'
             }
           }
         }
