@@ -8,7 +8,7 @@
     "ember pagination",
     "impagination"
   ],
-  "repository": "https://github.com/thefrontside/ember-impagination",
+  "repository": "https://github.com/adopted-ember-addons/ember-impagination",
   "license": "MIT",
   "author": "The Frontside",
   "contributors": [
@@ -77,6 +77,6 @@
   },
   "ember-addon": {
     "configPath": "tests/dummy/config",
-    "demoURL": "http://thefrontside.github.io/ember-impagination"
+    "demoURL": "http://adopted-ember-addons.github.io/ember-impagination"
   }
 }
