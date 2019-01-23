@@ -31,14 +31,15 @@
   },
   "dependencies": {
     "@ember/jquery": "^0.5.2",
+    "ember-auto-import": "^1.2.19",
     "ember-cli-babel": "^6.16.0",
-    "ember-cli-htmlbars": "^3.0.0"
+    "ember-cli-htmlbars": "^3.0.0",
+    "impagination": "1.0.0-alpha.3"
   },
   "devDependencies": {
     "@ember/optional-features": "^0.6.3",
     "broccoli-asset-rev": "^2.7.0",
     "ember-ajax": "^3.1.0",
-    "ember-browserify": "1.2.2",
     "ember-cli": "~3.4.4",
     "ember-cli-bootswatch": "1.13.3",
     "ember-cli-chai": "0.5.0",
@@ -68,7 +69,6 @@
     "ember-try": "^1.0.0",
     "eslint-plugin-ember": "^5.2.0",
     "eslint-plugin-node": "^7.0.1",
-    "impagination": "1.0.0-alpha.3",
     "loader.js": "^4.7.0",
     "virtual-each": "^0.6.2"
   },
