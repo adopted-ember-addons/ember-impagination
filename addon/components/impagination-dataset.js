@@ -59,7 +59,7 @@ export default Component.extend({
       let action = `on-${dasherize(method)}`;
       if (get(this, action)) {
         props[method] = function() {
-          context.sendAction(action, get(context, 'dataset'), ...arguments);
+          context[action](get(context, 'dataset'), ...arguments);
           return this._super(...arguments);
         };
       }
