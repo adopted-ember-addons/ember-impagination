@@ -2,7 +2,7 @@
 
 [![npm version](https://badge.fury.io/js/ember-impagination.svg)](https://badge.fury.io/js/ember-impagination)
 [![Ember Observer Score](http://emberobserver.com/badges/ember-impagination.svg)](http://emberobserver.com/addons/ember-impagination)
-[![Build Status](https://travis-ci.org/thefrontside/ember-impagination.svg?branch=master)](https://travis-ci.org/thefrontside/ember-impagination)
+[![Build Status](https://travis-ci.org/adopted-ember-addons/ember-impagination.svg?branch=master)](https://travis-ci.org/adopted-ember-addons/ember-impagination)
 
 *Ember-Impagination* is an Ember binding for
 [Impagination](https://github.com/flexyford/impagination), a front-end
