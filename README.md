@@ -39,7 +39,7 @@ your templates while having that data look exactly like an
 
 ## Demo
 
-[Ember-Impagination Demo](http://thefrontside.github.io/ember-impagination)
+[Ember-Impagination Demo](https://adopted-ember-addons.github.io/ember-impagination/)
 
 The demo presents a finite scroll implementation of
 *Ember-Impagination*. It scrolls through the ROYGBIV color spectrum by
