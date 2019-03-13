@@ -37,7 +37,7 @@
     "impagination": "1.0.0-alpha.3"
   },
   "devDependencies": {
-    "@ember/optional-features": "0.6.4",
+    "@ember/optional-features": "0.7.0",
     "broccoli-asset-rev": "2.7.0",
     "ember-ajax": "5.0.0",
     "ember-cli": "3.4.4",
