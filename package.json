@@ -30,7 +30,7 @@
     "test:all": "ember try:each"
   },
   "dependencies": {
-    "@ember/jquery": "0.5.2",
+    "@ember/jquery": "0.6.0",
     "ember-auto-import": "1.2.19",
     "ember-cli-babel": "6.18.0",
     "ember-cli-htmlbars": "3.0.1",
