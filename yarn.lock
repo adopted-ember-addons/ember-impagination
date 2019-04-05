@@ -4275,9 +4275,10 @@ ember-cli-babel@^7.5.0:
     ensure-posix-path "^1.0.2"
     semver "^5.5.0"
 
-ember-cli-bootswatch@1.13.3:
-  version "1.13.3"
-  resolved "https://registry.yarnpkg.com/ember-cli-bootswatch/-/ember-cli-bootswatch-1.13.3.tgz#ff379e987308cec4528d77eed06f3db87f22fc60"
+ember-cli-bootswatch@1.13.4:
+  version "1.13.4"
+  resolved "https://registry.yarnpkg.com/ember-cli-bootswatch/-/ember-cli-bootswatch-1.13.4.tgz#901f18bd06f6f5c04d66527ca50fa1b941b9cc07"
+  integrity sha1-kB8YvQb29cBNZlJ8pQ+huUG5zAc=
   dependencies:
     chalk "^1.1.3"
 
