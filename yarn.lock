@@ -2218,6 +2218,16 @@ boom@2.x.x:
   dependencies:
     hoek "2.x.x"
 
+bootstrap@^4.3.1:
+  version "4.3.1"
+  resolved "https://registry.yarnpkg.com/bootstrap/-/bootstrap-4.3.1.tgz#280ca8f610504d99d7b6b4bfc4b68cec601704ac"
+  integrity sha512-rXqOmH1VilAt2DyPzluTi2blhk17bO7ef+zLLPlWvG494pDxcM234pJ8wTc/6R40UWizAIIMgxjvxZg5kmsbag==
+
+bootswatch@^4.3.1:
+  version "4.3.1"
+  resolved "https://registry.yarnpkg.com/bootswatch/-/bootswatch-4.3.1.tgz#be54748b420a1962dbcf9782605aac092f842e38"
+  integrity sha512-kNdpo/TnhO++aic1IODLIe1V0lx6pXwHMpwXMacpANDnuVDtgU1MUgUbVMC3rSWm4UcbImfwPraNYgjKDT0BtA==
+
 bops@0.0.3:
   version "0.0.3"
   resolved "https://registry.yarnpkg.com/bops/-/bops-0.0.3.tgz#c5cbf6fea8be7401ca5ea6d1679e6c4e8b407c79"
@@ -4275,11 +4285,16 @@ ember-cli-babel@^7.5.0:
     ensure-posix-path "^1.0.2"
     semver "^5.5.0"
 
-ember-cli-bootswatch@1.13.3:
-  version "1.13.3"
-  resolved "https://registry.yarnpkg.com/ember-cli-bootswatch/-/ember-cli-bootswatch-1.13.3.tgz#ff379e987308cec4528d77eed06f3db87f22fc60"
+ember-cli-bootswatch@2.0.3:
+  version "2.0.3"
+  resolved "https://registry.yarnpkg.com/ember-cli-bootswatch/-/ember-cli-bootswatch-2.0.3.tgz#49b173f7542fe7279db4737abc8180e7b6f0b7be"
+  integrity sha512-DbANb1UBbMcoTqoQ/FJ4G10Fh0nESrQz0yW3WBKCoK4PHPtSaDYDtUPQJtfcWvhILP+YO0CzJZarOQ7AgpwF6Q==
   dependencies:
-    chalk "^1.1.3"
+    bootstrap "^4.3.1"
+    bootswatch "^4.3.1"
+    broccoli-funnel "^2.0.2"
+    broccoli-merge-trees "^3.0.2"
+    popper.js "^1.14.7"
 
 ember-cli-broccoli-sane-watcher@^2.1.1:
   version "2.2.2"
@@ -9593,6 +9608,11 @@ pluralize@^7.0.0:
   version "7.0.0"
   resolved "https://registry.yarnpkg.com/pluralize/-/pluralize-7.0.0.tgz#298b89df8b93b0221dbf421ad2b1b1ea23fc6777"
   integrity sha512-ARhBOdzS3e41FbkW/XWrTEtukqqLoK5+Z/4UeDaLuSW+39JPeFgs4gCGqsrJHVZX0fUrx//4OF0K1CUGwlIFow==
+
+popper.js@^1.14.7:
+  version "1.15.0"
+  resolved "https://registry.yarnpkg.com/popper.js/-/popper.js-1.15.0.tgz#5560b99bbad7647e9faa475c6b8056621f5a4ff2"
+  integrity sha512-w010cY1oCUmI+9KwwlWki+r5jxKfTFDVoadl7MSrIujHU5MJ5OR6HTDj6Xo8aoR/QsA56x8jKjA59qGH4ELtrA==
 
 portfinder@^1.0.15:
   version "1.0.20"
