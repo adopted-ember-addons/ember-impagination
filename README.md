@@ -40,7 +40,7 @@ your templates while having that data look exactly like an
 
 ## Demo
 
-[Ember-Impagination Demo](https://adopted-ember-addons.github.io/ember-impagination/)
+[Ember-Impagination Demo](https://ember-impagination.netlify.com/)
 
 The demo presents a finite scroll implementation of
 _Ember-Impagination_. It scrolls through the ROYGBIV color spectrum by
@@ -170,7 +170,7 @@ export default Ember.Route.extend({
 
 > We do not recommend defining `fetch` inside your controller because
 > it requires
-> [injecting the store into the controller](https://github.com/thefrontside/ember-impagination/issues/39#issuecomment-172101680)
+> [injecting the store into the controller](https://github.com/adopted-ember-addons/ember-impagination/issues/39#issuecomment-172101680)
 
 In **Ember 1.12 and below** we cannot define `fetch` in our actions
 hash. We must instead bind it to our controller.
