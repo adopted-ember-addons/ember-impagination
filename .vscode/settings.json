@@ -1,0 +1,6 @@
+{
+  "html.format.enable": true,
+  "html.format.indentHandlebars": true,
+  "html.format.wrapLineLength": 0,
+  "html.format.maxPreserveNewLines": 0
+}
