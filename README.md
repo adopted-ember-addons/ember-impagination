@@ -3,10 +3,11 @@
 [![npm version](https://badge.fury.io/js/ember-impagination.svg)](https://badge.fury.io/js/ember-impagination)
 [![Ember Observer Score](http://emberobserver.com/badges/ember-impagination.svg)](http://emberobserver.com/addons/ember-impagination)
 [![Build Status](https://travis-ci.org/adopted-ember-addons/ember-impagination.svg?branch=master)](https://travis-ci.org/adopted-ember-addons/ember-impagination)
+[![Netlify Status](https://api.netlify.com/api/v1/badges/f31e187a-b0aa-4b4f-9567-9bcb6873f0a5/deploy-status)](https://app.netlify.com/sites/ember-impagination/deploys)
 
-*Ember-Impagination* is an Ember binding for
+_Ember-Impagination_ is an Ember binding for
 [Impagination](https://github.com/flexyford/impagination), a front-end
-data-layer for the paginated API on your server. *Ember-Impagination*
+data-layer for the paginated API on your server. _Ember-Impagination_
 leverages the power of Glimmer and provides your component the data it
 needs to render quickly each and every time.
 
@@ -20,29 +21,29 @@ needs to render quickly each and every time.
 > Impagination is built using an event-driven immutable style, so it
 > is ideal for use with UI frameworks like Ember . . .
 
-Hence, we present *Ember-Impagination*.
+Hence, we present _Ember-Impagination_.
 
-*Ember-Impagination* provides you with a component,
+_Ember-Impagination_ provides you with a component,
 `{{impagination-dataset as |data|}}`, you can use to feed data into
 your templates while having that data look exactly like an
 `Ember.Array`.
 
-> Note: *Ember-Impagination* does not provide any of the visual
+> Note: _Ember-Impagination_ does not provide any of the visual
 > elements in a system like infinite scroll. You'll still need to use
 > a special component like `virtual-each` or
-> `ember-collection`. Instead, *Ember-Impagination* simplifies feeding
+> `ember-collection`. Instead, _Ember-Impagination_ simplifies feeding
 > your components fetched data.
 
 ## Installation
 
-* `ember install ember-impagination`
+- `ember install ember-impagination`
 
 ## Demo
 
 [Ember-Impagination Demo](https://adopted-ember-addons.github.io/ember-impagination/)
 
 The demo presents a finite scroll implementation of
-*Ember-Impagination*. It scrolls through the ROYGBIV color spectrum by
+_Ember-Impagination_. It scrolls through the ROYGBIV color spectrum by
 loading and unloading pages of records, where each record is a unique
 color-hue. At the top of the demo, you will find a visualization for
 pages. Resolved (Loaded) Pages are green, Pending (Loading) pages are
@@ -53,10 +54,10 @@ represents the top-most index of the scroll view.
 
 The demo is implemented using
 [virtual-each](https://github.com/jasonmit/virtual-each) due to the
-simplicity of the component. However, *Ember-Impagination* can also be
+simplicity of the component. However, _Ember-Impagination_ can also be
 utilized with other components like
 [ember-collection](https://github.com/emberjs/ember-collection), or
-even a simple `{{each}}`. By design, *Ember-Impagination* leverages
+even a simple `{{each}}`. By design, _Ember-Impagination_ leverages
 Glimmer and yields paginated data from your server's API to components
 which expect an array.
 
@@ -64,7 +65,7 @@ which expect an array.
 
 ### Impagination-Dataset Component
 
-To create an `impagination-dataset` there are two *required*
+To create an `impagination-dataset` there are two _required_
 parameters, `fetch` and `page-size`. Optional parameters include
 `load-horizon`, `unload-horizon`, `unfetch`. See
 [Impagination](https://github.com/flexyford/impagination) for detailed
@@ -92,30 +93,36 @@ pages to request ahead/behind.
 ```javascript
 // app/route/record.js
 export default Ember.Route.extend({
-  pageSize: 5,               // fetch records in pages of 5 (*required*)
-  loadHorizon: 10,           // fetch  records "inclusive" (+/- loadHorizon)   of the current readOffset (default: pageSize)
+  pageSize: 5, // fetch records in pages of 5 (*required*)
+  loadHorizon: 10, // fetch  records "inclusive" (+/- loadHorizon)   of the current readOffset (default: pageSize)
   //unloadHorizon: Infinity, // unload records "exclusive" (+/- unloadHorizon) of the current readOffset (default: Infinity)
   //readOffset: 0,           // the initial readOffset of the dataset (default: 0)
 
   // fetch() function is invoked whenever a page is requested within the loadHorizon
-  fetch: function(pageOffset, pageSize, stats) { // function which returns a "thenable" (*required*)
+  fetch: function(pageOffset, pageSize, stats) {
+    // function which returns a "thenable" (*required*)
     let params = {
-      page: pageOffset,
+      page: pageOffset
     };
     // fetch a page of records at the pageOffset
-    return this.store.query('record', params).then((data) => {
-      let meta = data.get('meta');
+    return this.store.query("record", params).then(data => {
+      let meta = data.get("meta");
       stats.totalPages = meta.totalPages;
       return data.toArray();
     });
   },
   // unfetch() function is invoked whenever a page is unloaded
   unfetch: function(records, pageOffset) {
-    this.store.findByIds('record', records.map(r => r.id).then(function(records) {
-      records.forEach(record => record.deleteRecord());
-    }));
+    this.store.findByIds(
+      "record",
+      records
+        .map(r => r.id)
+        .then(function(records) {
+          records.forEach(record => record.deleteRecord());
+        })
+    );
   }
-})
+});
 ```
 
 This setup will immediatly call fetch twice (for records 0-4 [page 0]
@@ -143,16 +150,16 @@ fetch function into `ember-impagination`
 ```javascript
 // app/route/record.js
 export default Ember.Route.extend({
-
   // fetch() function is invoked whenever a page is requested within the loadHorizon
   actions: {
-    fetch(pageOffset, pageSize, stats) { // function which returns a "thenable" (*required*)
+    fetch(pageOffset, pageSize, stats) {
+      // function which returns a "thenable" (*required*)
       let params = {
-        query: query,
+        query: query
       };
       // fetch a page of records at the pageOffset
-      return this.store.query('record', params).then((data) => {
-        let meta = data.get('meta');
+      return this.store.query("record", params).then(data => {
+        let meta = data.get("meta");
         stats.totalPages = meta.totalPages;
         return data.toArray();
       });
@@ -167,6 +174,7 @@ export default Ember.Route.extend({
 
 In **Ember 1.12 and below** we cannot define `fetch` in our actions
 hash. We must instead bind it to our controller.
+
 ```handlebars
 {{#impagination-dataset fetch=fetch)}}
 ```
@@ -200,10 +208,10 @@ is resolved. To filter a page at other times in your application see
 ```javascript
 // app/route/record.js
 export default Ember.Route.extend({
-
   // filter() function is invoked whenever a page is resolved or refiltered
-  filterCallback(record/*, index, records*/) { // function which rejects deleted records
-    return !record.get('isDeleted');
+  filterCallback(record /*, index, records*/) {
+    // function which rejects deleted records
+    return !record.get("isDeleted");
   }
 });
 ```
@@ -250,7 +258,7 @@ parameter.
 {{/search-pane}}
 ```
 
-``` javascript
+```javascript
 _resetDataset() {
   this.get('dataset').reset();
 },
@@ -318,14 +326,14 @@ let dataset = new Dataset({
 
 ### Running tests
 
-* `ember test` – Runs the test suite on the current Ember version
-* `ember test --server` – Runs the test suite in "watch mode"
-* `ember try:each` – Runs the test suite against multiple Ember versions
+- `ember test` – Runs the test suite on the current Ember version
+- `ember test --server` – Runs the test suite in "watch mode"
+- `ember try:each` – Runs the test suite against multiple Ember versions
 
 ### Running the dummy application
 
-* `ember serve`
-* Visit the dummy application at [http://localhost:4200](http://localhost:4200).
+- `ember serve`
+- Visit the dummy application at [http://localhost:4200](http://localhost:4200).
 
 For more information on using ember-cli, visit [https://ember-cli.com/](https://ember-cli.com/).
 
@@ -338,6 +346,6 @@ repository.
 
 ### License
 
-------------------------------------------------------------------------------
+---
 
 This project is licensed under the [MIT License](LICENSE.md).
