@@ -10,6 +10,7 @@ import EmberObject, {
   computed
 } from '@ember/object';
 import layout from '../templates/components/impagination-dataset';
+import Dataset from 'impagination';
 
 
 // TODO: Since `records` are wrapped in Ember.A() not all these methods are accurate
@@ -37,11 +38,11 @@ export default Component.extend({
   'on-init'() {},
   'on-observe'() {},
 
-  // Impagination Dataset Class: `app/components/impagination-dataset`
   Dataset: null,
 
   init() {
     this._super(...arguments);
+    this.set("Dataset", Dataset);
 
     let readOffsetAttrFound = get(this, 'read-offset') >= 0;
     warn('Ember Impagination: `read-offset` attribute has been removed. Please use the `on-init` function instead.', !readOffsetAttrFound, {id: 'ember-impagination.attributes.read-offset'});
