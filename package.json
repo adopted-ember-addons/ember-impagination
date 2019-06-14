@@ -1,6 +1,6 @@
 {
   "name": "ember-impagination",
-  "version": "1.0.0-pre-release",
+  "version": "1.0.0",
   "description": "Make asynchronous paginated data fun again",
   "keywords": [
     "ember-addon",
