@@ -4334,10 +4334,10 @@ ember-auto-import@^1.2.15:
     walk-sync "^0.3.3"
     webpack "^4.12.0"
 
-ember-bootstrap@2.6.1:
-  version "2.6.1"
-  resolved "https://registry.yarnpkg.com/ember-bootstrap/-/ember-bootstrap-2.6.1.tgz#65c69dbfc384e9d46fc575a2900ba3cbe0e889ee"
-  integrity sha512-CJokAYVlJCviiFAERUvk0RK5mun/heyEtXPI1YspNZd4OmeOQy6TN0yZmeMHGyVncJDMlPIIlZ7vCk8nYbZgpA==
+ember-bootstrap@2.8.1:
+  version "2.8.1"
+  resolved "https://registry.yarnpkg.com/ember-bootstrap/-/ember-bootstrap-2.8.1.tgz#a0eaf7dca6f7c2e573077f6bc09b3b58c9569d89"
+  integrity sha512-USZLZLmwiu8OAiQ1MlH5xs/JxGEjLepE+L37HmgxPTYB6xF/+cFIBSBTB5+8y335aZZWsmmULibdSwhd9rBNmA==
   dependencies:
     broccoli-debug "^0.6.3"
     broccoli-funnel "^2.0.0"
@@ -4349,7 +4349,7 @@ ember-bootstrap@2.6.1:
     ember-cli-build-config-editor "0.5.0"
     ember-cli-htmlbars "^3.0.0"
     ember-cli-version-checker "^3.0.0"
-    ember-concurrency "^0.9.0"
+    ember-concurrency "^0.8.0 || ^0.9.0 || ^0.10.0"
     ember-in-element-polyfill "^0.1.2"
     ember-maybe-in-element "^0.1.3"
     ember-popper "^0.9.0"
@@ -4835,10 +4835,10 @@ ember-concurrency@0.10.0:
     ember-compatibility-helpers "^1.2.0"
     ember-maybe-import-regenerator "^0.1.5"
 
-ember-concurrency@^0.9.0:
-  version "0.9.0"
-  resolved "https://registry.yarnpkg.com/ember-concurrency/-/ember-concurrency-0.9.0.tgz#0016652ff780fb665842e7f47815ee0601122ea1"
-  integrity sha512-JDjvwSlZBUQwv1+qUj6YUqXXe0Y0/to4ppUTNXQ1EEiEAopkHJXQUn0ZcFOiQpEinrYp34Vg6+lUNskoJFL2Vg==
+"ember-concurrency@^0.8.0 || ^0.9.0 || ^0.10.0":
+  version "0.10.1"
+  resolved "https://registry.yarnpkg.com/ember-concurrency/-/ember-concurrency-0.10.1.tgz#aae4528540391a7278e2c193a146b5474cad5ec2"
+  integrity sha512-KdvR5TEfnLov4igeIZiVueFOL0kMjkabMQrioipegey+NF23SSYThc/y2rKv109D92lTAJgC6Vp7+j2RtXqD+w==
   dependencies:
     babel-core "^6.24.1"
     ember-cli-babel "^6.8.2"
