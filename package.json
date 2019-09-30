@@ -55,7 +55,7 @@
     "ember-cli-template-lint": "1.0.0-beta.2",
     "ember-cli-uglify": "2.1.0",
     "ember-cli-update": "0.33.0",
-    "ember-code-snippet": "2.4.0",
+    "ember-code-snippet": "2.4.2",
     "ember-collection": "1.0.0-alpha.9",
     "ember-concurrency": "0.10.0",
     "ember-data": "3.7.0",
