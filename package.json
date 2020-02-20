@@ -72,7 +72,7 @@
     "eslint-plugin-ember": "5.4.0",
     "eslint-plugin-node": "8.0.1",
     "loader.js": "4.7.0",
-    "virtual-each": "0.6.2"
+    "virtual-each": "0.6.3"
   },
   "engines": {
     "node": "8.* || >= 10.*"
