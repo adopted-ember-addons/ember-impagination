@@ -7048,12 +7048,14 @@ ignore@^5.0.2:
   resolved "https://registry.yarnpkg.com/ignore/-/ignore-5.1.1.tgz#2fc6b8f518aff48fef65a7f348ed85632448e4a5"
   integrity sha512-DWjnQIFLenVrwyRCKZT+7a7/U4Cqgar4WG8V++K3hw+lrW1hc/SIwdiGmtxKCVACmHULTuGeBbHJmbwW7/sAvA==
 
-impagination@1.0.0-alpha.3:
-  version "1.0.0-alpha.3"
-  resolved "https://registry.yarnpkg.com/impagination/-/impagination-1.0.0-alpha.3.tgz#48ac39e5ff5d71f5bfcfcb4d200e471af5f8fb04"
+impagination@1.0.0:
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/impagination/-/impagination-1.0.0.tgz#5460595ab5d67ebe9aad4d68da77a6902a0230e4"
+  integrity sha512-9fr30z5kqrc5MqjOIZHaq8ZHFpNy2uhdeJ6b7zCb295+fRU1KFK/HUgSjjCviZ5OntQS8wlBYUjjSoro0va0pw==
   dependencies:
     babel-runtime "^5.8.25"
     binary-search-tree "^0.2.6"
+    util "^0.10.3"
 
 import-lazy@^2.1.0:
   version "2.1.0"
@@ -12432,6 +12434,13 @@ util@0.10.3:
   resolved "https://registry.yarnpkg.com/util/-/util-0.10.3.tgz#7afb1afe50805246489e3db7fe0ed379336ac0f9"
   dependencies:
     inherits "2.0.1"
+
+util@^0.10.3:
+  version "0.10.4"
+  resolved "https://registry.yarnpkg.com/util/-/util-0.10.4.tgz#3aa0125bfe668a4672de58857d3ace27ecb76901"
+  integrity sha512-0Pm9hTQ3se5ll1XihRic3FDIku70C+iHUdT/W926rSgHV5QgXsYbKZN8MSC3tJtSkhuROzvsQjAaFENRXr+19A==
+  dependencies:
+    inherits "2.0.3"
 
 util@^0.11.0:
   version "0.11.1"
